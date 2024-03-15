@@ -83,7 +83,7 @@ public class SorryMainActivity extends GameMainActivity {
 	 */
 	@Override
 	public LocalGame createLocalGame(GameState state) {
-		if (state == null) state = new SorryState(0);
+
 		return new SorryLocalGame(state);
 	}
 
