@@ -37,17 +37,13 @@ public class SorryState extends GameState {
 
 		cardNumber = 0;
 
-
-
 	}
 
 
 	@Override
 	public String toString(){
 
-		String string = "Player turn = " + playerTurn + " Pawn Start Count = " + pawnStartCount + " Pawn Home Count = " + pawnHomeCount + " Card Number = " + cardNumber;
-
-	return null;
+		 return "Player turn = " + playerTurn + " Pawn Start Count = " + pawnStartCount + " Pawn Home Count = " + pawnHomeCount + " Card Number = " + cardNumber;
 }
 
 
