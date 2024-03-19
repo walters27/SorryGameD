@@ -89,9 +89,9 @@ public class SorryComputerPlayer2 extends SorryComputerPlayer1 {
 			guiHandler.post(
 					new Runnable() {
 						public void run() {
-						if (counterValueTextView != null && currentGameState != null) {
-							counterValueTextView.setText("" + currentGameState.getClass());
-						}
+//						if (counterValueTextView != null && currentGameState != null) {
+//							counterValueTextView.setText("" + currentGameState.getCounter());
+//						}
 					}});
 		}
 	}
