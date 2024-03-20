@@ -21,9 +21,11 @@ public class SorryState extends GameState {
 
 	private int pawnStartCount;
 
-	public SorryPawn pawn =null;
+	SorryPawn pawn;
 
 	private int cardNumber;
+
+	private int playerId;
 
 
 
@@ -40,13 +42,22 @@ public class SorryState extends GameState {
 
 	}
 
+	public int getPlayerId() {
+		return playerId;
+	}
+	public void setPlayerId(int s)
+	{
+		playerId = s;
+	}
+
 	public SorryState(SorryState orig) {
-		this.playerTurn = orig.playerTurn;
-		this.pawnStartCount = orig.pawnStartCount;
-		this.pawnHomeCount = orig.pawnHomeCount;
-		this.cardNumber = orig.cardNumber;
-		if (orig.pawn != null) {
-			this.pawn = orig.pawn.clone();
+		super();
+		if (orig != null) {
+			this.playerTurn = orig.playerTurn;
+			this.pawnStartCount = orig.pawnStartCount;
+			this.pawnHomeCount = orig.pawnHomeCount;
+			this.cardNumber = orig.cardNumber;
+			this.pawn = new SorryPawn();
 		}
 	}
 

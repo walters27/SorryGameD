@@ -79,7 +79,41 @@ public class SorryLocalGame extends LocalGame {
 			return false;
 		}
 	}//makeMove
+	// helper method to update player turn after a move
+	protected boolean movePiece(GameAction action){
 
+		if (action instanceof SorryMoveAction)
+		{
+
+			SorryMoveAction cma = (SorryMoveAction) action;
+
+			if(gameState.getPlayerId() == 0){
+
+				gameState.setPlayerId(1);
+			}
+
+			else if(gameState.getPlayerId() == 1){
+
+				gameState.setPlayerId(2);
+			}
+			else if(gameState.getPlayerId() == 2){
+
+				gameState.setPlayerId(3);
+			}
+			else if(gameState.getPlayerId() == 3){
+
+				gameState.setPlayerId(4);
+			}
+			else if(gameState.getPlayerId() == 4){
+
+				gameState.setPlayerId(0);
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	/**
 	 * send the updated state to a given player
 	 */
