@@ -75,11 +75,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 		// Construct the action and send it to the game
 		GameAction action = null;
-		if (button.getId() == R.id.plusButton) {
+		if (true) {
 			// plus button: create "increment" action
 			action = new SorryMoveAction(this, true);
 		}
-		else if (button.getId() == R.id.minusButton) {
+		else if (true) {
 			// minus button: create "decrement" action
 			action = new SorryMoveAction(this, false);
 		}
@@ -123,10 +123,10 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		activity.setContentView(R.layout.counter_human_player);
 		
 		// make this object the listener for both the '+' and '-' 'buttons
-		Button plusButton = (Button) activity.findViewById(R.id.plusButton);
-		plusButton.setOnClickListener(this);
-		Button minusButton = (Button) activity.findViewById(R.id.minusButton);
-		minusButton.setOnClickListener(this);
+		//Button plusButton = (Button) activity.findViewById(R.id.plusButton);
+		//plusButton.setOnClickListener(this);
+		//Button minusButton = (Button) activity.findViewById(R.id.minusButton);
+		//minusButton.setOnClickListener(this);
 
 		// remember the field that we update to display the counter's value
 		this.counterValueTextView =
