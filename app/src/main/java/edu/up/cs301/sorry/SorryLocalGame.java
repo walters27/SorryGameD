@@ -48,9 +48,12 @@ public class SorryLocalGame extends LocalGame {
 	 */
 	public SorryLocalGame(GameState state) {
 		// initialize the game state, with the counter value starting at 0
-
-		this.gameState = (SorryState) state;
-		super.state = state;
+		if (state != null) {
+			this.state = state;
+		}
+		else {
+			this.state = new SorryState();
+		}
 	}
 
 	/**

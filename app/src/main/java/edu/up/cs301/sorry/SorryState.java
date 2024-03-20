@@ -21,12 +21,13 @@ public class SorryState extends GameState {
 
 	private int pawnStartCount;
 
-	private SorryPawn pawn;
+	public SorryPawn pawn =null;
 
 	private int cardNumber;
 
 
-	public SorryState(SorryState gameState) {
+
+	public SorryState() {
 		super();
 
 		playerTurn = 1;
@@ -39,16 +40,22 @@ public class SorryState extends GameState {
 
 	}
 
+	public SorryState(SorryState orig) {
+		this.playerTurn = orig.playerTurn;
+		this.pawnStartCount = orig.pawnStartCount;
+		this.pawnHomeCount = orig.pawnHomeCount;
+		this.cardNumber = orig.cardNumber;
+		if (orig.pawn != null) {
+			this.pawn = orig.pawn.clone();
+		}
+	}
+
+
 
 	@Override
 	public String toString(){
 
 		 return "Player turn = " + playerTurn + " Pawn Start Count = " + pawnStartCount + " Pawn Home Count = " + pawnHomeCount + " Card Number = " + cardNumber;
 }
-
-
-
-
-
 
 }
