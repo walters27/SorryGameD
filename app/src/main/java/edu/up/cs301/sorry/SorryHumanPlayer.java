@@ -19,7 +19,7 @@ import android.view.View.OnClickListener;
  * being dependent on whether the player is player 0 or player 1.
  * 
  * @author Steven R. Vegdahl
- * @author Andrew M. Nuxoll
+ * @author Andrew M. Nuxoll, Quince Pham, Corwin Carr, Kira Kunitake, Annalise Walters
  * @version July 2013
  */
 public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener {

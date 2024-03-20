@@ -10,7 +10,7 @@ import edu.up.cs301.GameFramework.utilities.Tickable;
  * rate of one per second. 
  * 
  * @author Steven R. Vegdahl
- * @author Andrew M. Nuxoll
+ * @author Andrew M. Nuxoll, Annalise Walters, Kira Kunitake, Quince Pham, Corwin Carr
  * @version September 2013
  */
 public class SorryComputerPlayer1 extends GameComputerPlayer implements Tickable {

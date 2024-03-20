@@ -11,7 +11,7 @@ import edu.up.cs301.GameFramework.gameConfiguration.*;
 /**
  * this is the primary activity for Counter game
  * 
- * @author Andrew M. Nuxoll
+ * @author Andrew M. Nuxoll, Kira Kunitake, Annalise Walters, Crorwin Carr, Quince Pham
  * @author Steven R. Vegdahl
  * @version July 2013
  */

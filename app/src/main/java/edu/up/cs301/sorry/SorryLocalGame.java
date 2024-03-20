@@ -12,7 +12,7 @@ import android.util.Log;
  * CounterState object is therefore very simple.
  * 
  * @author Steven R. Vegdahl
- * @author Andrew M. Nuxoll
+ * @author Andrew M. Nuxoll, Annalise Walters, Kira Kunitake, Corwin Carr, Quince Pham.
  * @version July 2013
  */
 public class SorryLocalGame extends LocalGame {

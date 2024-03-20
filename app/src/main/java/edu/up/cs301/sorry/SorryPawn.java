@@ -1,5 +1,5 @@
 package edu.up.cs301.sorry;
-
+// @authors Quince Pham, Kira Kunitake, Annalise Walkers, Corwin Carr
 public class SorryPawn {
 
    private int color;

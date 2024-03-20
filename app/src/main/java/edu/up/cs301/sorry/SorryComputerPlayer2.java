@@ -19,7 +19,7 @@ import android.widget.TextView;
 * as the game is being played.
 * 
 * @author Steven R. Vegdahl
-* @author Andrew M. Nuxoll
+* @author Andrew M. Nuxoll, Corwin Carr, Quince Pham, Kira Kunitake, Annalise Walters
 * @version September 2013
 */
 public class SorryComputerPlayer2 extends SorryComputerPlayer1 {

@@ -8,7 +8,7 @@ import edu.up.cs301.GameFramework.actionMessage.GameAction;
  * or decreasing the counter value.
  * 
  * @author Steven R. Vegdahl
- * @author Andrew M. Nuxoll
+ * @author Andrew M. Nuxoll, Corwin Carr, Annalise Walters, Kira Kunitake, Quince Pham
  * @version September 2012
  */
 public class SorryMoveAction extends GameAction {
