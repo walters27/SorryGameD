@@ -11,51 +11,51 @@ import edu.up.cs301.GameFramework.infoMessage.GameState;
  * @version July 2013
  */
 public class SorryState extends GameState {
-	
+
 	// to satisfy Serializable interface
 	private static final long serialVersionUID = 7737393762469851826L;
-	
-	// the value of the counter
-	private int counter;
-	
-	/**
-	 * constructor, initializing the counter value from the parameter
-	 * 
-	 * @param counterVal
-	 * 		the value to which the counter's value should be initialized
-	 */
-	public SorryState(int counterVal) {
-		counter = counterVal;
-	}
-	
-	/**
-	 * copy constructor; makes a copy of the original object
-	 * 
-	 * @param orig
-	 * 		the object from which the copy should be made
-	 */
-	public SorryState(SorryState orig) {
-		// set the counter to that of the original
-		this.counter = orig.counter;
+
+	private int playerTurn;
+
+	private int pawnHomeCount;
+
+	private int pawnStartCount;
+
+	public SorryPawn pawn =null;
+
+	private int cardNumber;
+
+
+
+	public SorryState() {
+		super();
+
+		playerTurn = 1;
+
+		pawnStartCount = 4;
+
+		pawnHomeCount = 0;
+
+		cardNumber = 0;
+
 	}
 
-	/**
-	 * getter method for the counter
-	 * 
-	 * @return
-	 * 		the value of the counter
-	 */
-	public int getCounter() {
-		return counter;
+	public SorryState(SorryState orig) {
+		this.playerTurn = orig.playerTurn;
+		this.pawnStartCount = orig.pawnStartCount;
+		this.pawnHomeCount = orig.pawnHomeCount;
+		this.cardNumber = orig.cardNumber;
+		if (orig.pawn != null) {
+			this.pawn = orig.pawn.clone();
+		}
 	}
-	
-	/**
-	 * setter method for the counter
-	 * 
-	 * @param counter
-	 * 		the value to which the counter should be set
-	 */
-	public void setCounter(int counter) {
-		this.counter = counter;
-	}
+
+
+
+	@Override
+	public String toString(){
+
+		 return "Player turn = " + playerTurn + " Pawn Start Count = " + pawnStartCount + " Pawn Home Count = " + pawnHomeCount + " Card Number = " + cardNumber;
+}
+
 }

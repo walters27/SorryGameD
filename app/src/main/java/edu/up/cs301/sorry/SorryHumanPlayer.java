@@ -59,7 +59,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	 */
 	protected void updateDisplay() {
 		// set the text in the appropriate widget
-		counterValueTextView.setText("" + state.getCounter());
+		//counterValueTextView.setText("" + state.getCounter());
 	}
 
 	/**
