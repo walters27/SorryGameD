@@ -27,7 +27,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	/* instance variables */
 	
 	// The TextView the displays the current counter value
-	private TextView counterValueTextView;
+	private TextView testResultTextView;
 	
 	// the most recent game state, as given to us by the CounterLocalGame
 	private SorryState state;
@@ -51,7 +51,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	 * 		the top object in the GUI's view heirarchy
 	 */
 	public View getTopView() {
-		return myActivity.findViewById(R.id.top_gui_layout);
+
+		return myActivity.findViewById(R.id.sorry_gui_layout);
 	}
 	
 	/**
@@ -72,23 +73,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	public void onClick(View button) {
 		// if we are not yet connected to a game, ignore
 		if (game == null) return;
-
-		// Construct the action and send it to the game
-		GameAction action = null;
-		if (true) {
-			// plus button: create "increment" action
-			action = new SorryMoveAction(this, true);
-		}
-		else if (true) {
-			// minus button: create "decrement" action
-			action = new SorryMoveAction(this, false);
-		}
-		else {
-			// something else was pressed: ignore
-			return;
-		}
-		
-		game.sendAction(action); // send action to the game
 	}// onClick
 	
 	/**
@@ -120,23 +104,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		this.myActivity = activity;
 		
 	    // Load the layout resource for our GUI
-		activity.setContentView(R.layout.counter_human_player);
-		
-		// make this object the listener for both the '+' and '-' 'buttons
-		//Button plusButton = (Button) activity.findViewById(R.id.plusButton);
-		//plusButton.setOnClickListener(this);
-		//Button minusButton = (Button) activity.findViewById(R.id.minusButton);
-		//minusButton.setOnClickListener(this);
+		activity.setContentView(R.layout.sorry_xml_multi_line);
 
-		// remember the field that we update to display the counter's value
-		this.counterValueTextView =
-				(TextView) activity.findViewById(R.id.counterValueTextView);
-		
-		// if we have a game state, "simulate" that we have just received
-		// the state from the game so that the GUI values are updated
-		if (state != null) {
-			receiveInfo(state);
-		}
+		// Refrence EditText to test text view
+		testResultTextView = myActivity.findViewById(R.id.editTextTextMultiLine2);
+		myActivity.findViewById(R.id.testButton).setOnClickListener(this);
+
 	}
 
 }// class CounterHumanPlayer
