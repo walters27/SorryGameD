@@ -110,6 +110,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		testResultTextView = myActivity.findViewById(R.id.editTextTextMultiLine2);
 		myActivity.findViewById(R.id.testButton).setOnClickListener(this);
 
+
 	}
 
 }// class CounterHumanPlayer
