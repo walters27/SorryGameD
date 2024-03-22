@@ -73,8 +73,18 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	public void onClick(View button) {
 		// if we are not yet connected to a game, ignore
 		if (game == null) return;
-	}// onClick
-	
+
+		// Clear any text currently displayed in the multi-line EditText
+		testResultTextView.setText("");
+
+		// Create a new instance of the game state class using the default constructor
+		SorryState firstInstance = new SorryState();
+
+		// Use the other constructor to create a deep copy of firstInstance from the perspective of player one
+		SorryState firstCopy = new SorryState(firstInstance);
+	}//onClick
+
+
 	/**
 	 * callback method when we get a message (e.g., from the game)
 	 * 
