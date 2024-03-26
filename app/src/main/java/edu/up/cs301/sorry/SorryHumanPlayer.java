@@ -80,7 +80,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// Create a new instance of the game state class using the default constructor
 		SorryState firstInstance = new SorryState();
 
-		// Use the other constructor to create a deep copy of firstInstance from the perspective of player one
+		// Create deep constructor
 		SorryState firstCopy = new SorryState(firstInstance);
 	}//onClick
 

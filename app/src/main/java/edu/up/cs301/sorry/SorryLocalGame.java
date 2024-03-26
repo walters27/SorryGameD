@@ -114,6 +114,29 @@ public class SorryLocalGame extends LocalGame {
 			return false;
 		}
 	}
+
+	protected boolean drawCard (GameAction action){
+		if (gameState.getCardDrawn() == true){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	protected boolean isGameOver(GameAction action){
+		if (gameState.getBluePawnHomeCount() == 4 ||
+				gameState.getRedPawnHomeCount() == 4||
+				gameState.getYellowPawnHomeCount() == 4 ||
+				gameState.getGreenPawnHomeCount() == 4){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+
 	/**
 	 * send the updated state to a given player
 	 */
