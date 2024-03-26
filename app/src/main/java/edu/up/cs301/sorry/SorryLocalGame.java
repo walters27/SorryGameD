@@ -135,8 +135,13 @@ public class SorryLocalGame extends LocalGame {
 			return false;
 		}
 	}
-
-
+	/*public boolean pawnIsHome(GameAction action, int i){
+		if (gameState.pawn[i].getLocation() >= 61)
+			return true;
+		else{
+			return false;
+		}
+	}*/
 	/**
 	 * send the updated state to a given player
 	 */

@@ -94,7 +94,9 @@ public class SorryState extends GameState {
 	public void setGreenPawnHomeCount(int num){
 		greenPawnHomeCount = num;
 	}
-
+	public SorryPawn getPawn(int i){
+		return pawn[i];
+	}
 
 	public SorryState(SorryState orig) {
 		super();
