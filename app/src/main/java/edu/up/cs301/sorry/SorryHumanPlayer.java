@@ -77,11 +77,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// Clear any text currently displayed in the multi-line EditText
 		testResultTextView.setText("");
 
-		// Create a new instance of the game state class using the default constructor
+		// New instance of the game state class
 		SorryState firstInstance = new SorryState();
 
 		// Create deep constructor
 		SorryState firstCopy = new SorryState(firstInstance);
+
 	}//onClick
 
 
