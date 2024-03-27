@@ -82,6 +82,13 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 		// Create deep constructor
 		SorryState firstCopy = new SorryState(firstInstance);
+
+		game.sendAction(new SorryMoveAction(this, true));
+
+		SorryState secondCopy = new SorryState(firstCopy);
+		//probably add breaks cite it
+		testResultTextView.append(secondCopy.toString());
+		testResultTextView.append(firstCopy.toString());
 	}//onClick
 
 
