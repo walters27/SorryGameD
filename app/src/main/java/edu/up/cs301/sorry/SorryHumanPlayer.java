@@ -124,49 +124,76 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// Game starts: all pawns are at start
 		appendToGameLog("Game starts. All pawns are at their start positions.");
 
+		while (true) {
+			// Interaction 1
+			state.setPlayerId(1);
+			state.setCardDrawn(true);
+			state.setBluePawnHomeCount(state.getBluePawnHomeCount() - 1);
+			state.setBluePawnHomeCount(state.getBluePawnHomeCount() + 1);
+			appendToGameLog("Player 1 draws a card and moves a blue pawn from start.");
 
-		// Player 1 draws a card and moves a pawn out of start
-		state.setPlayerId(1);
-		state.setCardDrawn(true); // Simulate drawing a card
-		state.setBluePawnHomeCount(state.getBluePawnHomeCount() - 1); // One pawn moves out
-		state.setBluePawnHomeCount(state.getBluePawnHomeCount() + 1); // Simulate moving a pawn to home
-		appendToGameLog("Player 1 draws a card and moves a blue pawn from start.");
+			// Interaction 2
+			state.setPlayerId(2);
+			state.setCardDrawn(true);
+			state.setRedPawnHomeCount(state.getRedPawnHomeCount() - 1);
+			state.setRedPawnHomeCount(state.getRedPawnHomeCount() + 1);
+			appendToGameLog("Player 2 draws a card and moves a red pawn towards home.");
 
+			// Interaction 3
+			state.setPlayerId(3);
+			state.setCardDrawn(true);
+			state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() - 1);
+			state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() + 1);
+			appendToGameLog("Player 3 draws a card and moves a green pawn towards home.");
 
-		// Player 2 draws a card and moves a pawn
-		state.setPlayerId(2);
-		state.setRedPawnHomeCount(state.getRedPawnHomeCount() - 1);
-		state.setRedPawnHomeCount(state.getRedPawnHomeCount() + 1);
-		appendToGameLog("Player 2 draws a card and moves a red pawn towards home.");
+			// Interaction 4
+			state.setPlayerId(4);
+			state.setCardDrawn(true);
+			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() - 1);
+			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() + 1);
+			appendToGameLog("Player 4 draws a card and moves a yellow pawn towards home.");
 
+			// Interaction 5: Slide
+			state.setPlayerId(1);
+			state.setCardDrawn(true);
+			state.setRedPawnHomeCount(state.getRedPawnHomeCount() - 1); // Assume red pawn is in the way
+			state.setRedPawnHomeCount(state.getRedPawnHomeCount() + 1); // Move red pawn back to start
+			state.setBluePawnHomeCount(state.getBluePawnHomeCount() + 1); // Move blue pawn forward
+			appendToGameLog("Player 1 draws a card, slides another player's pawn back, and moves their blue pawn forward.");
 
-		// Simulate more actions to use all methods
-		// For simplicity, let's simulate actions for Player 3
-		state.setPlayerId(3);
-		state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() - 1);
-		state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() + 1);
-		appendToGameLog("Player 3 moves a green pawn towards home.");
+			// Interaction 6: Switch
+			state.setPlayerId(2);
+			state.setCardDrawn(true);
+			int tempRedCount = state.getRedPawnHomeCount();
+			state.setRedPawnHomeCount(state.getBluePawnHomeCount());
+			state.setBluePawnHomeCount(tempRedCount);
+			appendToGameLog("Player 2 draws a card and switches the positions of their red pawn and player 1's blue pawn.");
 
+			// Interaction 7: Sorry
+			state.setPlayerId(3);
+			state.setCardDrawn(true);
+			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() - 1); // Assume yellow pawn is in the way
+			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() + 1); // Move yellow pawn back to start
+			state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() + 1); // Move green pawn forward
+			appendToGameLog("Player 3 draws a card, apologizes (Sorry), sends another player's pawn back, and moves their green pawn forward.");
 
-		// Let's say Player 4 makes a move that brings their last pawn home
-		state.setPlayerId(4);
-		state.setYellowPawnHomeCount(4); // Assuming this is the winning condition
-		appendToGameLog("Player 4 moves their final yellow pawn home.");
-
-
-		// Check for a winner, assuming winning condition is all pawns of a color at home
-		if (state.getBluePawnHomeCount() == 4) {
-			appendToGameLog("Player 1 wins the game!");
-		} else if (state.getRedPawnHomeCount() == 4) {
-			appendToGameLog("Player 2 wins the game!");
-		} else if (state.getGreenPawnHomeCount() == 4) {
-			appendToGameLog("Player 3 wins the game!");
-		} else if (state.getYellowPawnHomeCount() == 4) {
-			appendToGameLog("Player 4 wins the game!");
+			// Check for a winner
+			if (state.getBluePawnHomeCount() == 4) {
+				appendToGameLog("Player 1 wins the game!");
+				break;
+			} else if (state.getRedPawnHomeCount() == 4) {
+				appendToGameLog("Player 2 wins the game!");
+				break;
+			} else if (state.getGreenPawnHomeCount() == 4) {
+				appendToGameLog("Player 3 wins the game!");
+				break;
+			} else if (state.getYellowPawnHomeCount() == 4) {
+				appendToGameLog("Player 4 wins the game!");
+				break;
+			}
 		}
 
-
-		// Assume game ends after a winner is declared
+		// Game over
 		appendToGameLog("Game over.");
 	}
 
