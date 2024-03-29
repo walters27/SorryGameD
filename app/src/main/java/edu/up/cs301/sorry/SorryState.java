@@ -55,6 +55,7 @@ public class SorryState extends GameState {
 
 		cardDrawn = false;
 		movesToWin = 61;
+
 	}
 
 	public int getPlayerId() {
@@ -112,13 +113,13 @@ public class SorryState extends GameState {
 			this.greenPawnHomeCount = orig.greenPawnHomeCount;
 			this.cardNumber = orig.cardNumber;
 			this.cardDrawn = orig.cardDrawn;
+			this.playerId = orig.playerId;
+			this.movesToWin = orig.movesToWin;
 			for (int i = 0; i < 16; i++){
-				this.pawn[i] = new SorryPawn();
+				this.pawn[i] = new SorryPawn(orig.pawn[i]);
 			}
 		}
 	}
-
-
 
 	@Override
 	public String toString(){
