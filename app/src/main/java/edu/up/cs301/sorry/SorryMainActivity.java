@@ -58,12 +58,14 @@ public class SorryMainActivity extends GameMainActivity {
 		// - from 1 to 2 players
 		// - name of game is "Counter Game"
 		// - port number as defined above
-		GameConfig defaultConfig = new GameConfig(playerTypes, 1, 2, "Counter Game",
+		GameConfig defaultConfig = new GameConfig(playerTypes, 4, 4, "Sorry!",
 				PORT_NUMBER);
 
 		// Add the default players to the configuration
 		defaultConfig.addPlayer("Human", 0); // player 1: a human player
 		defaultConfig.addPlayer("Computer", 1); // player 2: a computer player
+		defaultConfig.addPlayer("Computer", 2); // player 3: a computer player
+		defaultConfig.addPlayer("Computer", 3); // player 4: a computer player
 		
 		// Set the default remote-player setup:
 		// - player name: "Remote Player"

@@ -29,14 +29,6 @@ public class GameBoardView extends View {
         init();
     }
 
-    public void moveDotTo(int position) {
-        if (position >= 1 && position <= 225) {
-            targetDotPosition = position;
-            isAnimating = true;
-            invalidate(); // Request a redraw of the view
-        }
-    }
-
     private void init() {
         gridPaint = new Paint();
         gridPaint.setColor(Color.RED);
@@ -133,6 +125,14 @@ public class GameBoardView extends View {
     private float getPositionY(int position) {
         int row = (position - 1) / 15;
         return margin + row * cellSize + cellSize / 2;
+    }
+
+    public void moveDotTo(int position) {
+        if (position >= 1 && position <= 225 && !isAnimating) {
+            targetDotPosition = position;
+            isAnimating = true;
+            invalidate(); // Request a redraw of the view
+        }
     }
 
     public void setMargin(int margin) {
