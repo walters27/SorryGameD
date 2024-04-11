@@ -1,5 +1,7 @@
 <resources>
 
     <string name="app_name">Sorry Game</string>
+    <string name="game_status">Game Status</string>
+    <string name="draw_cards">Draw Cards</string>
 
 </resources>

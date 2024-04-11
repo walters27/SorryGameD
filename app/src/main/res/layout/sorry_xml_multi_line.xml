@@ -1,26 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sorry_gui_layout"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+android:id="@+id/sorry_gui_layout"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/editTextTextMultiLine2"
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Game board image -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:src="@drawable/sorryimage" />
+
+    <!-- Side panel for cards and actions -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
+
+        <!-- Game Status situated at the top -->
+        <TextView
+            android:id="@+id/textViewGameStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Status"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            style="@style/TextAppearance.AppCompat.Headline" />
+
+        <!-- Outlined box for messages using LinearLayout -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="80"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine" />
+            android:background="@drawable/outline_box"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center">
 
+            <!-- Messages TextView -->
+            <TextView
+                android:id="@+id/textViewMessages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Message Line 1\nMessage Line 2\nMessage Line 3"
+                android:maxLines="3"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- Image of a card -->
+        <ImageView
+            android:id="@+id/imageViewCard"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:src="@drawable/sorrycardone"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="0dp" />
+
+        <!-- Draw cards button at the bottom -->
 
         <Button
-            android:id="@+id/testButton"
+            android:id="@+id/buttonDrawCards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:text="Run Test" />
+            android:text="Draw Card" />
+
     </LinearLayout>
+</LinearLayout>
 
-
+</LinearLayout>
