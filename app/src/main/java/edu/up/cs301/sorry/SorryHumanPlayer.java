@@ -4,11 +4,17 @@ import edu.up.cs301.GameFramework.players.GameHumanPlayer;
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
+
+import android.media.Image;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
+
+import java.util.Random;
+
 import edu.up.cs301.sorry.SorryState;
 
 
@@ -38,7 +44,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	// the android activity that we are running
 	private GameMainActivity myActivity;
 
-	private ImageButton cardImageButton = null;
+	private ImageView imageViewCard = null;
 	
 	/**
 	 * constructor
@@ -79,142 +85,49 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// if we are not yet connected to a game, ignore
 		if (game == null) return;
 
-
-		// Clear any text currently displayed in the multi-line EditText
-		testResultTextView.setText("");
-
-
 		// Create a new instance of the game state class using the default constructor
 		SorryState firstInstance = new SorryState();
 
-
-		// Create a deep copy of firstInstance
-		SorryState firstCopy = new SorryState(firstInstance);
-
-
-		// Simulate an entire game with firstInstance
-		simulateGame(firstInstance);
-
-
-		// Create another new instance of the game state for comparison
-		SorryState secondInstance = new SorryState();
-
-
-		// Create a deep copy of secondInstance
-		SorryState secondCopy = new SorryState(secondInstance);
-
-
-		// Call toString() on both copies to prepare for comparison
-		String firstCopyString = firstCopy.toString();
-		String secondCopyString = secondCopy.toString();
-
-
-		// Verify if the two strings are identical
-		boolean areIdentical = firstCopyString.equals(secondCopyString);
-
-
-		// Append the verification result to the EditText
-		appendToGameLog("Verification: " + (areIdentical ? "The two game states are identical." : "The two game states are not identical."));
-
-
-		// Print both strings for visual inspection
-		appendToGameLog("First game state: " + firstCopyString);
-		appendToGameLog("Second game state: " + secondCopyString);
-
-		SorryDrawCard draw = new SorryDrawCard(this);
-		game.sendAction(draw);
-
-	}
-
-
-	private void simulateGame(SorryState state) {
-		// Game starts: all pawns are at start
-		appendToGameLog("Game starts. All pawns are at their start positions.");
-
-		while (true) {
-			// Interaction 1
-			state.setPlayerId(1);
-			state.setCardDrawn(true);
-			state.setBluePawnHomeCount(state.getBluePawnHomeCount() - 1);
-			state.setBluePawnHomeCount(state.getBluePawnHomeCount() + 1);
-			appendToGameLog("Player 1 draws a card and moves a blue pawn from start.");
-
-			// Interaction 2
-			state.setPlayerId(2);
-			state.setCardDrawn(true);
-			state.setRedPawnHomeCount(state.getRedPawnHomeCount() - 1);
-			state.setRedPawnHomeCount(state.getRedPawnHomeCount() + 1);
-			appendToGameLog("Player 2 draws a card and moves a red pawn towards home.");
-
-			// Interaction 3
-			state.setPlayerId(3);
-			state.setCardDrawn(true);
-			state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() - 1);
-			state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() + 1);
-			appendToGameLog("Player 3 draws a card and moves a green pawn towards home.");
-
-			// Interaction 4
-			state.setPlayerId(4);
-			state.setCardDrawn(true);
-			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() - 1);
-			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() + 1);
-			appendToGameLog("Player 4 draws a card and moves a yellow pawn towards home.");
-
-			// Interaction 5: Slide
-			state.setPlayerId(1);
-			state.setCardDrawn(true);
-			state.setRedPawnHomeCount(state.getRedPawnHomeCount() - 1); // Assume red pawn is in the way
-			state.setRedPawnHomeCount(state.getRedPawnHomeCount() + 1); // Move red pawn back to start
-			state.setBluePawnHomeCount(state.getBluePawnHomeCount() + 1); // Move blue pawn forward
-			appendToGameLog("Player 1 draws a card, slides another player's pawn back, and moves their blue pawn forward.");
-
-			// Interaction 6: Switch
-			state.setPlayerId(2);
-			state.setCardDrawn(true);
-			int tempRedCount = state.getRedPawnHomeCount();
-			state.setRedPawnHomeCount(state.getBluePawnHomeCount());
-			state.setBluePawnHomeCount(tempRedCount);
-			appendToGameLog("Player 2 draws a card and switches the positions of their red pawn and player 1's blue pawn.");
-
-			// Interaction 7: Sorry
-			state.setPlayerId(3);
-			state.setCardDrawn(true);
-			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() - 1); // Assume yellow pawn is in the way
-			state.setYellowPawnHomeCount(state.getYellowPawnHomeCount() + 1); // Move yellow pawn back to start
-			state.setGreenPawnHomeCount(state.getGreenPawnHomeCount() + 1); // Move green pawn forward
-			appendToGameLog("Player 3 draws a card, apologizes (Sorry), sends another player's pawn back, and moves their green pawn forward.");
-
-			// Check for a winner
-			if (state.getBluePawnHomeCount() == 4) {
-				appendToGameLog("Player 1 wins the game!");
-				break;
-			} else if (state.getRedPawnHomeCount() == 4) {
-				appendToGameLog("Player 2 wins the game!");
-				break;
-			} else if (state.getGreenPawnHomeCount() == 4) {
-				appendToGameLog("Player 3 wins the game!");
-				break;
-			} else if (state.getYellowPawnHomeCount() == 4) {
-				appendToGameLog("Player 4 wins the game!");
-				break;
-			}
+		//Generate random card
+		Random rand = new Random();
+		int cardNum = rand.nextInt(11)+1;
+		int drawFace = 0;
+		if(cardNum == 1){
+			drawFace = R.drawable.sorrycardone;
 		}
-
-		// Game over
-		appendToGameLog("Game over.");
+		else if(cardNum ==2){
+			drawFace = R.drawable.sorrycardtwo;
+		}
+		else if(cardNum ==3){
+			drawFace = R.drawable.sorrycardthree;
+		}
+		else if(cardNum ==4){
+			drawFace = R.drawable.sorrycardfour;
+		}
+		else if(cardNum ==5){
+			drawFace = R.drawable.sorrycardfive;
+		}
+		else if(cardNum ==6){
+			drawFace = R.drawable.sorrycardseven;
+		}
+		else if(cardNum ==7){
+			drawFace = R.drawable.sorrycardeight;
+		}
+		else if(cardNum ==8){
+			drawFace = R.drawable.sorrycardten;
+		}
+		else if(cardNum ==9){
+			drawFace = R.drawable.sorrycardeleven;
+		}
+		else if(cardNum ==10){
+			drawFace = R.drawable.sorrycardtwelve;
+		}
+		else if(cardNum ==11){
+			drawFace = R.drawable.sorrycardsorry;
+		}
+		//set ImageView to new card drawn
+		imageViewCard.setImageResource(drawFace);
 	}
-
-
-
-
-	private void appendToGameLog(String message) {
-		// Appends a message to the game log in the multi-line EditText
-		String currentText = testResultTextView.getText().toString();
-		String newText = currentText.isEmpty() ? message : currentText + "\n" + message;
-		testResultTextView.setText(newText);
-	}
-//onClick
-
 
 
 	/**
@@ -231,45 +144,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// update our state; then update the display
 		this.state = (SorryState)info;
 		updateDisplay();
-
-		//get card number
-		/*SorryState gameState = (SorryState) info;
-		int cardNum = gameState.getCardNumber();
-		int drawFace = 0;
-		if(cardNum == 1){
-			drawFace = R.drawable.sorrycardone;
-		}
-		else if(cardNum ==2){
-			//drawFace = R.drawable.sorryCardTwo;
-		}
-		else if(cardNum ==3){
-
-		}
-		else if(cardNum ==4){
-
-		}
-		else if(cardNum ==5){
-
-		}
-		else if(cardNum ==7){
-
-		}
-		else if(cardNum ==8){
-
-		}
-		else if(cardNum ==10){
-
-		}
-		else if(cardNum ==11){
-
-		}
-		else if(cardNum ==12){
-
-		}
-		else if(cardNum ==13){
-
-		}
-		cardImageButton.setImageResource(drawFace);*/
 	}
 	
 	/**
@@ -287,11 +161,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	    // Load the layout resource for our GUI
 		activity.setContentView(R.layout.sorry_xml_multi_line);
 
-		// Refrence EditText to test text view
-		/*testResultTextView = myActivity.findViewById(R.id.editTextTextMultiLine2);
-		myActivity.findViewById(R.id.testButton).setOnClickListener(this);*/
+		//initialize widgets
+		this.imageViewCard = (ImageView) activity.findViewById(R.id.imageViewCard);
+		Button buttonDrawCards = (Button)activity.findViewById(R.id.buttonDrawCards);
 
-
+		//Listener for button
+		buttonDrawCards.setOnClickListener(this);
 	}
 
 }// class CounterHumanPlayer

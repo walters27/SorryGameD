@@ -6,6 +6,8 @@ import edu.up.cs301.GameFramework.LocalGame;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import android.util.Log;
 
+import java.util.Random;
+
 /**
  * A class that represents the state of a game. In our counter game, the only
  * relevant piece of information is the value of the game's counter. The
@@ -54,6 +56,7 @@ public class SorryLocalGame extends LocalGame {
 		else {
 			this.state = new SorryState();
 		}
+		gameState = new SorryState();
 	}
 
 	/**
@@ -67,10 +70,6 @@ public class SorryLocalGame extends LocalGame {
 
 			// cast so that we Java knows it's a CounterMoveAction
 			SorryMoveAction cma = (SorryMoveAction) action;
-
-			// Update the counter values based upon the action
-			//int result = gameState.getCounter() + (cma.isPlus() ? 1 : -1);
-			//gameState.setCounter(result);
 
 			// denote that this was a legal/successful move
 			return true;
