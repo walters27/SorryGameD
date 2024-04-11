@@ -51,7 +51,7 @@ public class SorryState extends GameState {
 			pawn[i] = new SorryPawn();
 		}
 
-		cardNumber = 0;
+		cardNumber = 1;
 
 		cardDrawn = false;
 		movesToWin = 61;
@@ -97,6 +97,12 @@ public class SorryState extends GameState {
 	}
 	public SorryPawn getPawn(int i){
 		return pawn[i];
+	}
+	public int getCardNumber(){
+		return cardNumber;
+	}
+	public void setCardNumber(int cardNumber){
+		this.cardNumber = cardNumber;
 	}
 
 	public SorryState(SorryState orig) {

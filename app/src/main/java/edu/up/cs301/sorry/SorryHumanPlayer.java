@@ -6,6 +6,7 @@ import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 import edu.up.cs301.sorry.SorryState;
@@ -36,6 +37,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	
 	// the android activity that we are running
 	private GameMainActivity myActivity;
+
+	private ImageButton cardImageButton = null;
 	
 	/**
 	 * constructor
@@ -117,6 +120,10 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// Print both strings for visual inspection
 		appendToGameLog("First game state: " + firstCopyString);
 		appendToGameLog("Second game state: " + secondCopyString);
+
+		SorryDrawCard draw = new SorryDrawCard(this);
+		game.sendAction(draw);
+
 	}
 
 
@@ -224,6 +231,45 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// update our state; then update the display
 		this.state = (SorryState)info;
 		updateDisplay();
+
+		//get card number
+		/*SorryState gameState = (SorryState) info;
+		int cardNum = gameState.getCardNumber();
+		int drawFace = 0;
+		if(cardNum == 1){
+			drawFace = R.drawable.sorrycardone;
+		}
+		else if(cardNum ==2){
+			//drawFace = R.drawable.sorryCardTwo;
+		}
+		else if(cardNum ==3){
+
+		}
+		else if(cardNum ==4){
+
+		}
+		else if(cardNum ==5){
+
+		}
+		else if(cardNum ==7){
+
+		}
+		else if(cardNum ==8){
+
+		}
+		else if(cardNum ==10){
+
+		}
+		else if(cardNum ==11){
+
+		}
+		else if(cardNum ==12){
+
+		}
+		else if(cardNum ==13){
+
+		}
+		cardImageButton.setImageResource(drawFace);*/
 	}
 	
 	/**
@@ -242,8 +288,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		activity.setContentView(R.layout.sorry_xml_multi_line);
 
 		// Refrence EditText to test text view
-		testResultTextView = myActivity.findViewById(R.id.editTextTextMultiLine2);
-		myActivity.findViewById(R.id.testButton).setOnClickListener(this);
+		/*testResultTextView = myActivity.findViewById(R.id.editTextTextMultiLine2);
+		myActivity.findViewById(R.id.testButton).setOnClickListener(this);*/
 
 
 	}
