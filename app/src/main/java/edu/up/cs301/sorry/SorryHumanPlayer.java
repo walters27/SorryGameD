@@ -232,8 +232,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		this.state = (SorryState)info;
 		updateDisplay();
 
-		/*//get card number
-		SorryState gameState = (SorryState) info;
+		//get card number
+		/*SorryState gameState = (SorryState) info;
 		int cardNum = gameState.getCardNumber();
 		int drawFace = 0;
 		if(cardNum == 1){
