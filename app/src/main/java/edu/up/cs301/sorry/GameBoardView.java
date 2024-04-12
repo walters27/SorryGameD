@@ -19,10 +19,12 @@ public class GameBoardView extends View {
     private Bitmap boardImage;
     private int margin;
     private RectF outlineRect;
-    private int currentDotPosition = 1; // Start the dot at grid 1
-    private int targetDotPosition = 1;
-    private boolean isAnimating = false;
+    private int currentDotPosition;
+    private int targetDotPosition;
     private float dotX, dotY;
+    private float targetDotX, targetDotY;
+    private long animationStartTime;
+    private long animationDuration = 800; // Animation duration in milliseconds
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,16 +47,20 @@ public class GameBoardView extends View {
         dotPaint.setStyle(Paint.Style.FILL);
 
         boardImage = BitmapFactory.decodeResource(getResources(), R.drawable.sorryimage);
-        margin = 25; // Set the initial margin size (in pixels)
+        margin = 25;
         outlineRect = new RectF();
+        currentDotPosition = 1;
+        targetDotPosition = 1;
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         boardSize = Math.min(w, h);
-        cellSize = (boardSize - 2 * margin) / 15; // Adjust the cell size based on the margin
+        cellSize = (boardSize - 2 * margin) / 15;
         updateOutlineRect();
+        updateDotPosition();
+        updateTargetDotPosition();
     }
 
     private void updateOutlineRect() {
@@ -66,18 +72,29 @@ public class GameBoardView extends View {
         outlineRect.set(left, top, right, bottom);
     }
 
+    private void updateDotPosition() {
+        int col = (currentDotPosition - 1) % 15;
+        int row = (currentDotPosition - 1) / 15;
+        dotX = margin + col * cellSize + cellSize / 2;
+        dotY = margin + row * cellSize + cellSize / 2;
+    }
+
+    private void updateTargetDotPosition() {
+        int col = (targetDotPosition - 1) % 15;
+        int row = (targetDotPosition - 1) / 15;
+        targetDotX = margin + col * cellSize + cellSize / 2;
+        targetDotY = margin + row * cellSize + cellSize / 2;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // Draw the game board image
         canvas.drawBitmap(boardImage, null, new RectF(0, 0, boardSize, boardSize), null);
 
-        // Create a separate canvas for the outline
         Bitmap outlineBitmap = Bitmap.createBitmap(boardSize, boardSize, Bitmap.Config.ARGB_8888);
         Canvas outlineCanvas = new Canvas(outlineBitmap);
 
-        // Draw the grid and numbers on the outline canvas
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 int index = i * 15 + j;
@@ -88,56 +105,45 @@ public class GameBoardView extends View {
             }
         }
 
-        // Draw the outline bitmap on the main canvas
         canvas.drawBitmap(outlineBitmap, null, outlineRect, null);
 
-        // Calculate the position of the dot
+        long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - animationStartTime;
+        float t = Math.min(1f, (float) elapsedTime / animationDuration);
+
+        float x = dotX + t * (targetDotX - dotX);
+        float y = dotY + t * (targetDotY - dotY);
+
         int dotRadius = cellSize / 2;
-        if (isAnimating) {
-            // Interpolate the position of the dot during animation
-            float t = (float) (System.currentTimeMillis() % 500) / 500f;
-            dotX = (1 - t) * getPositionX(currentDotPosition) + t * getPositionX(targetDotPosition);
-            dotY = (1 - t) * getPositionY(currentDotPosition) + t * getPositionY(targetDotPosition);
+        canvas.drawCircle(x, y, dotRadius, dotPaint);
 
-            if (t >= 1) {
-                currentDotPosition = targetDotPosition;
-                isAnimating = false;
-            }
+        if (t < 1f) {
+            invalidate();
         } else {
-            dotX = getPositionX(currentDotPosition);
-            dotY = getPositionY(currentDotPosition);
+            currentDotPosition = targetDotPosition;
+            dotX = targetDotX;
+            dotY = targetDotY;
         }
+    }
 
-        // Draw the dot
-        canvas.drawCircle(dotX, dotY, dotRadius, dotPaint);
-
-        // Redraw the view if animating
-        if (isAnimating) {
+    public void moveDotTo(int position) {
+        if (position >= 1 && position <= 225) {
+            targetDotPosition = position;
+            updateTargetDotPosition();
+            animationStartTime = System.currentTimeMillis();
             invalidate();
         }
     }
 
-    private float getPositionX(int position) {
-        int col = (position - 1) % 15;
-        return margin + col * cellSize + cellSize / 2;
-    }
-
-    private float getPositionY(int position) {
-        int row = (position - 1) / 15;
-        return margin + row * cellSize + cellSize / 2;
-    }
-
-    public void moveDotTo(int position) {
-        if (position >= 1 && position <= 225 && !isAnimating) {
-            targetDotPosition = position;
-            isAnimating = true;
-            invalidate(); // Request a redraw of the view
-        }
+    public void setAnimationDuration(long duration) {
+        animationDuration = duration;
     }
 
     public void setMargin(int margin) {
         this.margin = margin;
         updateOutlineRect();
-        invalidate(); // Request a redraw of the view
+        updateDotPosition();
+        updateTargetDotPosition();
+        invalidate();
     }
 }

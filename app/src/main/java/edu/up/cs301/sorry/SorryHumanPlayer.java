@@ -4,19 +4,17 @@ import edu.up.cs301.GameFramework.players.GameHumanPlayer;
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import java.util.Random;
-
 import edu.up.cs301.sorry.SorryState;
 
 public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener {
-
 	private SorryState state;
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
@@ -36,6 +34,21 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// Set the text in the appropriate widget
 		// counterValueTextView.setText("" + state.getCounter());
 	}
+
+	public TextView getTextBox()
+	{
+		//grabs game status text box
+		return myActivity.findViewById(R.id.textViewMessages);
+	}
+	public void sendTextMessage(TextView t, String m) {
+		//appends message to game status text box
+		t.append("\n" + m);
+		// Need to add calls to this method to the following
+		// after turn change: "It is now Player (x)'s turn"
+		// game win: "Player (x) wins"
+		// after card draw "Player (x) drew a (x) card"
+	}
+
 
 	public void onClick(View button) {
 		if (game == null) return;
@@ -68,6 +81,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			} else if (cardNum == 11) {
 				drawFace = R.drawable.sorrycardsorry;
 			}
+
+//put at the end of the draw card method
+			sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " has drawn a" + cardNum);
 			// Set ImageView to new card drawn
 			imageViewCard.setImageResource(drawFace);
 		} else if (button.getId() == R.id.buttonMoveDot) {
@@ -75,6 +91,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			if (!gridBoxNumber.isEmpty()) {
 				int position = Integer.parseInt(gridBoxNumber);
 				gameBoardView.moveDotTo(position);
+				editTextGridBox.setText(""); // Clear the EditText after moving the dot
 			}
 		}
 	}
@@ -89,7 +106,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 	public void setAsGui(GameMainActivity activity) {
 		this.myActivity = activity;
-
 		activity.setContentView(R.layout.sorry_xml_multi_line);
 
 		// Initialize widgets
