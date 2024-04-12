@@ -121,26 +121,31 @@ public class GameBoardView extends View {
         long elapsedTime = currentTime - animationStartTime;
         float t = Math.min(1f, (float) elapsedTime / animationDuration);
 
-        float x = pawnX + t * (targetPawnX - pawnX);
-        float y = pawnY + t * (targetPawnY - pawnY);
+        int col = (int) ((currentPawn.location - 1) % 15 + t * ((targetPawn.location - 1) % 15 - (currentPawn.location - 1) % 15));
+        int row = (int) ((currentPawn.location - 1) / 15 + t * ((targetPawn.location - 1) / 15 - (currentPawn.location - 1) / 15));
+
+        int x = margin + col * cellSize;
+        int y = margin + row * cellSize;
 
         // Load the pawn image
         Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
         Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
 
-        // Calculate the size of the pawn image
-        int pawnSize = cellSize / 2;
+        // Calculate the size of the pawn image to fit the cell
+        int pawnSize = (int) (cellSize * 0.8); // Adjust the scaling factor as needed
         Bitmap resizedPawnBitmap = Bitmap.createScaledBitmap(pawnBitmap, pawnSize, pawnSize, true);
 
+        // Calculate the position to center the pawn image within the cell
+        int pawnX = x + (cellSize - pawnSize) / 2;
+        int pawnY = y + (cellSize - pawnSize) / 2;
+
         // Draw the pawn image
-        canvas.drawBitmap(resizedPawnBitmap, x - pawnSize / 2, y - pawnSize / 2, null);
+        canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);
 
         if (t < 1f) {
             invalidate();
         } else {
             currentPawn = new SorryPawn(targetPawn);
-            pawnX = targetPawnX;
-            pawnY = targetPawnY;
         }
     }
 

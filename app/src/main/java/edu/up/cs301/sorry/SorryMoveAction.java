@@ -3,12 +3,14 @@ package edu.up.cs301.sorry;
 import edu.up.cs301.GameFramework.players.GamePlayer;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 
-
 /**
  * A SorryMoveAction is an action that represents a move in the game of Sorry.
  * It includes the player making the move, the pawn being moved, the card drawn,
  * and the target position of the move.
  *
+ * @author Steven R. Vegdahl
+ * @author Andrew M. Nuxoll, Corwin Carr, Annalise Walters, Kira Kunitake, Quince Pham
+ * @version September 2012
  */
 public class SorryMoveAction extends GameAction {
 	// to satisfy the serializable interface
