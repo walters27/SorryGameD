@@ -44,6 +44,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		t.append(m); // Add the new message
 	}
 
+
 	public void onClick(View button) {
 		if (game == null) return;
 
