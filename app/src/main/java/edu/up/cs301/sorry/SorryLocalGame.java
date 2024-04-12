@@ -101,10 +101,6 @@ public class SorryLocalGame extends LocalGame {
 			}
 			else if(gameState.getPlayerId() == 3){
 
-				gameState.setPlayerId(4);
-			}
-			else if(gameState.getPlayerId() == 4){
-
 				gameState.setPlayerId(0);
 			}
 			return true;

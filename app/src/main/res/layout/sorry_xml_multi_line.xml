@@ -41,20 +41,34 @@
             <!-- Outlined box for messages using LinearLayout -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:background="@drawable/outline_box"
                 android:padding="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center">
 
-                <!-- Messages TextView -->
-                <TextView
-                    android:id="@+id/textViewMessages"
-                    android:layout_width="wrap_content"
+                <ScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Message Line 1\nMessage Line 2\nMessage Line 3"
-                    android:maxLines="3"
-                    android:ellipsize="end" />
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- Messages TextView -->
+                        <TextView
+                            android:id="@+id/textViewMessages"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:scrollbars="vertical" />
+
+                    </LinearLayout>
+
+                </ScrollView>
 
             </LinearLayout>
 
