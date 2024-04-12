@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-
 import java.util.Random;
 import edu.up.cs301.sorry.SorryState;
 
@@ -35,20 +34,15 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// counterValueTextView.setText("" + state.getCounter());
 	}
 
-	public TextView getTextBox()
-	{
+	public TextView getTextBox() {
 		//grabs game status text box
 		return myActivity.findViewById(R.id.textViewMessages);
 	}
+
 	public void sendTextMessage(TextView t, String m) {
 		//appends message to game status text box
 		t.append("\n" + m);
-		// Need to add calls to this method to the following
-		// after turn change: "It is now Player (x)'s turn"
-		// game win: "Player (x) wins"
-		// after card draw "Player (x) drew a (x) card"
 	}
-
 
 	public void onClick(View button) {
 		if (game == null) return;
@@ -58,32 +52,54 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			Random rand = new Random();
 			int cardNum = rand.nextInt(11) + 1;
 			int drawFace = 0;
-			if (cardNum == 1) {
-				drawFace = R.drawable.sorrycardone;
-			} else if (cardNum == 2) {
-				drawFace = R.drawable.sorrycardtwo;
-			} else if (cardNum == 3) {
-				drawFace = R.drawable.sorrycardthree;
-			} else if (cardNum == 4) {
-				drawFace = R.drawable.sorrycardfour;
-			} else if (cardNum == 5) {
-				drawFace = R.drawable.sorrycardfive;
-			} else if (cardNum == 6) {
-				drawFace = R.drawable.sorrycardseven;
-			} else if (cardNum == 7) {
-				drawFace = R.drawable.sorrycardeight;
-			} else if (cardNum == 8) {
-				drawFace = R.drawable.sorrycardten;
-			} else if (cardNum == 9) {
-				drawFace = R.drawable.sorrycardeleven;
-			} else if (cardNum == 10) {
-				drawFace = R.drawable.sorrycardtwelve;
-			} else if (cardNum == 11) {
-				drawFace = R.drawable.sorrycardsorry;
+
+			switch (cardNum) {
+				case 1:
+					drawFace = R.drawable.sorrycardone;
+					handleOneCard();
+					break;
+				case 2:
+					drawFace = R.drawable.sorrycardtwo;
+					handleTwoCard();
+					break;
+				case 3:
+					drawFace = R.drawable.sorrycardthree;
+					handleThreeCard();
+					break;
+				case 4:
+					drawFace = R.drawable.sorrycardfour;
+					handleFourCard();
+					break;
+				case 5:
+					drawFace = R.drawable.sorrycardfive;
+					handleFiveCard();
+					break;
+				case 6:
+					drawFace = R.drawable.sorrycardseven;
+					handleSevenCard();
+					break;
+				case 7:
+					drawFace = R.drawable.sorrycardeight;
+					handleEightCard();
+					break;
+				case 8:
+					drawFace = R.drawable.sorrycardten;
+					handleTenCard();
+					break;
+				case 9:
+					drawFace = R.drawable.sorrycardeleven;
+					handleElevenCard();
+					break;
+				case 10:
+					drawFace = R.drawable.sorrycardtwelve;
+					handleTwelveCard();
+					break;
+				case 11:
+					drawFace = R.drawable.sorrycardsorry;
+					handleSorryCard();
+					break;
 			}
 
-//put at the end of the draw card method
-			sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " has drawn a" + cardNum);
 			// Set ImageView to new card drawn
 			imageViewCard.setImageResource(drawFace);
 		} else if (button.getId() == R.id.buttonMoveDot) {
@@ -96,10 +112,53 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		}
 	}
 
+	private void handleOneCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 1 card. Move a pawn from Start or move a pawn one space forward.");
+	}
+
+	private void handleTwoCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 2 card. Move a pawn two spaces forward or move a pawn from Start and draw again.");
+	}
+
+	private void handleThreeCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 3 card. Move a pawn three spaces forward.");
+	}
+
+	private void handleFourCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 4 card. Move a pawn four spaces backward.");
+	}
+
+	private void handleFiveCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 5 card. Move a pawn five spaces forward.");
+	}
+
+	private void handleSevenCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 7 card. Move one pawn seven spaces forward or split the seven spaces between two pawns.");
+	}
+
+	private void handleEightCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew an 8 card. Move a pawn eight spaces forward.");
+	}
+
+	private void handleTenCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 10 card. Move a pawn ten spaces forward or move a pawn one space backward.");
+	}
+
+	private void handleElevenCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew an 11 card. Move eleven spaces forward or switch places with an opponent.");
+	}
+
+	private void handleTwelveCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 12 card. Move a pawn twelve spaces forward.");
+	}
+
+	private void handleSorryCard() {
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a Sorry card. Take one pawn from Start and move it directly to a square occupied by any opponent's pawn, sending that pawn back to its own Start.");
+	}
+
 	@Override
 	public void receiveInfo(GameInfo info) {
 		if (!(info instanceof SorryState)) return;
-
 		this.state = (SorryState) info;
 		updateDisplay();
 	}
