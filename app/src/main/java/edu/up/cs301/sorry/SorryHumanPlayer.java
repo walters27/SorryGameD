@@ -65,6 +65,19 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 		return myActivity.findViewById(R.id.sorry_gui_layout);
 	}
+	public TextView getTextBox()
+	{
+		//grabs game status text box
+		return myActivity.findViewById(R.id.textViewMessages);
+	}
+	public void sendTextMessage(TextView t, String m) {
+		//appends message to game status text box
+		t.append("\n" + m);
+		// Need to add calls to this method to the following
+		// after turn change: "It is now Player (x)'s turn"
+		// game win: "Player (x) wins"
+		// after card draw "Player (x) drew a (x) card"
+	}
 	
 	/**
 	 * sets the counter value in the text view
@@ -127,6 +140,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		}
 		//set ImageView to new card drawn
 		imageViewCard.setImageResource(drawFace);
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " has drawn a" + cardNum);
 	}
 
 
