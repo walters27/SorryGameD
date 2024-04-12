@@ -10,8 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
-import edu.up.cs301.sorry.SorryState;
 
 public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener {
 	private SorryState state;
@@ -30,25 +31,21 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	}
 
 	protected void updateDisplay() {
-		// Set the text in the appropriate widget
-		// counterValueTextView.setText("" + state.getCounter());
 	}
 
 	public TextView getTextBox() {
-		//grabs game status text box
 		return myActivity.findViewById(R.id.textViewMessages);
 	}
 
 	public void sendTextMessage(TextView t, String m) {
-		//appends message to game status text box
-		t.append("\n" + m);
+		t.setText(""); // Clear the previous message
+		t.append(m); // Add the new message
 	}
 
 	public void onClick(View button) {
 		if (game == null) return;
 
 		if (button.getId() == R.id.buttonDrawCards) {
-			// Generate random card
 			Random rand = new Random();
 			int cardNum = rand.nextInt(11) + 1;
 			int drawFace = 0;
@@ -100,14 +97,19 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 					break;
 			}
 
-			// Set ImageView to new card drawn
 			imageViewCard.setImageResource(drawFace);
+
+			List<Integer> validMovePositions = getValidMovePositions(cardNum);
+
+			gameBoardView.highlightValidMoves(validMovePositions);
 		} else if (button.getId() == R.id.buttonMoveDot) {
 			String gridBoxNumber = editTextGridBox.getText().toString();
 			if (!gridBoxNumber.isEmpty()) {
 				int position = Integer.parseInt(gridBoxNumber);
 				gameBoardView.moveDotTo(position);
-				editTextGridBox.setText(""); // Clear the EditText after moving the dot
+				editTextGridBox.setText("");
+
+				gameBoardView.highlightValidMoves(Collections.emptyList());
 			}
 		}
 	}
@@ -156,6 +158,10 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a Sorry card. Take one pawn from Start and move it directly to a square occupied by any opponent's pawn, sending that pawn back to its own Start.");
 	}
 
+	private List<Integer> getValidMovePositions(int cardNum) {
+		return Collections.emptyList();
+	}
+
 	@Override
 	public void receiveInfo(GameInfo info) {
 		if (!(info instanceof SorryState)) return;
@@ -167,14 +173,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		this.myActivity = activity;
 		activity.setContentView(R.layout.sorry_xml_multi_line);
 
-		// Initialize widgets
 		imageViewCard = activity.findViewById(R.id.imageViewCard);
 		Button buttonDrawCards = activity.findViewById(R.id.buttonDrawCards);
 		editTextGridBox = activity.findViewById(R.id.editTextGridBox);
 		buttonMoveDot = activity.findViewById(R.id.buttonMoveDot);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
 
-		// Listeners for buttons
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveDot.setOnClickListener(this);
 	}

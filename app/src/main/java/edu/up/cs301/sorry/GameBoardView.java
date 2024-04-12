@@ -10,10 +10,13 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.List;
+
 public class GameBoardView extends View {
     private Paint gridPaint;
     private Paint textPaint;
     private Paint dotPaint;
+    private Paint highlightPaint;
     private int cellSize;
     private int boardSize;
     private Bitmap boardImage;
@@ -24,7 +27,8 @@ public class GameBoardView extends View {
     private float dotX, dotY;
     private float targetDotX, targetDotY;
     private long animationStartTime;
-    private long animationDuration = 800; // Animation duration in milliseconds
+    private long animationDuration = 800;
+    private List<Integer> validMovePositions;
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,6 +49,11 @@ public class GameBoardView extends View {
         dotPaint = new Paint();
         dotPaint.setColor(Color.BLUE);
         dotPaint.setStyle(Paint.Style.FILL);
+
+        highlightPaint = new Paint();
+        highlightPaint.setColor(Color.YELLOW);
+        highlightPaint.setStyle(Paint.Style.FILL);
+        highlightPaint.setAlpha(128);
 
         boardImage = BitmapFactory.decodeResource(getResources(), R.drawable.sorryimage);
         margin = 25;
@@ -102,6 +111,10 @@ public class GameBoardView extends View {
                 int y = margin + i * cellSize;
                 outlineCanvas.drawRect(x, y, x + cellSize, y + cellSize, gridPaint);
                 outlineCanvas.drawText(String.valueOf(index + 1), x + cellSize / 2, y + cellSize / 2, textPaint);
+
+                if (validMovePositions != null && validMovePositions.contains(index + 1)) {
+                    outlineCanvas.drawRect(x, y, x + cellSize, y + cellSize, highlightPaint);
+                }
             }
         }
 
@@ -144,6 +157,11 @@ public class GameBoardView extends View {
         updateOutlineRect();
         updateDotPosition();
         updateTargetDotPosition();
+        invalidate();
+    }
+
+    public void highlightValidMoves(List<Integer> validPositions) {
+        validMovePositions = validPositions;
         invalidate();
     }
 }
