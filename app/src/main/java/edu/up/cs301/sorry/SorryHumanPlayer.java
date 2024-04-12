@@ -106,7 +106,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			String gridBoxNumber = editTextGridBox.getText().toString();
 			if (!gridBoxNumber.isEmpty()) {
 				int position = Integer.parseInt(gridBoxNumber);
-				gameBoardView.moveDotTo(position);
+				gameBoardView.movePawnTo(position);
 				editTextGridBox.setText("");
 
 				gameBoardView.highlightValidMoves(Collections.emptyList());

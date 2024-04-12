@@ -53,6 +53,6 @@ public class SorryComputerPlayer1 extends GameComputerPlayer implements Tickable
 		boolean move = Math.random() >= 0.5;
 		
 		// send the move-action to the game
-		game.sendAction(new SorryMoveAction(this, move));
+		//game.sendAction(new SorryMoveAction(this, move));
 	}
 }

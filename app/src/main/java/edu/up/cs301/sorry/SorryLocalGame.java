@@ -119,7 +119,7 @@ public class SorryLocalGame extends LocalGame {
 		}
 	}
 
-	protected boolean isGameOver(GameAction action){
+	/*protected boolean isGameOver(GameAction action){
 		if (gameState.getBluePawnHomeCount() == 4 ||
 				gameState.getRedPawnHomeCount() == 4||
 				gameState.getYellowPawnHomeCount() == 4 ||

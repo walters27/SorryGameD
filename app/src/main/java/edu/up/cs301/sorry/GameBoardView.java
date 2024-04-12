@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -15,17 +17,16 @@ import java.util.List;
 public class GameBoardView extends View {
     private Paint gridPaint;
     private Paint textPaint;
-    private Paint dotPaint;
     private Paint highlightPaint;
     private int cellSize;
     private int boardSize;
     private Bitmap boardImage;
     private int margin;
     private RectF outlineRect;
-    private int currentDotPosition;
-    private int targetDotPosition;
-    private float dotX, dotY;
-    private float targetDotX, targetDotY;
+    private SorryPawn currentPawn;
+    private SorryPawn targetPawn;
+    private float pawnX, pawnY;
+    private float targetPawnX, targetPawnY;
     private long animationStartTime;
     private long animationDuration = 800;
     private List<Integer> validMovePositions;
@@ -46,10 +47,6 @@ public class GameBoardView extends View {
         textPaint.setTextSize(24f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
-        dotPaint = new Paint();
-        dotPaint.setColor(Color.BLUE);
-        dotPaint.setStyle(Paint.Style.FILL);
-
         highlightPaint = new Paint();
         highlightPaint.setColor(Color.YELLOW);
         highlightPaint.setStyle(Paint.Style.FILL);
@@ -58,8 +55,8 @@ public class GameBoardView extends View {
         boardImage = BitmapFactory.decodeResource(getResources(), R.drawable.sorryimage);
         margin = 25;
         outlineRect = new RectF();
-        currentDotPosition = 1;
-        targetDotPosition = 1;
+        currentPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
+        targetPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
     }
 
     @Override
@@ -68,8 +65,8 @@ public class GameBoardView extends View {
         boardSize = Math.min(w, h);
         cellSize = (boardSize - 2 * margin) / 15;
         updateOutlineRect();
-        updateDotPosition();
-        updateTargetDotPosition();
+        updatePawnPosition();
+        updateTargetPawnPosition();
     }
 
     private void updateOutlineRect() {
@@ -81,18 +78,18 @@ public class GameBoardView extends View {
         outlineRect.set(left, top, right, bottom);
     }
 
-    private void updateDotPosition() {
-        int col = (currentDotPosition - 1) % 15;
-        int row = (currentDotPosition - 1) / 15;
-        dotX = margin + col * cellSize + cellSize / 2;
-        dotY = margin + row * cellSize + cellSize / 2;
+    private void updatePawnPosition() {
+        int col = (currentPawn.location - 1) % 15;
+        int row = (currentPawn.location - 1) / 15;
+        pawnX = margin + col * cellSize + cellSize / 2;
+        pawnY = margin + row * cellSize + cellSize / 2;
     }
 
-    private void updateTargetDotPosition() {
-        int col = (targetDotPosition - 1) % 15;
-        int row = (targetDotPosition - 1) / 15;
-        targetDotX = margin + col * cellSize + cellSize / 2;
-        targetDotY = margin + row * cellSize + cellSize / 2;
+    private void updateTargetPawnPosition() {
+        int col = (targetPawn.location - 1) % 15;
+        int row = (targetPawn.location - 1) / 15;
+        targetPawnX = margin + col * cellSize + cellSize / 2;
+        targetPawnY = margin + row * cellSize + cellSize / 2;
     }
 
     @Override
@@ -124,25 +121,33 @@ public class GameBoardView extends View {
         long elapsedTime = currentTime - animationStartTime;
         float t = Math.min(1f, (float) elapsedTime / animationDuration);
 
-        float x = dotX + t * (targetDotX - dotX);
-        float y = dotY + t * (targetDotY - dotY);
+        float x = pawnX + t * (targetPawnX - pawnX);
+        float y = pawnY + t * (targetPawnY - pawnY);
 
-        int dotRadius = cellSize / 2;
-        canvas.drawCircle(x, y, dotRadius, dotPaint);
+        // Load the pawn image
+        Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
+        Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
+
+        // Calculate the size of the pawn image
+        int pawnSize = cellSize / 2;
+        Bitmap resizedPawnBitmap = Bitmap.createScaledBitmap(pawnBitmap, pawnSize, pawnSize, true);
+
+        // Draw the pawn image
+        canvas.drawBitmap(resizedPawnBitmap, x - pawnSize / 2, y - pawnSize / 2, null);
 
         if (t < 1f) {
             invalidate();
         } else {
-            currentDotPosition = targetDotPosition;
-            dotX = targetDotX;
-            dotY = targetDotY;
+            currentPawn = new SorryPawn(targetPawn);
+            pawnX = targetPawnX;
+            pawnY = targetPawnY;
         }
     }
 
-    public void moveDotTo(int position) {
+    public void movePawnTo(int position) {
         if (position >= 1 && position <= 225) {
-            targetDotPosition = position;
-            updateTargetDotPosition();
+            targetPawn.location = position;
+            updateTargetPawnPosition();
             animationStartTime = System.currentTimeMillis();
             invalidate();
         }
@@ -155,8 +160,8 @@ public class GameBoardView extends View {
     public void setMargin(int margin) {
         this.margin = margin;
         updateOutlineRect();
-        updateDotPosition();
-        updateTargetDotPosition();
+        updatePawnPosition();
+        updateTargetPawnPosition();
         invalidate();
     }
 
