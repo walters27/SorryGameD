@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -15,17 +17,16 @@ import java.util.List;
 public class GameBoardView extends View {
     private Paint gridPaint;
     private Paint textPaint;
-    private Paint dotPaint;
     private Paint highlightPaint;
     private int cellSize;
     private int boardSize;
     private Bitmap boardImage;
     private int margin;
     private RectF outlineRect;
-    private int currentDotPosition;
-    private int targetDotPosition;
-    private float dotX, dotY;
-    private float targetDotX, targetDotY;
+    private SorryPawn currentPawn;
+    private SorryPawn targetPawn;
+    private float pawnX, pawnY;
+    private float targetPawnX, targetPawnY;
     private long animationStartTime;
     private long animationDuration = 800;
     private List<Integer> validMovePositions;
@@ -46,10 +47,6 @@ public class GameBoardView extends View {
         textPaint.setTextSize(24f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
-        dotPaint = new Paint();
-        dotPaint.setColor(Color.BLUE);
-        dotPaint.setStyle(Paint.Style.FILL);
-
         highlightPaint = new Paint();
         highlightPaint.setColor(Color.YELLOW);
         highlightPaint.setStyle(Paint.Style.FILL);
@@ -58,8 +55,9 @@ public class GameBoardView extends View {
         boardImage = BitmapFactory.decodeResource(getResources(), R.drawable.sorryimage);
         margin = 25;
         outlineRect = new RectF();
-        currentDotPosition = 1;
-        targetDotPosition = 1;
+        currentPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
+        targetPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
+        currentPawn.location = 1; // Start the pawn at the first box
     }
 
     @Override
@@ -68,8 +66,8 @@ public class GameBoardView extends View {
         boardSize = Math.min(w, h);
         cellSize = (boardSize - 2 * margin) / 15;
         updateOutlineRect();
-        updateDotPosition();
-        updateTargetDotPosition();
+        updatePawnPosition();
+        updateTargetPawnPosition();
     }
 
     private void updateOutlineRect() {
@@ -81,18 +79,18 @@ public class GameBoardView extends View {
         outlineRect.set(left, top, right, bottom);
     }
 
-    private void updateDotPosition() {
-        int col = (currentDotPosition - 1) % 15;
-        int row = (currentDotPosition - 1) / 15;
-        dotX = margin + col * cellSize + cellSize / 2;
-        dotY = margin + row * cellSize + cellSize / 2;
+    private void updatePawnPosition() {
+        int col = (currentPawn.location - 1) % 15;
+        int row = (currentPawn.location - 1) / 15;
+        pawnX = margin + col * cellSize + cellSize / 2;
+        pawnY = margin + row * cellSize + cellSize / 2;
     }
 
-    private void updateTargetDotPosition() {
-        int col = (targetDotPosition - 1) % 15;
-        int row = (targetDotPosition - 1) / 15;
-        targetDotX = margin + col * cellSize + cellSize / 2;
-        targetDotY = margin + row * cellSize + cellSize / 2;
+    private void updateTargetPawnPosition() {
+        int col = (targetPawn.location - 1) % 15;
+        int row = (targetPawn.location - 1) / 15;
+        targetPawnX = margin + col * cellSize + cellSize / 2;
+        targetPawnY = margin + row * cellSize + cellSize / 2;
     }
 
     @Override
@@ -124,25 +122,38 @@ public class GameBoardView extends View {
         long elapsedTime = currentTime - animationStartTime;
         float t = Math.min(1f, (float) elapsedTime / animationDuration);
 
-        float x = dotX + t * (targetDotX - dotX);
-        float y = dotY + t * (targetDotY - dotY);
+        int col = (int) ((currentPawn.location - 1) % 15 + t * ((targetPawn.location - 1) % 15 - (currentPawn.location - 1) % 15));
+        int row = (int) ((currentPawn.location - 1) / 15 + t * ((targetPawn.location - 1) / 15 - (currentPawn.location - 1) / 15));
 
-        int dotRadius = cellSize / 2;
-        canvas.drawCircle(x, y, dotRadius, dotPaint);
+        int x = margin + col * cellSize;
+        int y = margin + row * cellSize;
+
+        // Load the pawn image
+        Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
+        Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
+
+        // Calculate the size of the pawn image to fit the cell
+        int pawnSize = (int) (cellSize * 0.8); // Adjust the scaling factor as needed
+        Bitmap resizedPawnBitmap = Bitmap.createScaledBitmap(pawnBitmap, pawnSize, pawnSize, true);
+
+        // Calculate the position to center the pawn image within the cell
+        int pawnX = x + (cellSize - pawnSize) / 2;
+        int pawnY = y + (cellSize - pawnSize) / 2;
+
+        // Draw the pawn image
+        canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);
 
         if (t < 1f) {
             invalidate();
         } else {
-            currentDotPosition = targetDotPosition;
-            dotX = targetDotX;
-            dotY = targetDotY;
+            currentPawn = new SorryPawn(targetPawn);
         }
     }
 
-    public void moveDotTo(int position) {
+    public void movePawnTo(int position) {
         if (position >= 1 && position <= 225) {
-            targetDotPosition = position;
-            updateTargetDotPosition();
+            targetPawn.location = position;
+            updateTargetPawnPosition();
             animationStartTime = System.currentTimeMillis();
             invalidate();
         }
@@ -155,13 +166,138 @@ public class GameBoardView extends View {
     public void setMargin(int margin) {
         this.margin = margin;
         updateOutlineRect();
-        updateDotPosition();
-        updateTargetDotPosition();
+        updatePawnPosition();
+        updateTargetPawnPosition();
         invalidate();
     }
 
     public void highlightValidMoves(List<Integer> validPositions) {
         validMovePositions = validPositions;
         invalidate();
+    }
+
+    public void moveClockwise(int numSpaces) {
+        int currentLocation = currentPawn.location;
+        int newLocation = currentLocation;
+
+        for (int i = 0; i < numSpaces; i++) {
+            if (currentLocation == 2) {
+                newLocation = 3;
+            } else if (currentLocation == 3) {
+                newLocation = 4;
+            } else if (currentLocation == 4) {
+                newLocation = 5;
+            } else if (currentLocation == 5) {
+                newLocation = 6;
+            } else if (currentLocation == 6) {
+                newLocation = 7;
+            } else if (currentLocation == 7) {
+                newLocation = 8;
+            } else if (currentLocation == 8) {
+                newLocation = 9;
+            } else if (currentLocation == 9) {
+                newLocation = 10;
+            } else if (currentLocation == 10) {
+                newLocation = 11;
+            } else if (currentLocation == 11) {
+                newLocation = 12;
+            } else if (currentLocation == 12) {
+                newLocation = 13;
+            } else if (currentLocation == 13) {
+                newLocation = 14;
+            } else if (currentLocation == 14) {
+                newLocation = 15;
+            } else if (currentLocation == 15) {
+                newLocation = 30;
+            } else if (currentLocation == 30) {
+                newLocation = 45;
+            } else if (currentLocation == 45) {
+                newLocation = 60;
+            } else if (currentLocation == 60) {
+                newLocation = 75;
+            } else if (currentLocation == 75) {
+                newLocation = 90;
+            } else if (currentLocation == 90) {
+                newLocation = 105;
+            } else if (currentLocation == 105) {
+                newLocation = 120;
+            } else if (currentLocation == 120) {
+                newLocation = 135;
+            } else if (currentLocation == 135) {
+                newLocation = 150;
+            } else if (currentLocation == 150) {
+                newLocation = 165;
+            } else if (currentLocation == 165) {
+                newLocation = 180;
+            } else if (currentLocation == 180) {
+                newLocation = 195;
+            } else if (currentLocation == 195) {
+                newLocation = 210;
+            } else if (currentLocation == 210) {
+                newLocation = 225;
+            } else if (currentLocation == 225) {
+                newLocation = 224;
+            } else if (currentLocation == 224) {
+                newLocation = 223;
+            } else if (currentLocation == 223) {
+                newLocation = 222;
+            } else if (currentLocation == 222) {
+                newLocation = 221;
+            } else if (currentLocation == 221) {
+                newLocation = 220;
+            } else if (currentLocation == 220) {
+                newLocation = 219;
+            } else if (currentLocation == 219) {
+                newLocation = 218;
+            } else if (currentLocation == 218) {
+                newLocation = 217;
+            } else if (currentLocation == 217) {
+                newLocation = 216;
+            } else if (currentLocation == 216) {
+                newLocation = 215;
+            } else if (currentLocation == 215) {
+                newLocation = 214;
+            } else if (currentLocation == 214) {
+                newLocation = 213;
+            } else if (currentLocation == 213) {
+                newLocation = 212;
+            } else if (currentLocation == 212) {
+                newLocation = 211;
+            } else if (currentLocation == 211) {
+                newLocation = 196;
+            } else if (currentLocation == 196) {
+                newLocation = 181;
+            } else if (currentLocation == 181) {
+                newLocation = 166;
+            } else if (currentLocation == 166) {
+                newLocation = 151;
+            } else if (currentLocation == 151) {
+                newLocation = 136;
+            } else if (currentLocation == 136) {
+                newLocation = 121;
+            } else if (currentLocation == 121) {
+                newLocation = 106;
+            } else if (currentLocation == 106) {
+                newLocation = 91;
+            } else if (currentLocation == 91) {
+                newLocation = 76;
+            } else if (currentLocation == 76) {
+                newLocation = 61;
+            } else if (currentLocation == 61) {
+                newLocation = 46;
+            } else if (currentLocation == 46) {
+                newLocation = 31;
+            } else if (currentLocation == 31) {
+                newLocation = 16;
+            } else if (currentLocation == 16) {
+                newLocation = 1;
+            } else if (currentLocation == 1) {
+                newLocation = 2;
+            }
+
+            currentLocation = newLocation;
+        }
+
+        movePawnTo(newLocation);
     }
 }

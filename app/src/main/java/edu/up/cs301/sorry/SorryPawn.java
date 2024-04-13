@@ -1,29 +1,30 @@
 package edu.up.cs301.sorry;
+
 // @authors Quince Pham, Kira Kunitake, Annalise Walkers, Corwin Carr
 public class SorryPawn {
-
    private int color;
+   boolean isHome;
+   boolean isInStart;
+   public int location;
+   private int imageResourceId;
 
-   private boolean isHome;
+   public SorryPawn(SorryPawn s) {
+      this.color = s.color;
+      this.isHome = s.isHome;
+      this.isInStart = s.isInStart;
+      this.location = s.location;
+      this.imageResourceId = s.imageResourceId;
+   }
 
-   private boolean isInStart;
+   public SorryPawn(int color, int imageResourceId) {
+      this.color = color;
+      this.isHome = true;
+      this.isInStart = true;
+      this.location = 1;
+      this.imageResourceId = imageResourceId;
+   }
 
-   private int location;
-
-public SorryPawn(SorryPawn s) {
-   this.color = s.color;
-   this.isHome = s.isHome;
-   this.isInStart = s.isInStart;
-   this.location = s.location;
-}
-public SorryPawn()
-{
-   color = 50;
-   isHome = true;
-   isInStart = true;
-   location = 50;
-}
-
-
-
+   public int getImageResourceId() {
+      return imageResourceId;
+   }
 }

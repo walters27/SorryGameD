@@ -19,7 +19,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
 	private EditText editTextGridBox;
+	private EditText editTextNumSpaces;
 	private Button buttonMoveDot;
+	private Button buttonMoveClockwise;
 	private GameBoardView gameBoardView;
 
 	public SorryHumanPlayer(String name) {
@@ -33,10 +35,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	protected void updateDisplay() {
 	}
 
+	//gets text box for displaying messages
 	public TextView getTextBox() {
 		return myActivity.findViewById(R.id.textViewMessages);
 	}
 
+	//sends a message to the text box
 	public void sendTextMessage(TextView t, String m) {
 		t.setText(""); // Clear the previous message
 		t.append(m); // Add the new message
@@ -46,10 +50,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		if (game == null) return;
 
 		if (button.getId() == R.id.buttonDrawCards) {
+			//generates/draws a random card number
 			Random rand = new Random();
 			int cardNum = rand.nextInt(11) + 1;
 			int drawFace = 0;
 
+			//displays card depending on what number card was drawn
 			switch (cardNum) {
 				case 1:
 					drawFace = R.drawable.sorrycardone;
@@ -101,19 +107,28 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 			List<Integer> validMovePositions = getValidMovePositions(cardNum);
 
+			//highlights valid boxes to move to based on card drawn
 			gameBoardView.highlightValidMoves(validMovePositions);
 		} else if (button.getId() == R.id.buttonMoveDot) {
 			String gridBoxNumber = editTextGridBox.getText().toString();
 			if (!gridBoxNumber.isEmpty()) {
 				int position = Integer.parseInt(gridBoxNumber);
-				gameBoardView.moveDotTo(position);
+				gameBoardView.movePawnTo(position);
 				editTextGridBox.setText("");
 
 				gameBoardView.highlightValidMoves(Collections.emptyList());
 			}
+		} else if (button.getId() == R.id.buttonMoveClockwise) {
+			String numSpacesString = editTextNumSpaces.getText().toString();
+			if (!numSpacesString.isEmpty()) {
+				int numSpaces = Integer.parseInt(numSpacesString);
+				gameBoardView.moveClockwise(numSpaces);
+				editTextNumSpaces.setText("");
+			}
 		}
 	}
 
+	//displays message to text box depending on which card was drawn
 	private void handleOneCard() {
 		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 1 card. Move a pawn from Start or move a pawn one space forward.");
 	}
@@ -162,6 +177,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		return Collections.emptyList();
 	}
 
+	//receives game info and updates SorryState
 	@Override
 	public void receiveInfo(GameInfo info) {
 		if (!(info instanceof SorryState)) return;
@@ -171,15 +187,21 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 	public void setAsGui(GameMainActivity activity) {
 		this.myActivity = activity;
+
 		activity.setContentView(R.layout.sorry_xml_multi_line);
 
+		//initialize GUI elements
 		imageViewCard = activity.findViewById(R.id.imageViewCard);
 		Button buttonDrawCards = activity.findViewById(R.id.buttonDrawCards);
 		editTextGridBox = activity.findViewById(R.id.editTextGridBox);
+		editTextNumSpaces = activity.findViewById(R.id.editTextNumSpaces);
 		buttonMoveDot = activity.findViewById(R.id.buttonMoveDot);
+		buttonMoveClockwise = activity.findViewById(R.id.buttonMoveClockwise);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
 
+		//register click listeners
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveDot.setOnClickListener(this);
+		buttonMoveClockwise.setOnClickListener(this);
 	}
 }

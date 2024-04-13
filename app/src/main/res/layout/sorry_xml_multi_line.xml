@@ -106,6 +106,24 @@
                 android:text="Move Dot"
                 android:layout_marginTop="8dp" />
 
+            <!-- EditText for entering the number of spaces to move -->
+            <EditText
+                android:id="@+id/editTextNumSpaces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter number of spaces"
+                android:inputType="number"
+                android:maxLength="2"
+                android:layout_marginTop="16dp" />
+
+            <!-- Button to move the pawn clockwise -->
+            <Button
+                android:id="@+id/buttonMoveClockwise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Move Clockwise"
+                android:layout_marginTop="8dp" />
+
         </LinearLayout>
 
     </LinearLayout>

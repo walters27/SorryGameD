@@ -119,7 +119,7 @@ public class SorryLocalGame extends LocalGame {
 		}
 	}
 
-	protected boolean isGameOver(GameAction action){
+	/*protected boolean isGameOver(GameAction action){
 		if (gameState.getBluePawnHomeCount() == 4 ||
 				gameState.getRedPawnHomeCount() == 4||
 				gameState.getYellowPawnHomeCount() == 4 ||
@@ -163,7 +163,7 @@ public class SorryLocalGame extends LocalGame {
 
 		// get the value of the counter
 		/*int counterVal = this.gameState.getCounter();
-		
+
 		if (counterVal >= TARGET_MAGNITUDE) {
 			// counter has reached target magnitude, so return message that
 			// player 0 has won.
@@ -184,7 +184,5 @@ public class SorryLocalGame extends LocalGame {
 			// is not yet over
 			return null;
 		}*/
-
-
 
 // class CounterLocalGame
