@@ -48,6 +48,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 	public void onClick(View button) {
 		if (game == null) return;
+		if (state.getCardDrawn() == true) return;
 
 		if (button.getId() == R.id.buttonDrawCards) {
 			//generates/draws a random card number
@@ -59,47 +60,58 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			switch (cardNum) {
 				case 1:
 					drawFace = R.drawable.sorrycardone;
+					state.setCardNumber(1);
 					handleOneCard();
 					break;
 				case 2:
 					drawFace = R.drawable.sorrycardtwo;
+					state.setCardNumber(2);
 					handleTwoCard();
 					break;
 				case 3:
 					drawFace = R.drawable.sorrycardthree;
 					handleThreeCard();
+					state.setCardNumber(3);
 					break;
 				case 4:
 					drawFace = R.drawable.sorrycardfour;
 					handleFourCard();
+					state.setCardNumber(4);
 					break;
 				case 5:
 					drawFace = R.drawable.sorrycardfive;
 					handleFiveCard();
+					state.setCardNumber(5);
 					break;
 				case 6:
 					drawFace = R.drawable.sorrycardseven;
 					handleSevenCard();
+					state.setCardNumber(6);
 					break;
 				case 7:
 					drawFace = R.drawable.sorrycardeight;
 					handleEightCard();
+					state.setCardNumber(7);
 					break;
 				case 8:
 					drawFace = R.drawable.sorrycardten;
 					handleTenCard();
+					state.setCardNumber(8);
 					break;
 				case 9:
 					drawFace = R.drawable.sorrycardeleven;
 					handleElevenCard();
+					state.setCardNumber(9);
 					break;
 				case 10:
 					drawFace = R.drawable.sorrycardtwelve;
 					handleTwelveCard();
+					state.setCardNumber(10);
 					break;
 				case 11:
 					drawFace = R.drawable.sorrycardsorry;
 					handleSorryCard();
+					state.setCardNumber(11);
 					break;
 			}
 
@@ -126,6 +138,13 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				editTextNumSpaces.setText("");
 			}
 		}
+		state.setCardDrawn(true);
+		// call the moveClockwise on the pawn, something like
+		// GameBoardView.moveClockwise(state.getCardNumber());
+
+
+		//below should be after the move is played
+		state.setCardDrawn(false);
 	}
 
 	//displays message to text box depending on which card was drawn

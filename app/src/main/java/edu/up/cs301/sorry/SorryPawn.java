@@ -24,6 +24,7 @@ public class SorryPawn {
       this.imageResourceId = imageResourceId;
    }
 
+
    public int getImageResourceId() {
       return imageResourceId;
    }
