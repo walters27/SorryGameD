@@ -181,28 +181,118 @@ public class GameBoardView extends View {
         int newLocation = currentLocation;
 
         for (int i = 0; i < numSpaces; i++) {
-            newLocation++;
-
-            if (currentLocation >= 1 && currentLocation <= 15) {
-                // Top row
-                if (newLocation > 15) {
-                    newLocation = 16;
-                }
-            } else if (currentLocation >= 16 && currentLocation <= 30) {
-                // Right column
-                if (newLocation > 30) {
-                    newLocation = 46;
-                }
-            } else if (currentLocation >= 211 && currentLocation <= 225) {
-                // Bottom row
-                if (newLocation > 225) {
-                    newLocation = 1;
-                }
-            } else if (currentLocation >= 31 && currentLocation <= 210) {
-                // Left column
-                if ((currentLocation - 15) % 16 == 0) {
-                    newLocation = currentLocation - 14;
-                }
+            if (currentLocation == 2) {
+                newLocation = 3;
+            } else if (currentLocation == 3) {
+                newLocation = 4;
+            } else if (currentLocation == 4) {
+                newLocation = 5;
+            } else if (currentLocation == 5) {
+                newLocation = 6;
+            } else if (currentLocation == 6) {
+                newLocation = 7;
+            } else if (currentLocation == 7) {
+                newLocation = 8;
+            } else if (currentLocation == 8) {
+                newLocation = 9;
+            } else if (currentLocation == 9) {
+                newLocation = 10;
+            } else if (currentLocation == 10) {
+                newLocation = 11;
+            } else if (currentLocation == 11) {
+                newLocation = 12;
+            } else if (currentLocation == 12) {
+                newLocation = 13;
+            } else if (currentLocation == 13) {
+                newLocation = 14;
+            } else if (currentLocation == 14) {
+                newLocation = 15;
+            } else if (currentLocation == 15) {
+                newLocation = 30;
+            } else if (currentLocation == 30) {
+                newLocation = 45;
+            } else if (currentLocation == 45) {
+                newLocation = 60;
+            } else if (currentLocation == 60) {
+                newLocation = 75;
+            } else if (currentLocation == 75) {
+                newLocation = 90;
+            } else if (currentLocation == 90) {
+                newLocation = 105;
+            } else if (currentLocation == 105) {
+                newLocation = 120;
+            } else if (currentLocation == 120) {
+                newLocation = 135;
+            } else if (currentLocation == 135) {
+                newLocation = 150;
+            } else if (currentLocation == 150) {
+                newLocation = 165;
+            } else if (currentLocation == 165) {
+                newLocation = 180;
+            } else if (currentLocation == 180) {
+                newLocation = 195;
+            } else if (currentLocation == 195) {
+                newLocation = 210;
+            } else if (currentLocation == 210) {
+                newLocation = 225;
+            } else if (currentLocation == 225) {
+                newLocation = 224;
+            } else if (currentLocation == 224) {
+                newLocation = 223;
+            } else if (currentLocation == 223) {
+                newLocation = 222;
+            } else if (currentLocation == 222) {
+                newLocation = 221;
+            } else if (currentLocation == 221) {
+                newLocation = 220;
+            } else if (currentLocation == 220) {
+                newLocation = 219;
+            } else if (currentLocation == 219) {
+                newLocation = 218;
+            } else if (currentLocation == 218) {
+                newLocation = 217;
+            } else if (currentLocation == 217) {
+                newLocation = 216;
+            } else if (currentLocation == 216) {
+                newLocation = 215;
+            } else if (currentLocation == 215) {
+                newLocation = 214;
+            } else if (currentLocation == 214) {
+                newLocation = 213;
+            } else if (currentLocation == 213) {
+                newLocation = 212;
+            } else if (currentLocation == 212) {
+                newLocation = 211;
+            } else if (currentLocation == 211) {
+                newLocation = 196;
+            } else if (currentLocation == 196) {
+                newLocation = 181;
+            } else if (currentLocation == 181) {
+                newLocation = 166;
+            } else if (currentLocation == 166) {
+                newLocation = 151;
+            } else if (currentLocation == 151) {
+                newLocation = 136;
+            } else if (currentLocation == 136) {
+                newLocation = 121;
+            } else if (currentLocation == 121) {
+                newLocation = 106;
+            } else if (currentLocation == 106) {
+                newLocation = 91;
+            } else if (currentLocation == 91) {
+                newLocation = 76;
+            } else if (currentLocation == 76) {
+                newLocation = 61;
+            } else if (currentLocation == 61) {
+                newLocation = 46;
+            } else if (currentLocation == 46) {
+                newLocation = 31;
+            } else if (currentLocation == 31) {
+                newLocation = 16;
+            } else if (currentLocation == 16) {
+                newLocation = 1;
+            } else if (currentLocation == 1) {
+                newLocation = 2;
             }
 
             currentLocation = newLocation;

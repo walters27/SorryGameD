@@ -20,7 +20,7 @@ public class SorryPawn {
       this.color = color;
       this.isHome = true;
       this.isInStart = true;
-      this.location = 50;
+      this.location = 1;
       this.imageResourceId = imageResourceId;
    }
 
