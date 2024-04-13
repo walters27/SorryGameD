@@ -50,7 +50,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		if (game == null) return;
 
 		if (button.getId() == R.id.buttonDrawCards) {
-			state.setCardDrawn(false);
+			// if (state.set)
 			//generates/draws a random card number
 			Random rand = new Random();
 			int cardNum = rand.nextInt(11) + 1;
@@ -138,7 +138,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		} else if (button.getId() == R.id.buttonMoveClockwise) {
 			String numSpacesString = editTextNumSpaces.getText().toString();
 			//if (!numSpacesString.isEmpty()) {
-				int numSpaces = Integer.parseInt(numSpacesString);
+				//int numSpaces = Integer.parseInt(numSpacesString);
 				gameBoardView.moveClockwise(state.getCardNumber());
 				editTextNumSpaces.setText("");
 				state.setCardDrawn(false);
