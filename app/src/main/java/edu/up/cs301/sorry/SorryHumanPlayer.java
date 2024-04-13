@@ -121,6 +121,10 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 			//highlights valid boxes to move to based on card drawn
 			gameBoardView.highlightValidMoves(validMovePositions);
+
+			state.setCardDrawn(true);
+
+
 		} else if (button.getId() == R.id.buttonMoveDot) {
 			String gridBoxNumber = editTextGridBox.getText().toString();
 			if (!gridBoxNumber.isEmpty()) {
@@ -129,22 +133,18 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				editTextGridBox.setText("");
 
 				gameBoardView.highlightValidMoves(Collections.emptyList());
+				state.setCardDrawn(false);
 			}
 		} else if (button.getId() == R.id.buttonMoveClockwise) {
 			String numSpacesString = editTextNumSpaces.getText().toString();
 			if (!numSpacesString.isEmpty()) {
 				int numSpaces = Integer.parseInt(numSpacesString);
-				gameBoardView.moveClockwise(numSpaces);
+				gameBoardView.moveClockwise(state.getCardNumber());
 				editTextNumSpaces.setText("");
+				state.setCardDrawn(false);
+				// changed buttonMoveClockwise to move based on the card drawn
 			}
 		}
-		state.setCardDrawn(true);
-		// call the moveClockwise on the pawn, something like
-		// GameBoardView.moveClockwise(state.getCardNumber());
-
-
-		//below should be after the move is played
-		state.setCardDrawn(false);
 	}
 
 	//displays message to text box depending on which card was drawn
