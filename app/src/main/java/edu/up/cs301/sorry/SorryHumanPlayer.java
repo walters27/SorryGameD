@@ -48,9 +48,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 	public void onClick(View button) {
 		if (game == null) return;
-		if (state.getCardDrawn() == true) return;
 
 		if (button.getId() == R.id.buttonDrawCards) {
+			state.setCardDrawn(false);
 			//generates/draws a random card number
 			Random rand = new Random();
 			int cardNum = rand.nextInt(11) + 1;
