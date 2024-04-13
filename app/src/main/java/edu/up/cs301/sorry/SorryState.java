@@ -21,12 +21,14 @@ public class SorryState extends GameState {
 	private boolean cardDrawn;
 	private int movesToWin;
 
+	//constructor to initialize game state
 	public SorryState() {
 		super();
 		playerTurn = 1;
 		pawnStartCount = new int[]{4, 4, 4, 4};
 		pawnHomeCount = new int[]{0, 0, 0, 0};
 		pawns = new SorryPawn[16];
+		//initialize pawns with colors and image
 		for (int i = 0; i < 16; i++) {
 			int color = i / 4;
 			int imageResourceId = getImageResourceId(color);
@@ -98,19 +100,7 @@ public class SorryState extends GameState {
 		}
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Player turn = ").append(playerTurn).append("\n");
-		for (int i = 0; i < 4; i++) {
-			String colorName = getColorName(i);
-			sb.append(colorName).append(" Pawn Start Count = ").append(pawnStartCount[i]).append("\n");
-			sb.append(colorName).append(" Pawn Home Count = ").append(pawnHomeCount[i]).append("\n");
-		}
-		sb.append("Card Number = ").append(cardNumber);
-		return sb.toString();
-	}
-
+	//matches pawn color to a corresponding pawn image
 	private int getImageResourceId(int color) {
 		switch (color) {
 			case 0:
@@ -126,6 +116,7 @@ public class SorryState extends GameState {
 		}
 	}
 
+	//gets the color of the pawn based on color index
 	private String getColorName(int color) {
 		switch (color) {
 			case 0:

@@ -40,61 +40,41 @@ public class SorryMoveAction extends GameAction {
 		this.targetPosition = targetPosition;
 	}
 
-	/**
-	 * Moves the pawn from the start position to the first position on the board.
-	 */
+	//moves the pawn from the start position ot the first position on the board
 	public void moveFromStart() {
 		pawn.isInStart = false;
 		pawn.location = 1;
 	}
 
-	/**
-	 * Moves the pawn forward by the specified number of spaces.
-	 *
-	 * @param spaces the number of spaces to move forward
-	 */
+	//moves the pawn forward the specified number of spaces
 	public void moveForward(int spaces) {
 		pawn.location += spaces;
 	}
 
-	/**
-	 * Moves the pawn backward by the specified number of spaces.
-	 *
-	 * @param spaces the number of spaces to move backward
-	 */
+	//moves the pawn backward by the specified number of spaces
 	public void moveBackward(int spaces) {
 		pawn.location -= spaces;
 	}
 
-	/**
-	 * Moves the pawn to the home position.
-	 */
+	//moves pawn to home position
 	public void moveToHome() {
 		pawn.isHome = true;
 		pawn.location = 0;
 	}
 
-	/**
-	 * Swaps the position of the pawn with another pawn.
-	 *
-	 * @param otherPawn the other pawn to swap positions with
-	 */
+	//swaps the position of the pawn with another pawn
 	public void swapWithPawn(SorryPawn otherPawn) {
 		int tempLocation = pawn.location;
 		pawn.location = otherPawn.location;
 		otherPawn.location = tempLocation;
 	}
 
-	/**
-	 * Moves the pawn to the specified target position.
-	 */
+	//moves pawn to specified target position
 	public void moveToPosition() {
 		pawn.location = targetPosition;
 	}
 
-	/**
-	 * Executes the move action based on the card drawn.
-	 */
+	//executes move action based on the card drawn
 	public void execute() {
 		switch (card) {
 			case 1:
