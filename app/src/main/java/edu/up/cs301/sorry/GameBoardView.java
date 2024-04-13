@@ -57,6 +57,7 @@ public class GameBoardView extends View {
         outlineRect = new RectF();
         currentPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
         targetPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
+        currentPawn.location = 1; // Start the pawn at the first box
     }
 
     @Override
@@ -173,5 +174,40 @@ public class GameBoardView extends View {
     public void highlightValidMoves(List<Integer> validPositions) {
         validMovePositions = validPositions;
         invalidate();
+    }
+
+    public void moveClockwise(int numSpaces) {
+        int currentLocation = currentPawn.location;
+        int newLocation = currentLocation;
+
+        for (int i = 0; i < numSpaces; i++) {
+            newLocation++;
+
+            if (currentLocation >= 1 && currentLocation <= 15) {
+                // Top row
+                if (newLocation > 15) {
+                    newLocation = 16;
+                }
+            } else if (currentLocation >= 16 && currentLocation <= 30) {
+                // Right column
+                if (newLocation > 30) {
+                    newLocation = 46;
+                }
+            } else if (currentLocation >= 211 && currentLocation <= 225) {
+                // Bottom row
+                if (newLocation > 225) {
+                    newLocation = 1;
+                }
+            } else if (currentLocation >= 31 && currentLocation <= 210) {
+                // Left column
+                if ((currentLocation - 15) % 16 == 0) {
+                    newLocation = currentLocation - 14;
+                }
+            }
+
+            currentLocation = newLocation;
+        }
+
+        movePawnTo(newLocation);
     }
 }

@@ -19,7 +19,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
 	private EditText editTextGridBox;
+	private EditText editTextNumSpaces;
 	private Button buttonMoveDot;
+	private Button buttonMoveClockwise;
 	private GameBoardView gameBoardView;
 
 	public SorryHumanPlayer(String name) {
@@ -43,7 +45,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		t.setText(""); // Clear the previous message
 		t.append(m); // Add the new message
 	}
-
 
 	public void onClick(View button) {
 		if (game == null) return;
@@ -117,6 +118,13 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 				gameBoardView.highlightValidMoves(Collections.emptyList());
 			}
+		} else if (button.getId() == R.id.buttonMoveClockwise) {
+			String numSpacesString = editTextNumSpaces.getText().toString();
+			if (!numSpacesString.isEmpty()) {
+				int numSpaces = Integer.parseInt(numSpacesString);
+				gameBoardView.moveClockwise(numSpaces);
+				editTextNumSpaces.setText("");
+			}
 		}
 	}
 
@@ -186,11 +194,14 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		imageViewCard = activity.findViewById(R.id.imageViewCard);
 		Button buttonDrawCards = activity.findViewById(R.id.buttonDrawCards);
 		editTextGridBox = activity.findViewById(R.id.editTextGridBox);
+		editTextNumSpaces = activity.findViewById(R.id.editTextNumSpaces);
 		buttonMoveDot = activity.findViewById(R.id.buttonMoveDot);
+		buttonMoveClockwise = activity.findViewById(R.id.buttonMoveClockwise);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
 
 		//register click listeners
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveDot.setOnClickListener(this);
+		buttonMoveClockwise.setOnClickListener(this);
 	}
 }
