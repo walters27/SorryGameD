@@ -137,13 +137,13 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			}
 		} else if (button.getId() == R.id.buttonMoveClockwise) {
 			String numSpacesString = editTextNumSpaces.getText().toString();
-			if (!numSpacesString.isEmpty()) {
+			//if (!numSpacesString.isEmpty()) {
 				int numSpaces = Integer.parseInt(numSpacesString);
 				gameBoardView.moveClockwise(state.getCardNumber());
 				editTextNumSpaces.setText("");
 				state.setCardDrawn(false);
 				// changed buttonMoveClockwise to move based on the card drawn
-			}
+			//}
 		}
 	}
 
