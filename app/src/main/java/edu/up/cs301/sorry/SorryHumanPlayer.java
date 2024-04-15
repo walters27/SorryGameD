@@ -86,32 +86,32 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				case 6:
 					drawFace = R.drawable.sorrycardseven;
 					handleSevenCard();
-					state.setCardNumber(6);
+					state.setCardNumber(7);
 					break;
 				case 7:
 					drawFace = R.drawable.sorrycardeight;
 					handleEightCard();
-					state.setCardNumber(7);
+					state.setCardNumber(8);
 					break;
 				case 8:
 					drawFace = R.drawable.sorrycardten;
 					handleTenCard();
-					state.setCardNumber(8);
+					state.setCardNumber(10);
 					break;
 				case 9:
 					drawFace = R.drawable.sorrycardeleven;
 					handleElevenCard();
-					state.setCardNumber(9);
+					state.setCardNumber(11);
 					break;
 				case 10:
 					drawFace = R.drawable.sorrycardtwelve;
 					handleTwelveCard();
-					state.setCardNumber(10);
+					state.setCardNumber(12);
 					break;
 				case 11:
 					drawFace = R.drawable.sorrycardsorry;
 					handleSorryCard();
-					state.setCardNumber(11);
+					state.setCardNumber(50);
 					break;
 			}
 
