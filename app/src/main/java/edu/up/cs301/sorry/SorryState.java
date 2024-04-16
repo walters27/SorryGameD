@@ -20,15 +20,16 @@ public class SorryState extends GameState {
 	private int playerId;
 	private boolean cardDrawn;
 	private int movesToWin;
+	private int currentPawnIndex;
 
-	//constructor to initialize game state
+	// constructor to initialize game state
 	public SorryState() {
 		super();
 		playerTurn = 1;
 		pawnStartCount = new int[]{4, 4, 4, 4};
 		pawnHomeCount = new int[]{0, 0, 0, 0};
 		pawns = new SorryPawn[16];
-		//initialize pawns with colors and image
+		// initialize pawns with colors and image
 		for (int i = 0; i < 16; i++) {
 			int color = i / 4;
 			int imageResourceId = getImageResourceId(color);
@@ -37,6 +38,7 @@ public class SorryState extends GameState {
 		cardNumber = 1;
 		cardDrawn = false;
 		movesToWin = 61;
+		currentPawnIndex = -1;
 	}
 
 	public int getPlayerId() {
@@ -83,6 +85,14 @@ public class SorryState extends GameState {
 		this.cardNumber = cardNumber;
 	}
 
+	public int getCurrentPawnIndex() {
+		return currentPawnIndex;
+	}
+
+	public void setCurrentPawnIndex(int index) {
+		currentPawnIndex = index;
+	}
+
 	public SorryState(SorryState orig) {
 		super();
 		if (orig != null) {
@@ -97,10 +107,11 @@ public class SorryState extends GameState {
 			this.cardDrawn = orig.cardDrawn;
 			this.playerId = orig.playerId;
 			this.movesToWin = orig.movesToWin;
+			this.currentPawnIndex = orig.currentPawnIndex;
 		}
 	}
 
-	//matches pawn color to a corresponding pawn image
+	// matches pawn color to a corresponding pawn image
 	private int getImageResourceId(int color) {
 		switch (color) {
 			case 0:
@@ -116,7 +127,7 @@ public class SorryState extends GameState {
 		}
 	}
 
-	//gets the color of the pawn based on color index
+	// gets the color of the pawn based on color index
 	private String getColorName(int color) {
 		switch (color) {
 			case 0:

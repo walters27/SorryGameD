@@ -35,12 +35,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	protected void updateDisplay() {
 	}
 
-	//gets text box for displaying messages
+	// gets text box for displaying messages
 	public TextView getTextBox() {
 		return myActivity.findViewById(R.id.textViewMessages);
 	}
 
-	//sends a message to the text box
+	// sends a message to the text box
 	public void sendTextMessage(TextView t, String m) {
 		t.setText(""); // Clear the previous message
 		t.append(m); // Add the new message
@@ -50,13 +50,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		if (game == null) return;
 
 		if (button.getId() == R.id.buttonDrawCards) {
-			// if (state.set)
-			//generates/draws a random card number
+			// generates/draws a random card number
 			Random rand = new Random();
 			int cardNum = rand.nextInt(11) + 1;
 			int drawFace = 0;
 
-			//displays card depending on what number card was drawn
+			// displays card depending on what number card was drawn
 			switch (cardNum) {
 				case 1:
 					drawFace = R.drawable.sorrycardone;
@@ -116,38 +115,21 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			}
 
 			imageViewCard.setImageResource(drawFace);
-
-			List<Integer> validMovePositions = getValidMovePositions(cardNum);
-
-			//highlights valid boxes to move to based on card drawn
-			gameBoardView.highlightValidMoves(validMovePositions);
-
 			state.setCardDrawn(true);
-
 
 		} else if (button.getId() == R.id.buttonMoveDot) {
 			String gridBoxNumber = editTextGridBox.getText().toString();
 			if (!gridBoxNumber.isEmpty()) {
 				int position = Integer.parseInt(gridBoxNumber);
-				gameBoardView.movePawnTo(position);
+				int pawnIndex = state.getCurrentPawnIndex(); // Get the current pawn index from the game state
+				gameBoardView.movePawnTo(pawnIndex, position); // Pass the pawn index to the movePawnTo method
 				editTextGridBox.setText("");
-
-				gameBoardView.highlightValidMoves(Collections.emptyList());
 				state.setCardDrawn(false);
 			}
-		} else if (button.getId() == R.id.buttonMoveClockwise) {
-			String numSpacesString = editTextNumSpaces.getText().toString();
-			//if (!numSpacesString.isEmpty()) {
-				//int numSpaces = Integer.parseInt(numSpacesString);
-				gameBoardView.moveClockwise(state.getCardNumber());
-				editTextNumSpaces.setText("");
-				state.setCardDrawn(false);
-				// changed buttonMoveClockwise to move based on the card drawn
-			//}
 		}
 	}
 
-	//displays message to text box depending on which card was drawn
+	// displays message to text box depending on which card was drawn
 	private void handleOneCard() {
 		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 1 card. Move a pawn from Start or move a pawn one space forward.");
 	}
@@ -193,10 +175,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	}
 
 	private List<Integer> getValidMovePositions(int cardNum) {
+		// TODO: Implement the logic to determine valid move positions based on the card number
 		return Collections.emptyList();
 	}
 
-	//receives game info and updates SorryState
+	// receives game info and updates SorryState
 	@Override
 	public void receiveInfo(GameInfo info) {
 		if (!(info instanceof SorryState)) return;
@@ -209,7 +192,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 		activity.setContentView(R.layout.sorry_xml_multi_line);
 
-		//initialize GUI elements
+		// initialize GUI elements
 		imageViewCard = activity.findViewById(R.id.imageViewCard);
 		Button buttonDrawCards = activity.findViewById(R.id.buttonDrawCards);
 		editTextGridBox = activity.findViewById(R.id.editTextGridBox);
@@ -218,7 +201,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		buttonMoveClockwise = activity.findViewById(R.id.buttonMoveClockwise);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
 
-		//register click listeners
+		// register click listeners
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveDot.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
