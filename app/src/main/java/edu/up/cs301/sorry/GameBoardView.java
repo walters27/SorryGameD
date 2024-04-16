@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoardView extends View {
@@ -30,6 +31,11 @@ public class GameBoardView extends View {
     private long animationStartTime;
     private long animationDuration = 800;
     private List<Integer> validMovePositions;
+    private List<SorryPawn> currentPawns;
+    private List<SorryPawn> targetPawns;
+    long currentTime = System.currentTimeMillis();
+    long elapsedTime = currentTime - animationStartTime;
+    float t = Math.min(1f, (float) elapsedTime / animationDuration);
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,16 +43,19 @@ public class GameBoardView extends View {
     }
 
     private void init() {
+        //Draws grid lines
         gridPaint = new Paint();
         gridPaint.setColor(Color.RED);
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setStrokeWidth(2f);
 
+        //Draws text
         textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(24f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
+        //Highlights box
         highlightPaint = new Paint();
         highlightPaint.setColor(Color.YELLOW);
         highlightPaint.setStyle(Paint.Style.FILL);
@@ -55,9 +64,38 @@ public class GameBoardView extends View {
         boardImage = BitmapFactory.decodeResource(getResources(), R.drawable.sorryimage);
         margin = 25;
         outlineRect = new RectF();
-        currentPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
+/*      currentPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
         targetPawn = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
-        currentPawn.location = 1; // Start the pawn at the first box
+        currentPawn.location = 1; // Start the pawn at the first box*/
+
+        currentPawns= new ArrayList<>();
+        targetPawns = new ArrayList<>();
+        //start position of each pawn
+        int[] bluePawnLoc = {58,73,88,225};
+        int[] redPawnLoc = {20,34,35,36};
+        int [] yellowPawnLoc = {176,191,206,192};
+        int [] greenPawnLoc = {138,153,168,152};
+        for(int i =0; i<4;i++){
+           //create new blue pawn
+            SorryPawn bluePawns = new SorryPawn(Color.BLUE, R.drawable.blue_pawn);
+            //set pawn location
+            bluePawns.location = bluePawnLoc[i]*2;
+            //add blue pawn
+            currentPawns.add(bluePawns);
+
+            SorryPawn redPawns = new SorryPawn(Color.RED, R.drawable.red_pawn);
+            redPawns.location = redPawnLoc[i];
+            currentPawns.add(redPawns);
+
+            SorryPawn yellowPawns = new SorryPawn(Color.YELLOW, R.drawable.yellow_pawn);
+            yellowPawns.location = yellowPawnLoc[i];
+            currentPawns.add(yellowPawns);
+
+            SorryPawn greenPawns = new SorryPawn(Color.GREEN, R.drawable.green_pawn);
+            greenPawns.location = greenPawnLoc[i];
+            currentPawns.add(greenPawns);
+        }
+        targetPawns = new ArrayList <>(currentPawns);
     }
 
     @Override
@@ -80,17 +118,34 @@ public class GameBoardView extends View {
     }
 
     private void updatePawnPosition() {
-        int col = (currentPawn.location - 1) % 15;
+/*        int col = (currentPawn.location - 1) % 15;
         int row = (currentPawn.location - 1) / 15;
         pawnX = margin + col * cellSize + cellSize / 2;
-        pawnY = margin + row * cellSize + cellSize / 2;
+        pawnY = margin + row * cellSize + cellSize / 2;*/
+        for(int i =0; i<currentPawns.size();i++){
+            int col = (currentPawns.get(i).location -1) % 15;
+            int row = (currentPawns.get(i).location -1) / 15;
+            int x = margin +col * cellSize + cellSize /2;
+            int y = margin + row * cellSize + cellSize / 2;
+            currentPawns.get(i).x = x;
+            currentPawns.get(i).y = y;
+        }
     }
 
     private void updateTargetPawnPosition() {
-        int col = (targetPawn.location - 1) % 15;
+        /*int col = (targetPawn.location - 1) % 15;
         int row = (targetPawn.location - 1) / 15;
         targetPawnX = margin + col * cellSize + cellSize / 2;
-        targetPawnY = margin + row * cellSize + cellSize / 2;
+        targetPawnY = margin + row * cellSize + cellSize / 2;*/
+
+        for(int i =0; i<currentPawns.size();i++){
+            int col = (currentPawns.get(i).location -1) % 15;
+            int row = (currentPawns.get(i).location -1) / 15;
+            int x = margin +col * cellSize + cellSize /2;
+            int y = margin + row * cellSize + cellSize / 2;
+            currentPawns.get(i).x = x;
+            currentPawns.get(i).y = y;
+        }
     }
 
     @Override
@@ -118,30 +173,53 @@ public class GameBoardView extends View {
 
         canvas.drawBitmap(outlineBitmap, null, outlineRect, null);
 
-        long currentTime = System.currentTimeMillis();
+        /*long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - animationStartTime;
-        float t = Math.min(1f, (float) elapsedTime / animationDuration);
+        float t = Math.min(1f, (float) elapsedTime / animationDuration);*/
 
-        int col = (int) ((currentPawn.location - 1) % 15 + t * ((targetPawn.location - 1) % 15 - (currentPawn.location - 1) % 15));
+        /*int col = (int) ((currentPawn.location - 1) % 15 + t * ((targetPawn.location - 1) % 15 - (currentPawn.location - 1) % 15));
         int row = (int) ((currentPawn.location - 1) / 15 + t * ((targetPawn.location - 1) / 15 - (currentPawn.location - 1) / 15));
-
-        int x = margin + col * cellSize;
-        int y = margin + row * cellSize;
+*/
+        /*int x = margin + col * cellSize;
+        int y = margin + row * cellSize;*/
 
         // Load the pawn image
-        Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
-        Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
+        /*Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
+        Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();*/
 
         // Calculate the size of the pawn image to fit the cell
-        int pawnSize = (int) (cellSize * 0.8); // Adjust the scaling factor as needed
-        Bitmap resizedPawnBitmap = Bitmap.createScaledBitmap(pawnBitmap, pawnSize, pawnSize, true);
+        /*int pawnSize = (int) (cellSize * 0.8); // Adjust the scaling factor as needed
+        Bitmap resizedPawnBitmap = Bitmap.createScaledBitmap(pawnBitmap, pawnSize, pawnSize, true);*/
 
         // Calculate the position to center the pawn image within the cell
-        int pawnX = x + (cellSize - pawnSize) / 2;
-        int pawnY = y + (cellSize - pawnSize) / 2;
+        //int pawnX = x + (cellSize - pawnSize) / 2;
+        //int pawnY = y + (cellSize - pawnSize) / 2;
 
-        // Draw the pawn image
-        canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);
+        long currentTimes = System.currentTimeMillis();
+        long elapsedTimes = currentTimes - animationStartTime;
+        float animationProgress = Math.min(1f, (float) elapsedTimes / animationDuration);
+
+        for(int i = 0; i < currentPawns.size(); i++){
+            SorryPawn currentPawn = currentPawns.get(i);
+            SorryPawn targetPawn = targetPawns.get(i);
+            if(currentPawn == null || targetPawn == null){
+                continue;
+            }
+            float newX = currentPawn.x + (targetPawn.x - currentPawn.x) * animationProgress;
+            float newY = currentPawn.y+(targetPawn.y - currentPawn.y) * animationProgress;
+            int col = (int) ((currentPawn.location - 1) % 15 + t * ((targetPawn.location - 1) % 15 - (currentPawn.location - 1) % 15));
+            int row = (int) ((currentPawn.location - 1) / 15 + t * ((targetPawn.location - 1) / 15 - (currentPawn.location - 1) / 15));
+            int x = margin + col * cellSize;
+            int y = margin + row * cellSize;
+            Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
+            Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
+            int pawnSize = (int) (cellSize * 0.8); // Adjust the scaling factor as needed
+            Bitmap resizedPawnBitmap = Bitmap.createScaledBitmap(pawnBitmap, pawnSize, pawnSize, true);
+            canvas.drawBitmap(resizedPawnBitmap, x-newX/2, y-newY/2, null);
+        }
+
+/*        // Draw the pawn image
+        canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);*/
 
         if (t < 1f) {
             invalidate();
@@ -152,7 +230,7 @@ public class GameBoardView extends View {
 
     public void movePawnTo(int position) {
         if (position >= 1 && position <= 225) {
-            targetPawn.location = position;
+            currentPawn.location = position;
             updateTargetPawnPosition();
             animationStartTime = System.currentTimeMillis();
             invalidate();

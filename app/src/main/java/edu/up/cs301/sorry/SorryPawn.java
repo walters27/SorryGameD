@@ -8,12 +8,20 @@ public class SorryPawn {
    public int location;
    private int imageResourceId;
 
+   //x position of pawn
+   public float x;
+
+   //y position of pawn
+   public float y;
+
    public SorryPawn(SorryPawn s) {
-      this.color = s.color;
-      this.isHome = s.isHome;
-      this.isInStart = s.isInStart;
-      this.location = s.location;
-      this.imageResourceId = s.imageResourceId;
+      if(s != null){
+         this.color = s.color;
+         this.isHome = s.isHome;
+         this.isInStart = s.isInStart;
+         this.location = s.location;
+         this.imageResourceId = s.imageResourceId;
+      }
    }
 
    public SorryPawn(int color, int imageResourceId) {
