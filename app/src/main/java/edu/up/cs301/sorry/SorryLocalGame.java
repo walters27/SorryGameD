@@ -28,6 +28,8 @@ public class SorryLocalGame extends LocalGame {
 
 	// the game's state
 	private SorryState gameState;
+	private int playerId;
+
 
 	/**
 	 * can this player move
@@ -52,8 +54,7 @@ public class SorryLocalGame extends LocalGame {
 		// initialize the game state, with the counter value starting at 0
 		if (state != null) {
 			this.state = state;
-		}
-		else {
+		} else {
 			this.state = new SorryState();
 		}
 		gameState = new SorryState();
@@ -78,65 +79,33 @@ public class SorryLocalGame extends LocalGame {
 			return false;
 		}
 	}//makeMove
-	// helper method to update player turn after a move
-	protected boolean movePiece(GameAction action){
 
-		if (action instanceof SorryMoveAction)
-		{
+	// helper method to update player turn after a move
+	protected boolean movePiece(GameAction action) {
+
+		if (action instanceof SorryMoveAction) {
 
 			SorryMoveAction cma = (SorryMoveAction) action;
 
-			if(gameState.getPlayerId() == 0){
+			if (gameState.getPlayerId() == 0) {
 
 				gameState.setPlayerId(1);
-			}
-
-			else if(gameState.getPlayerId() == 1){
+			} else if (gameState.getPlayerId() == 1) {
 
 				gameState.setPlayerId(2);
-			}
-			else if(gameState.getPlayerId() == 2){
+			} else if (gameState.getPlayerId() == 2) {
 
 				gameState.setPlayerId(3);
-			}
-			else if(gameState.getPlayerId() == 3){
+			} else if (gameState.getPlayerId() == 3) {
 
 				gameState.setPlayerId(0);
 			}
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 
-	protected boolean drawCard (GameAction action){
-		if (gameState.getCardDrawn() == true){
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	/*protected boolean isGameOver(GameAction action){
-		if (gameState.getBluePawnHomeCount() == 4 ||
-				gameState.getRedPawnHomeCount() == 4||
-				gameState.getYellowPawnHomeCount() == 4 ||
-				gameState.getGreenPawnHomeCount() == 4){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	/*public boolean pawnIsHome(GameAction action, int i){
-		if (gameState.pawn[i].getLocation() >= 61)
-			return true;
-		else{
-			return false;
-		}
-	}*/
 	/**
 	 * send the updated state to a given player
 	 */
@@ -148,41 +117,16 @@ public class SorryLocalGame extends LocalGame {
 
 	}//sendUpdatedSate
 
-}
-
-	/**
-	 * Check if the game is over. It is over, return a string that tells
-	 * who the winner(s), if any, are. If the game is not over, return null;
-	 * 
-	 * @return
-	 * 		a message that tells who has won the game, or null if the
-	 * 		game is not over
-	 */
-	/*@Override*/
-/*	protected String checkIfGameOver() {*/
-
-		// get the value of the counter
-		/*int counterVal = this.gameState.getCounter();
-
-		if (counterVal >= TARGET_MAGNITUDE) {
-			// counter has reached target magnitude, so return message that
-			// player 0 has won.
-			return playerNames[0]+" has won.";
+/*	@Override
+	protected String checkIfGameOver() {
+		for (int i = 0; i < 4; i++) {
+			if(gameState.getPawnHomeCount(i) == 1){
+				return "Player " + (i+1) + " wins!";
+			}
 		}
-		else if (counterVal <= -TARGET_MAGNITUDE) {
-			// counter has reached negative of target magnitude; if there
-			// is a second player, return message that this player has won,
-			// otherwise that the first player has lost
-			if (playerNames.length >= 2) {
-				return playerNames[1]+" has won.";
-			}
-			else {
-				return playerNames[0]+" has lost.";
-			}
-		}else {
-			// game is still between the two limit: return null, as the game
-			// is not yet over
-			return null;
-		}*/
+		return null;
+	}*/
+
+}
 
 // class CounterLocalGame

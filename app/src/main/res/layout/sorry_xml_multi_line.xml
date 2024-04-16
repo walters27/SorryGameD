@@ -88,33 +88,6 @@
                 android:layout_height="wrap_content"
                 android:text="Draw Card" />
 
-            <!-- EditText for entering the grid box number -->
-            <EditText
-                android:id="@+id/editTextGridBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter grid box number"
-                android:inputType="number"
-                android:maxLength="3"
-                android:layout_marginTop="16dp" />
-
-            <!-- Button to move the dot to the specified grid box -->
-            <Button
-                android:id="@+id/buttonMoveDot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Move Dot"
-                android:layout_marginTop="8dp" />
-
-            <!-- EditText for entering the number of spaces to move -->
-            <EditText
-                android:id="@+id/editTextNumSpaces"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter number of spaces"
-                android:inputType="number"
-                android:maxLength="2"
-                android:layout_marginTop="16dp" />
 
             <!-- Button to move the pawn clockwise -->
             <Button

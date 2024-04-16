@@ -4,6 +4,8 @@ import edu.up.cs301.GameFramework.players.GameHumanPlayer;
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
+
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	private Button buttonMoveDot;
 	private Button buttonMoveClockwise;
 	private GameBoardView gameBoardView;
+	private Handler handler = new Handler();
 
 	public SorryHumanPlayer(String name) {
 		super(name);
@@ -50,83 +53,99 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		if (game == null) return;
 
 		if (button.getId() == R.id.buttonDrawCards) {
-			// generates/draws a random card number
-			Random rand = new Random();
-			int cardNum = rand.nextInt(11) + 1;
-			int drawFace = 0;
-
-			// displays card depending on what number card was drawn
-			switch (cardNum) {
-				case 1:
-					drawFace = R.drawable.sorrycardone;
-					state.setCardNumber(1);
-					handleOneCard();
-					break;
-				case 2:
-					drawFace = R.drawable.sorrycardtwo;
-					state.setCardNumber(2);
-					handleTwoCard();
-					break;
-				case 3:
-					drawFace = R.drawable.sorrycardthree;
-					handleThreeCard();
-					state.setCardNumber(3);
-					break;
-				case 4:
-					drawFace = R.drawable.sorrycardfour;
-					handleFourCard();
-					state.setCardNumber(4);
-					break;
-				case 5:
-					drawFace = R.drawable.sorrycardfive;
-					handleFiveCard();
-					state.setCardNumber(5);
-					break;
-				case 6:
-					drawFace = R.drawable.sorrycardseven;
-					handleSevenCard();
-					state.setCardNumber(7);
-					break;
-				case 7:
-					drawFace = R.drawable.sorrycardeight;
-					handleEightCard();
-					state.setCardNumber(8);
-					break;
-				case 8:
-					drawFace = R.drawable.sorrycardten;
-					handleTenCard();
-					state.setCardNumber(10);
-					break;
-				case 9:
-					drawFace = R.drawable.sorrycardeleven;
-					handleElevenCard();
-					state.setCardNumber(11);
-					break;
-				case 10:
-					drawFace = R.drawable.sorrycardtwelve;
-					handleTwelveCard();
-					state.setCardNumber(12);
-					break;
-				case 11:
-					drawFace = R.drawable.sorrycardsorry;
-					handleSorryCard();
-					state.setCardNumber(50);
-					break;
+			drawCard();
+		} else if (button.getId() == R.id.buttonMoveClockwise) {
+			gameBoardView.currentPawn = gameBoardView.pawns.get(0);
+			gameBoardView.targetPawn = gameBoardView.pawns.get(0);
+			gameBoardView.moveClockwise(state.getCardNumber());
+			state.setCardDrawn(false);
+			if (gameBoardView.youWon) {
+				sendTextMessage(getTextBox(), "You win");
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) {
+				throw new RuntimeException();
+			}
+			gameBoardView.currentPawn = gameBoardView.pawns.get(1);
+			gameBoardView.targetPawn = gameBoardView.pawns.get(1);
+			drawCard();
+			gameBoardView.moveClockwise(state.getCardNumber());
+			if (gameBoardView.youLost) {
+				sendTextMessage(getTextBox(), "You lost");
 			}
 
-			imageViewCard.setImageResource(drawFace);
-			state.setCardDrawn(true);
 
-		} else if (button.getId() == R.id.buttonMoveDot) {
-			String gridBoxNumber = editTextGridBox.getText().toString();
-			if (!gridBoxNumber.isEmpty()) {
-				int position = Integer.parseInt(gridBoxNumber);
-				int pawnIndex = state.getCurrentPawnIndex(); // Get the current pawn index from the game state
-				gameBoardView.movePawnTo(pawnIndex, position); // Pass the pawn index to the movePawnTo method
-				editTextGridBox.setText("");
-				state.setCardDrawn(false);
-			}
 		}
+
+}
+	public void drawCard(){
+		// generates/draws a random card number
+		Random rand = new Random();
+		int cardNum = rand.nextInt(11) + 1;
+		int drawFace = 0;
+
+		// displays card depending on what number card was drawn
+		switch (cardNum) {
+			case 1:
+				drawFace = R.drawable.sorrycardone;
+				state.setCardNumber(1);
+				handleOneCard();
+				break;
+			case 2:
+				drawFace = R.drawable.sorrycardtwo;
+				state.setCardNumber(2);
+				handleTwoCard();
+				break;
+			case 3:
+				drawFace = R.drawable.sorrycardthree;
+				handleThreeCard();
+				state.setCardNumber(3);
+				break;
+			case 4:
+				drawFace = R.drawable.sorrycardfour;
+				handleFourCard();
+				state.setCardNumber(4);
+				break;
+			case 5:
+				drawFace = R.drawable.sorrycardfive;
+				handleFiveCard();
+				state.setCardNumber(5);
+				break;
+			case 6:
+				drawFace = R.drawable.sorrycardseven;
+				handleSevenCard();
+				state.setCardNumber(7);
+				break;
+			case 7:
+				drawFace = R.drawable.sorrycardeight;
+				handleEightCard();
+				state.setCardNumber(8);
+				break;
+			case 8:
+				drawFace = R.drawable.sorrycardten;
+				handleTenCard();
+				state.setCardNumber(10);
+				break;
+			case 9:
+				drawFace = R.drawable.sorrycardeleven;
+				handleElevenCard();
+				state.setCardNumber(11);
+				break;
+			case 10:
+				drawFace = R.drawable.sorrycardtwelve;
+				handleTwelveCard();
+				state.setCardNumber(12);
+				break;
+			case 11:
+				drawFace = R.drawable.sorrycardsorry;
+				handleSorryCard();
+				state.setCardNumber(50);
+				break;
+		}
+
+		imageViewCard.setImageResource(drawFace);
+		state.setCardDrawn(true);
 	}
 
 	// displays message to text box depending on which card was drawn
@@ -195,15 +214,15 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// initialize GUI elements
 		imageViewCard = activity.findViewById(R.id.imageViewCard);
 		Button buttonDrawCards = activity.findViewById(R.id.buttonDrawCards);
-		editTextGridBox = activity.findViewById(R.id.editTextGridBox);
-		editTextNumSpaces = activity.findViewById(R.id.editTextNumSpaces);
-		buttonMoveDot = activity.findViewById(R.id.buttonMoveDot);
+		//editTextGridBox = activity.findViewById(R.id.editTextGridBox);
+		//editTextNumSpaces = activity.findViewById(R.id.editTextNumSpaces);
+		//buttonMoveDot = activity.findViewById(R.id.buttonMoveDot);
 		buttonMoveClockwise = activity.findViewById(R.id.buttonMoveClockwise);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
 
 		// register click listeners
 		buttonDrawCards.setOnClickListener(this);
-		buttonMoveDot.setOnClickListener(this);
+		//buttonMoveDot.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
 	}
 }

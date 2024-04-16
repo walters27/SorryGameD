@@ -44,6 +44,9 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 			MoveForwardAction forward = new MoveForwardAction (this);
 			//send move forward to the game
 			game.sendAction(forward);
+			// if turn = myturn
+			// drawcard/
+			// mvoe
 		}
 	}
 }
