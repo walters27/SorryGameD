@@ -62,21 +62,20 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			if (gameBoardView.youWon) {
 				sendTextMessage(getTextBox(), "You win");
 			}
-			try {
-				Thread.sleep(1000);
-			} catch (Exception e) {
-				throw new RuntimeException();
-			}
-			gameBoardView.currentPawn = gameBoardView.pawns.get(1);
-			gameBoardView.targetPawn = gameBoardView.pawns.get(1);
-			drawCard();
-			gameBoardView.moveClockwise(state.getCardNumber());
-			if (gameBoardView.youLost) {
-				sendTextMessage(getTextBox(), "You lost");
+			new Handler().postDelayed(new Runnable(){
+				public void run(){
+					gameBoardView.currentPawn = gameBoardView.pawns.get(1);
+					gameBoardView.targetPawn = gameBoardView.pawns.get(1);
+					drawCard();
+					gameBoardView.moveClockwise(state.getCardNumber());
+					if (gameBoardView.youLost) {
+						sendTextMessage(getTextBox(), "You lost");
+					}
+				}
+			}, 3000);
 			}
 
 
-		}
 
 }
 	public void drawCard(){
@@ -140,7 +139,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			case 11:
 				drawFace = R.drawable.sorrycardsorry;
 				handleSorryCard();
-				state.setCardNumber(50);
+				state.setCardNumber(13);
 				break;
 		}
 
