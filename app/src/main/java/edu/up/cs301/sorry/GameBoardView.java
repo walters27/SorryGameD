@@ -18,7 +18,7 @@ public class GameBoardView extends View {
     private Paint gridPaint;
     private Paint textPaint;
     private Paint highlightPaint;
-    private int cellSize;
+    public int cellSize;
     private int boardSize;
     private Bitmap boardImage;
     private int margin;
@@ -67,7 +67,7 @@ public class GameBoardView extends View {
 
     private void initializePawns() {
         int[][] locations = {
-                {58, 73, 88, 74},     // Blue
+                {58, 1, 88, 74},     // Blue
                 {20, 34, 35, 36},     // Red
                 {191, 192, 206, 190}, // Yellow
                 {138, 153, 168, 152}  // Green

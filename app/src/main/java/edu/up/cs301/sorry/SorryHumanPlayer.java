@@ -10,7 +10,9 @@ import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 
+import android.os.Build;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener {
+public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener, View.OnTouchListener {
 	private SorryState state;
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
@@ -322,5 +324,46 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		buttonDrawCards.setOnClickListener(this);
 		//buttonMoveDot.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
+		gameBoardView.setOnTouchListener(this);
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		if (v instanceof GameBoardView)
+		{
+			SorryPawn selected = null;
+			List<SorryPawn> sp = gameBoardView.pawns;
+			// code citation DJhon Stackoverflow
+			// get x and y location of click
+			int transx = (int) event.getX();
+			int transy = (int) event.getY();
+			int ydiff =0;
+			int xdiff =0;
+			for (int i = 0; i < 16; i++)
+			{
+				int pawnrow = (sp.get(i).location - 1) / 15;
+				int pawncol = (sp.get(i).location - 1) % 15;
+				//get pawn location and compare with transx, transy
+				//      margin         row/col number              compare           center on box
+				ydiff = (50 + (pawnrow * gameBoardView.cellSize)) - transy + gameBoardView.cellSize / 2;
+				xdiff = (50 + (pawncol * gameBoardView.cellSize)) - transx + gameBoardView.cellSize / 2;
+				//if the distance between touch and pawn position < 25, pawn is selected pawn
+				if (Math.sqrt((double)(xdiff * xdiff + ydiff * ydiff)) < 25)
+				{selected = sp.get(i);}
+			}
+			if (selected != null)
+			{
+			gameBoardView.currentPawn = selected;
+			gameBoardView.targetPawn = selected;
+			sendTextMessage(getTextBox(), "selected a " + selected.color + " color pawn" + " x:" + transx + " y:" + transy);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public void setBoardView(GameBoardView gb)
+	{
+		this.gameBoardView = gb;
 	}
 }
