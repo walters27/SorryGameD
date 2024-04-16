@@ -30,7 +30,7 @@ public class GameBoardView extends View {
     public boolean youLost = false;
     private long animationStartTime;
     private static final long animationDuration = 500; // Animation duration in milliseconds
-
+    private int currentPlayerIndex = 0;
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -67,10 +67,10 @@ public class GameBoardView extends View {
 
     private void initializePawns() {
         int[][] locations = {
-                {75},  // Blue
-                {5},   // Red
-                {221}, // Yellow
-                {151}  // Green
+                {58, 73, 88, 74},     // Blue
+                {20, 34, 35, 36},     // Red
+                {191, 192, 206, 190}, // Yellow
+                {138, 153, 168, 152}  // Green
         };
         int[] colors = {Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN};
         int[] drawableIds = {R.drawable.blue_pawn, R.drawable.red_pawn, R.drawable.yellow_pawn, R.drawable.green_pawn};
@@ -192,135 +192,158 @@ public class GameBoardView extends View {
             int currentLocation = currentPawn.location;
             int newLocation = currentLocation;
 
+            // Check if the pawn is in its start box
+            if ((currentPawn.color == Color.BLUE && isInStartBox(currentLocation, Color.BLUE)) ||
+                    (currentPawn.color == Color.RED && isInStartBox(currentLocation, Color.RED)) ||
+                    (currentPawn.color == Color.YELLOW && isInStartBox(currentLocation, Color.YELLOW)) ||
+                    (currentPawn.color == Color.GREEN && isInStartBox(currentLocation, Color.GREEN))) {
+                if (numSpaces == 1 || numSpaces == 2) {
+                    // Move the pawn to its start position
+                    newLocation = getStartPosition(currentPawn.color);
+                    currentLocation = newLocation;
+                } else {
+                    // Pawn cannot move from the start box with the given number of spaces
+                    return;
+                }
+            }
+
+            // Move the pawn clockwise
             for (int i = 0; i < numSpaces; i++) {
                 if (currentLocation == 2) {
                     newLocation = 3;
                     if (currentPawn.color == Color.RED) {
-                        youLost = true;
+                        newLocation = 18; // Move to the first safe zone for Red
+                        break;
                     }
-                } else if (currentLocation == 3) {
-                    newLocation = 4;
-                } else if (currentLocation == 4) {
-                    newLocation = 5;
-                } else if (currentLocation == 5) {
-                    newLocation = 6;
-                } else if (currentLocation == 6) {
-                    newLocation = 7;
-                } else if (currentLocation == 7) {
-                    newLocation = 8;
-                } else if (currentLocation == 8) {
-                    newLocation = 9;
-                } else if (currentLocation == 9) {
-                    newLocation = 10;
-                } else if (currentLocation == 10) {
-                    newLocation = 11;
-                } else if (currentLocation == 11) {
-                    newLocation = 12;
-                } else if (currentLocation == 12) {
-                    newLocation = 13;
-                } else if (currentLocation == 13) {
-                    newLocation = 14;
-                } else if (currentLocation == 14) {
-                    newLocation = 15;
+                } else if (currentLocation >= 3 && currentLocation <= 6) {
+                    newLocation = currentLocation + 1; // Continue on the Red slide
+                } else if (currentLocation >= 10 && currentLocation <= 13) {
+                    newLocation = currentLocation + 1; // Continue on the Red slide
                 } else if (currentLocation == 15) {
                     newLocation = 30;
                 } else if (currentLocation == 30) {
                     newLocation = 45;
                     if (currentPawn.color == Color.BLUE) {
-                        youWon = true;
+                        newLocation = 44; // Move to the first safe zone for Blue
+                        break;
                     }
-                } else if (currentLocation == 45) {
-                    newLocation = 60;
-                } else if (currentLocation == 60) {
-                    newLocation = 75;
-                } else if (currentLocation == 75) {
-                    newLocation = 90;
-                } else if (currentLocation == 90) {
-                    newLocation = 105;
-                } else if (currentLocation == 105) {
-                    newLocation = 120;
-                } else if (currentLocation == 120) {
-                    newLocation = 135;
-                } else if (currentLocation == 135) {
-                    newLocation = 150;
-                } else if (currentLocation == 150) {
-                    newLocation = 165;
-                } else if (currentLocation == 165) {
-                    newLocation = 180;
-                } else if (currentLocation == 180) {
-                    newLocation = 195;
-                } else if (currentLocation == 195) {
-                    newLocation = 210;
-                } else if (currentLocation == 210) {
-                    newLocation = 225;
+                } else if (currentLocation == 45 || currentLocation == 60 || currentLocation == 75 || currentLocation == 90) {
+                    newLocation = currentLocation + 15; // Continue on the Blue slide
+                } else if (currentLocation == 150 || currentLocation == 165 || currentLocation == 180 || currentLocation == 195) {
+                    newLocation = currentLocation + 15; // Continue on the Blue slide
                 } else if (currentLocation == 225) {
                     newLocation = 224;
                 } else if (currentLocation == 224) {
                     newLocation = 223;
                     if (currentPawn.color == Color.YELLOW) {
-                        youLost = true;
+                        newLocation = 208; // Move to the first safe zone for Yellow
+                        break;
                     }
-                } else if (currentLocation == 223) {
-                    newLocation = 222;
-                } else if (currentLocation == 222) {
-                    newLocation = 221;
-                } else if (currentLocation == 221) {
-                    newLocation = 220;
-                } else if (currentLocation == 220) {
-                    newLocation = 219;
-                } else if (currentLocation == 219) {
-                    newLocation = 218;
-                } else if (currentLocation == 218) {
-                    newLocation = 217;
-                } else if (currentLocation == 217) {
-                    newLocation = 216;
-                } else if (currentLocation == 216) {
-                    newLocation = 215;
-                } else if (currentLocation == 215) {
-                    newLocation = 214;
-                } else if (currentLocation == 214) {
-                    newLocation = 213;
-                } else if (currentLocation == 213) {
-                    newLocation = 212;
-                } else if (currentLocation == 212) {
-                    newLocation = 211;
+                } else if (currentLocation >= 220 && currentLocation <= 223) {
+                    newLocation = currentLocation - 1; // Continue on the Yellow slide
+                } else if (currentLocation >= 213 && currentLocation <= 216) {
+                    newLocation = currentLocation - 1; // Continue on the Yellow slide
                 } else if (currentLocation == 211) {
                     newLocation = 196;
                 } else if (currentLocation == 196) {
                     newLocation = 181;
                     if (currentPawn.color == Color.GREEN) {
-                        youLost = true;
+                        newLocation = 182; // Move to the first safe zone for Green
+                        break;
                     }
-                } else if (currentLocation == 181) {
-                    newLocation = 166;
-                } else if (currentLocation == 166) {
-                    newLocation = 151;
-                } else if (currentLocation == 151) {
-                    newLocation = 136;
-                } else if (currentLocation == 136) {
-                    newLocation = 121;
-                } else if (currentLocation == 121) {
-                    newLocation = 106;
-                } else if (currentLocation == 106) {
-                    newLocation = 91;
-                } else if (currentLocation == 91) {
-                    newLocation = 76;
-                } else if (currentLocation == 76) {
-                    newLocation = 61;
-                } else if (currentLocation == 61) {
-                    newLocation = 46;
-                } else if (currentLocation == 46) {
-                    newLocation = 31;
-                } else if (currentLocation == 31) {
-                    newLocation = 16;
-                } else if (currentLocation == 16) {
-                    newLocation = 1;
-                } else if (currentLocation == 1) {
-                    newLocation = 2;
+                } else if (currentLocation == 181 || currentLocation == 166 || currentLocation == 151 || currentLocation == 136) {
+                    newLocation = currentLocation - 15; // Continue on the Green slide
+                } else if (currentLocation == 76 || currentLocation == 61 || currentLocation == 46 || currentLocation == 31) {
+                    newLocation = currentLocation - 15; // Continue on the Green slide
+                } else {
+                    // Move to the next position on the board
+                    if (currentLocation >= 1 && currentLocation <= 15) {
+                        newLocation = (currentLocation % 15) + 1;
+                    } else if (currentLocation >= 16 && currentLocation <= 30) {
+                        newLocation = currentLocation + 15;
+                    } else if (currentLocation >= 211 && currentLocation <= 225) {
+                        newLocation = (currentLocation % 15) - 1;
+                        if (newLocation == 0) {
+                            newLocation = 15;
+                        }
+                    } else if (currentLocation >= 196 && currentLocation <= 210) {
+                        newLocation = currentLocation - 15;
+                    }
                 }
+
+                // Check if the pawn has reached its home
+                if (isHome(newLocation, currentPawn.color)) {
+                    currentPawn.location = newLocation;
+                    break;
+                }
+
                 currentLocation = newLocation;
             }
+
             movePawnTo(currentLocation);
         }
     }
-}
+
+    private boolean isInStartBox(int location, int color) {
+        int[][] startBoxes = {
+                {58, 73, 88, 74},     // Blue
+                {20, 34, 35, 36},     // Red
+                {191, 192, 206, 190}, // Yellow
+                {138, 153, 168, 152}  // Green
+        };
+
+        int colorIndex = getColorIndex(color);
+        for (int startLocation : startBoxes[colorIndex]) {
+            if (location == startLocation) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int getStartPosition(int color) {
+        int[] startPositions = {75, 5, 221, 151};
+        int colorIndex = getColorIndex(color);
+        return startPositions[colorIndex];
+    }
+
+    private boolean isHome(int location, int color) {
+        int[][] homePositions = {
+                {107, 108, 109, 123}, // Red
+                {23, 38, 53, 37},     // Blue
+                {118, 119, 103, 104}, // Yellow
+                {173, 188, 203, 189}  // Green
+        };
+
+        int colorIndex = getColorIndex(color);
+        for (int homeLocation : homePositions[colorIndex]) {
+            if (location == homeLocation) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int getColorIndex(int color) {
+        switch (color) {
+            case Color.BLUE:
+                return 0;
+            case Color.RED:
+                return 1;
+            case Color.YELLOW:
+                return 2;
+            case Color.GREEN:
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
+    public void setCurrentPlayer(int playerIndex) {
+        currentPlayerIndex = playerIndex;
+        currentPawn = pawns.get(playerIndex * 4); // Assumes 4 pawns per player
+    }
+
+    public void selectPawn(int pawnIndex) {
+        currentPawn = pawns.get(currentPlayerIndex * 4 + pawnIndex);
+    }}

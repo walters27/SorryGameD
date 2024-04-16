@@ -1,5 +1,10 @@
 package edu.up.cs301.sorry;
 
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
+import static android.graphics.Color.YELLOW;
+
 import edu.up.cs301.GameFramework.players.GameHumanPlayer;
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
@@ -49,35 +54,129 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		t.append(m); // Add the new message
 	}
 
-	public void onClick(View button) {
-		if (game == null) return;
-
+	public void onClick(View button) { if (game == null) return;
 		if (button.getId() == R.id.buttonDrawCards) {
 			drawCard();
 		} else if (button.getId() == R.id.buttonMoveClockwise) {
-			gameBoardView.currentPawn = gameBoardView.pawns.get(0);
-			gameBoardView.targetPawn = gameBoardView.pawns.get(0);
+			// Real player's turn
+			gameBoardView.setCurrentPlayer(0);
+			int bestPawnIndex = getBestPawnIndex(0);
+			gameBoardView.selectPawn(bestPawnIndex);
 			gameBoardView.moveClockwise(state.getCardNumber());
 			state.setCardDrawn(false);
 			if (gameBoardView.youWon) {
 				sendTextMessage(getTextBox(), "You win");
+				return;
 			}
-			new Handler().postDelayed(new Runnable(){
-				public void run(){
-					gameBoardView.currentPawn = gameBoardView.pawns.get(1);
-					gameBoardView.targetPawn = gameBoardView.pawns.get(1);
+
+			// Automated player 1's turn
+			new Handler().postDelayed(new Runnable() {
+				public void run() {
+					gameBoardView.setCurrentPlayer(1);
+					int bestPawnIndex = getBestPawnIndex(1);
+					gameBoardView.selectPawn(bestPawnIndex);
 					drawCard();
 					gameBoardView.moveClockwise(state.getCardNumber());
 					if (gameBoardView.youLost) {
 						sendTextMessage(getTextBox(), "You lost");
+						return;
 					}
+
+					// Automated player 2's turn
+					new Handler().postDelayed(new Runnable() {
+						public void run() {
+							gameBoardView.setCurrentPlayer(2);
+							int bestPawnIndex = getBestPawnIndex(2);
+							gameBoardView.selectPawn(bestPawnIndex);
+							drawCard();
+							gameBoardView.moveClockwise(state.getCardNumber());
+							if (gameBoardView.youLost) {
+								sendTextMessage(getTextBox(), "You lost");
+								return;
+							}
+
+							// Automated player 3's turn
+							new Handler().postDelayed(new Runnable() {
+								public void run() {
+									gameBoardView.setCurrentPlayer(3);
+									int bestPawnIndex = getBestPawnIndex(3);
+									gameBoardView.selectPawn(bestPawnIndex);
+									drawCard();
+									gameBoardView.moveClockwise(state.getCardNumber());
+									if (gameBoardView.youLost) {
+										sendTextMessage(getTextBox(), "You lost");
+										return;
+									}
+
+									// Real player's turn again
+									new Handler().postDelayed(new Runnable() {
+										public void run() {
+											gameBoardView.setCurrentPlayer(0);
+											int bestPawnIndex = getBestPawnIndex(0);
+											gameBoardView.selectPawn(bestPawnIndex);
+										}
+									}, 200);
+								}
+							}, 200);
+						}
+					}, 200);
 				}
-			}, 3000);
+			}, 200);
+		}
+	}
+	private int getBestPawnIndex(int playerIndex) {
+		int bestPawnIndex = 0;
+		int maxDistance = -1;
+		for (int i = 0; i < 4; i++) {
+			SorryPawn pawn = gameBoardView.pawns.get(playerIndex * 4 + i);
+			int distance = getDistanceToHome(pawn);
+
+			if (distance > maxDistance) {
+				maxDistance = distance;
+				bestPawnIndex = i;
 			}
+		}
+
+		return bestPawnIndex;
+	}
+	private int getDistanceToHome(SorryPawn pawn) {
+		int distance = 0;
+		int currentLocation = pawn.location;
+// Calculate distance based on pawn color and current location
+		if (pawn.color == RED) {
+			if (currentLocation >= 1 && currentLocation <= 107) {
+				distance = 107 - currentLocation;
+			}
+		} else if (pawn.color == BLUE) {
+			if (currentLocation >= 16 && currentLocation <= 23) {
+				distance = 23 - currentLocation;
+			} else if (currentLocation >= 1 && currentLocation <= 15) {
+				distance = (15 - currentLocation) + 8;
+			}
+		} else if (pawn.color == YELLOW) {
+			if (currentLocation >= 211 && currentLocation <= 118) {
+				distance = 118 - currentLocation;
+			} else if (currentLocation >= 196 && currentLocation <= 210) {
+				distance = (210 - currentLocation) + 104;
+			}
+		} else if (pawn.color == GREEN) {
+			if (currentLocation >= 166 && currentLocation <= 173) {
+				distance = 173 - currentLocation;
+			} else if (currentLocation >= 151 && currentLocation <= 165) {
+				distance = (165 - currentLocation) + 8;
+			}
+		}
+
+		return distance;}
 
 
 
-}
+
+
+
+
+
+
 	public void drawCard(){
 		// generates/draws a random card number
 		Random rand = new Random();
