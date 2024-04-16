@@ -1,5 +1,4 @@
 package edu.up.cs301.sorry;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,11 +26,10 @@ public class GameBoardView extends View {
     public List<SorryPawn> pawns;
     public SorryPawn currentPawn;
     public SorryPawn targetPawn;
-
     public boolean youWon = false;
-
     public boolean youLost = false;
-    private long animateStartTime;
+    private long animationStartTime;
+    private static final long animationDuration = 500; // Animation duration in milliseconds
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -39,57 +37,48 @@ public class GameBoardView extends View {
     }
 
     private void init() {
-        //paint grid
+        // Paint grid
         gridPaint = new Paint();
         gridPaint.setColor(Color.RED);
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setStrokeWidth(2f);
 
-        //text for grid
+        // Text for grid
         textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(24f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
-        //highlight grid that pawn can move to
+        // Highlight grid that pawn can move to
         highlightPaint = new Paint();
         highlightPaint.setColor(Color.YELLOW);
         highlightPaint.setStyle(Paint.Style.FILL);
         highlightPaint.setAlpha(128);
 
-        //load board image
+        // Load board image
         boardImage = BitmapFactory.decodeResource(getResources(), R.drawable.sorryimage);
-        margin = 25;
+        margin = 50;
         outlineRect = new RectF();
-        //ArrayList to hold pawns
         pawns = new ArrayList<>();
 
-        //initalize pawns in starting position
+        // Initialize pawns in starting position
         initializePawns();
     }
 
     private void initializePawns() {
-        //pawn starting locations
         int[][] locations = {
                 {75},  // Blue
                 {5},   // Red
                 {221}, // Yellow
-                {151} // Green
+                {151}  // Green
         };
-        //color for each player
         int[] colors = {Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN};
-        //pawn image for each color
         int[] drawableIds = {R.drawable.blue_pawn, R.drawable.red_pawn, R.drawable.yellow_pawn, R.drawable.green_pawn};
 
-        //go through each color
         for (int colorIndex = 0; colorIndex < colors.length; colorIndex++) {
-            //go through each initial location for each color
             for (int location : locations[colorIndex]) {
-                //create a new SorryPawn
                 SorryPawn pawn = new SorryPawn(colors[colorIndex], drawableIds[colorIndex]);
-                //set initial location
                 pawn.location = location;
-                //add pawn
                 pawns.add(pawn);
             }
         }
@@ -98,27 +87,24 @@ public class GameBoardView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        //make board size the minimum width and height
         boardSize = Math.min(w, h);
-        //calculate cell size
         cellSize = (boardSize - 2 * margin) / 15;
-        //update rectangle to new size
         updateOutlineRect();
     }
 
-    //updates rectangle based on board size and margin
     private void updateOutlineRect() {
-        //calculate size of rectangle
         int outlineSize = boardSize - 2 * margin;
-        //set new outline
         outlineRect.set(margin, margin, margin + outlineSize, margin + outlineSize);
+    }
+
+    private float interpolate(float start, float end, float t) {
+        return start + (end - start) * t;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(boardImage, null, new RectF(0, 0, boardSize, boardSize), null);
 
-        // Draw grid and numbers
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 int index = i * 15 + j;
@@ -129,36 +115,43 @@ public class GameBoardView extends View {
             }
         }
 
-        // Draw pawns
-        for (SorryPawn pawn : pawns) {
-            int col = (pawn.location - 1) % 15;
-            int row = (pawn.location - 1) / 15;
-            float pawnX = margin + col * cellSize + cellSize / 2;
-            float pawnY = margin + row * cellSize + cellSize / 2;
+        long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - animationStartTime;
+        float t = Math.min(1f, (float) elapsedTime / animationDuration);
 
-            Drawable pawnDrawable = getResources().getDrawable(pawn.getImageResourceId());
+        if (currentPawn != null && targetPawn != null) {
+            float interpolatedCol = interpolate((currentPawn.location - 1) % 15, (targetPawn.location - 1) % 15, t);
+            float interpolatedRow = interpolate((currentPawn.location - 1) / 15, (targetPawn.location - 1) / 15, t);
+
+            int x = margin + (int) (interpolatedCol * cellSize);
+            int y = margin + (int) (interpolatedRow * cellSize);
+
+            Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
             Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
+
             int pawnSize = (int) (cellSize * 0.8);
             Bitmap resizedPawnBitmap = Bitmap.createScaledBitmap(pawnBitmap, pawnSize, pawnSize, true);
-            canvas.drawBitmap(resizedPawnBitmap, pawnX - pawnSize / 2, pawnY - pawnSize / 2, null);
+
+            int pawnX = x + (cellSize - pawnSize) / 2;
+            int pawnY = y + (cellSize - pawnSize) / 2;
+
+            canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);
+
+            if (t < 1f) {
+                invalidate();
+            } else {
+                currentPawn.location = targetPawn.location;
+            }
         }
     }
 
     public void movePawnTo(int position) {
-        //check if new position is on the board
         if (position >= 1 && position <= 225) {
+            targetPawn = new SorryPawn(currentPawn);
             targetPawn.location = position;
-            updateTargetPosition();
-            animateStartTime = System.currentTimeMillis();
+            animationStartTime = System.currentTimeMillis();
             invalidate();
         }
-    }
-
-    private void updateTargetPosition(){
-        int col = (targetPawn.location -1) % 15;
-        int row = (targetPawn.location -1) / 15;
-        int targetPawnX = margin + col +cellSize +cellSize/2;
-        int targetPawnY = margin + row + cellSize + cellSize/2;
     }
 
     public void setMargin(int margin) {
@@ -168,14 +161,16 @@ public class GameBoardView extends View {
     }
 
     public void moveClockwise(int numSpaces) {
-        int newLocation = currentPawn.location;
         if (currentPawn != null) {
             int currentLocation = currentPawn.location;
-            newLocation = currentLocation;
+            int newLocation = currentLocation;
+
             for (int i = 0; i < numSpaces; i++) {
                 if (currentLocation == 2) {
                     newLocation = 3;
-                    if (currentPawn.color == Color.RED) {youLost = true;}
+                    if (currentPawn.color == Color.RED) {
+                        youLost = true;
+                    }
                 } else if (currentLocation == 3) {
                     newLocation = 4;
                 } else if (currentLocation == 4) {
@@ -204,7 +199,9 @@ public class GameBoardView extends View {
                     newLocation = 30;
                 } else if (currentLocation == 30) {
                     newLocation = 45;
-                    if (currentPawn.color == Color.BLUE) {youWon = true;}
+                    if (currentPawn.color == Color.BLUE) {
+                        youWon = true;
+                    }
                 } else if (currentLocation == 45) {
                     newLocation = 60;
                 } else if (currentLocation == 60) {
@@ -264,7 +261,7 @@ public class GameBoardView extends View {
                     newLocation = 196;
                 } else if (currentLocation == 196) {
                     newLocation = 181;
-                    if(currentPawn.color == Color.GREEN){
+                    if (currentPawn.color == Color.GREEN) {
                         youLost = true;
                     }
                 } else if (currentLocation == 181) {
@@ -296,10 +293,7 @@ public class GameBoardView extends View {
                 }
                 currentLocation = newLocation;
             }
-        currentPawn.location = currentLocation;
+            movePawnTo(currentLocation);
         }
-
-        movePawnTo(newLocation);
     }
-
 }
