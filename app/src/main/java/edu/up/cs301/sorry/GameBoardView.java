@@ -105,6 +105,7 @@ public class GameBoardView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(boardImage, null, new RectF(0, 0, boardSize, boardSize), null);
 
+        // Draw grid and numbers
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 int index = i * 15 + j;
@@ -115,18 +116,36 @@ public class GameBoardView extends View {
             }
         }
 
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - animationStartTime;
-        float t = Math.min(1f, (float) elapsedTime / animationDuration);
+        // Draw pawns
+        for (SorryPawn pawn : pawns) {
+            int pawnLocation = pawn.location;
+            int pawnRow = (pawnLocation - 1) / 15;
+            int pawnCol = (pawnLocation - 1) % 15;
 
-        if (currentPawn != null && targetPawn != null) {
-            float interpolatedCol = interpolate((currentPawn.location - 1) % 15, (targetPawn.location - 1) % 15, t);
-            float interpolatedRow = interpolate((currentPawn.location - 1) / 15, (targetPawn.location - 1) / 15, t);
+            // Highlight the current pawn's location
+            if (pawn == currentPawn) {
+                float highlightX = margin + pawnCol * cellSize;
+                float highlightY = margin + pawnRow * cellSize;
+                canvas.drawRect(highlightX, highlightY, highlightX + cellSize, highlightY + cellSize, highlightPaint);
+            }
 
-            int x = margin + (int) (interpolatedCol * cellSize);
-            int y = margin + (int) (interpolatedRow * cellSize);
+            // Animate the pawn movement
+            if (pawn == currentPawn && targetPawn != null) {
+                long currentTime = System.currentTimeMillis();
+                long elapsedTime = currentTime - animationStartTime;
+                float t = Math.min(1f, (float) elapsedTime / animationDuration);
 
-            Drawable pawnDrawable = getResources().getDrawable(currentPawn.getImageResourceId());
+                float interpolatedCol = interpolate(pawnCol, (targetPawn.location - 1) % 15, t);
+                float interpolatedRow = interpolate(pawnRow, (targetPawn.location - 1) / 15, t);
+                pawnRow = (int) interpolatedRow;
+                pawnCol = (int) interpolatedCol;
+            }
+
+            // Draw the pawn
+            int x = margin + pawnCol * cellSize;
+            int y = margin + pawnRow * cellSize;
+
+            Drawable pawnDrawable = getResources().getDrawable(pawn.getImageResourceId());
             Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
 
             int pawnSize = (int) (cellSize * 0.8);
@@ -136,11 +155,19 @@ public class GameBoardView extends View {
             int pawnY = y + (cellSize - pawnSize) / 2;
 
             canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);
+        }
+
+        // Check if animation is still in progress
+        if (currentPawn != null && targetPawn != null) {
+            long currentTime = System.currentTimeMillis();
+            long elapsedTime = currentTime - animationStartTime;
+            float t = Math.min(1f, (float) elapsedTime / animationDuration);
 
             if (t < 1f) {
                 invalidate();
             } else {
                 currentPawn.location = targetPawn.location;
+                targetPawn = null;
             }
         }
     }
