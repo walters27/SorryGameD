@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 
@@ -210,6 +211,7 @@ public class GameBoardView extends View {
         outlineRect.set(margin, margin, margin + outlineSize, margin + outlineSize);
     }
 
+
     private float interpolate(float start, float end, float t) {
         return start + (end - start) * t;
     }
@@ -235,6 +237,9 @@ public class GameBoardView extends View {
             int pawnRow = (pawnLocation - 1) / 15;
             int pawnCol = (pawnLocation - 1) % 15;
 
+            Log.d("SorryGame", "Drawing pawn at location: " + pawnLocation);
+            Log.d("SorryGame", "Pawn row: " + pawnRow + ", Pawn col: " + pawnCol);
+
             // Highlight the current pawn's location
             if (pawn == currentPawn) {
                 float highlightX = margin + pawnCol * cellSize;
@@ -242,21 +247,11 @@ public class GameBoardView extends View {
                 canvas.drawRect(highlightX, highlightY, highlightX + cellSize, highlightY + cellSize, highlightPaint);
             }
 
-            // Animate the pawn movement
-            if (pawn == currentPawn && targetPawn != null) {
-                long currentTime = System.currentTimeMillis();
-                long elapsedTime = currentTime - animationStartTime;
-                float t = Math.min(1f, (float) elapsedTime / animationDuration);
-
-                float interpolatedCol = interpolate(pawnCol, (targetPawn.location - 1) % 15, t);
-                float interpolatedRow = interpolate(pawnRow, (targetPawn.location - 1) / 15, t);
-                pawnRow = (int) interpolatedRow;
-                pawnCol = (int) interpolatedCol;
-            }
-
             // Draw the pawn
             int x = margin + pawnCol * cellSize;
             int y = margin + pawnRow * cellSize;
+
+            Log.d("SorryGame", "Pawn position - x: " + x + ", y: " + y);
 
             Drawable pawnDrawable = getResources().getDrawable(pawn.getImageResourceId());
             Bitmap pawnBitmap = ((BitmapDrawable) pawnDrawable).getBitmap();
@@ -269,67 +264,62 @@ public class GameBoardView extends View {
 
             canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);
         }
-
-        // Check if animation is still in progress
-        if (currentPawn != null && targetPawn != null) {
-            long currentTime = System.currentTimeMillis();
-            long elapsedTime = currentTime - animationStartTime;
-            float t = Math.min(1f, (float) elapsedTime / animationDuration);
-
-            if (t < 1f) {
-                invalidate();
-            } else {
-                currentPawn.location = targetPawn.location;
-                targetPawn = null;
-            }
-        }
     }
 
     public void movePawnTo(int position) {
         if (position >= 1 && position <= 225) {
-            targetPawn = new SorryPawn(currentPawn);
-            targetPawn.location = position;
-            animationStartTime = System.currentTimeMillis();
+            currentPawn.location = position;
             invalidate();
         }
     }
 
     public void moveClockwise(int numSpaces) {
-        int currentLocation = currentPawn.location;
-        int newLocation = currentLocation;
+        int newLocation = currentPawn.location;
+        String currentTeamColor = getTeamColorFromPawn(currentPawn);
+        TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
+
+        Log.d("SorryGame", "Current pawn location: " + currentPawn.location);
+        Log.d("SorryGame", "Current team color: " + currentTeamColor);
 
         for (int i = 0; i < numSpaces; i++) {
-            if (mainPathMap.containsKey(newLocation)) {
+            if (currentPawn.isInStart) {
+                // Move from start box to start position
+                newLocation = currentTeamConfig.getStartPos();
+                currentPawn.isInStart = false;
+                Log.d("SorryGame", "Moved from start box to start position: " + newLocation);
+            } else if (mainPathMap.containsKey(newLocation)) {
+                // Move along the main path
                 newLocation = mainPathMap.get(newLocation);
+                Log.d("SorryGame", "Moved along main path to: " + newLocation);
+            } else if (newLocation == currentTeamConfig.getSafeEntry()) {
+                // Enter the safe zone
+                newLocation = currentTeamConfig.getSafeZone()[0];
+                Log.d("SorryGame", "Entered safe zone at: " + newLocation);
             } else {
-                // Check if the pawn is in the safe zone or home
-                String currentTeamColor = getTeamColorFromPawn(currentPawn);
-                TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
                 int[] safeZone = currentTeamConfig.getSafeZone();
-                int safeZoneIndex = -1;
-
-                for (int j = 0; j < safeZone.length; j++) {
-                    if (safeZone[j] == newLocation) {
-                        safeZoneIndex = j;
-                        break;
-                    }
-                }
+                int safeZoneIndex = Arrays.asList(safeZone).indexOf(newLocation);
 
                 if (safeZoneIndex != -1) {
+                    // Move within the safe zone
                     if (safeZoneIndex < safeZone.length - 1) {
                         newLocation = safeZone[safeZoneIndex + 1];
+                        Log.d("SorryGame", "Moved within safe zone to: " + newLocation);
                     } else {
                         // Move to a random spot in the home position
                         int[] home = currentTeamConfig.getHome();
                         int randomHomeIndex = new Random().nextInt(home.length);
                         newLocation = home[randomHomeIndex];
+                        currentPawn.isHome = true;
+                        Log.d("SorryGame", "Moved to home position: " + newLocation);
                     }
                 }
             }
         }
-
+        Log.d("SorryGame", "Final pawn location: " + newLocation);
         movePawnTo(newLocation);
     }
+
+
 
     private String getTeamColorFromPawn(SorryPawn pawn) {
         int pawnColor = pawn.color;
