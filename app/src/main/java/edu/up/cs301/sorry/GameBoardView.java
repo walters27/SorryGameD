@@ -1,4 +1,5 @@
 package edu.up.cs301.sorry;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,8 +12,19 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import edu.up.cs301.sorry.R;
+import edu.up.cs301.sorry.SorryPawn;
 
 public class GameBoardView extends View {
     private Paint gridPaint;
@@ -31,6 +43,9 @@ public class GameBoardView extends View {
     private long animationStartTime;
     private static final long animationDuration = 500; // Animation duration in milliseconds
     private int currentPlayerIndex = 0;
+    private Map<Integer, Integer> mainPathMap;
+    private Map<String, TeamConfiguration> teams;
+
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -61,26 +76,124 @@ public class GameBoardView extends View {
         outlineRect = new RectF();
         pawns = new ArrayList<>();
 
+        // Initialize main path mapping
+        mainPathMap = new HashMap<>();
+        mainPathMap.put(2, 3);
+        mainPathMap.put(3, 4);
+        mainPathMap.put(4, 5);
+        mainPathMap.put(5, 6);
+        mainPathMap.put(6, 7);
+        mainPathMap.put(7, 8);
+        mainPathMap.put(8, 9);
+        mainPathMap.put(9, 10);
+        mainPathMap.put(10, 11);
+        mainPathMap.put(11, 12);
+        mainPathMap.put(12, 13);
+        mainPathMap.put(13, 14);
+        mainPathMap.put(14, 15);
+        mainPathMap.put(15, 30);
+        mainPathMap.put(30, 45);
+        mainPathMap.put(45, 60);
+        mainPathMap.put(60, 75);
+        mainPathMap.put(75, 90);
+        mainPathMap.put(90, 105);
+        mainPathMap.put(105, 120);
+        mainPathMap.put(120, 135);
+        mainPathMap.put(135, 150);
+        mainPathMap.put(150, 165);
+        mainPathMap.put(165, 180);
+        mainPathMap.put(180, 195);
+        mainPathMap.put(195, 210);
+        mainPathMap.put(210, 225);
+        mainPathMap.put(225, 224);
+        mainPathMap.put(224, 223);
+        mainPathMap.put(223, 222);
+        mainPathMap.put(222, 221);
+        mainPathMap.put(221, 220);
+        mainPathMap.put(220, 219);
+        mainPathMap.put(219, 218);
+        mainPathMap.put(218, 217);
+        mainPathMap.put(217, 216);
+        mainPathMap.put(216, 215);
+        mainPathMap.put(215, 214);
+        mainPathMap.put(214, 213);
+        mainPathMap.put(213, 212);
+        mainPathMap.put(212, 211);
+        mainPathMap.put(211, 196);
+        mainPathMap.put(196, 181);
+        mainPathMap.put(181, 166);
+        mainPathMap.put(166, 151);
+        mainPathMap.put(151, 136);
+        mainPathMap.put(136, 121);
+        mainPathMap.put(121, 106);
+        mainPathMap.put(106, 91);
+        mainPathMap.put(91, 76);
+        mainPathMap.put(76, 61);
+        mainPathMap.put(61, 46);
+        mainPathMap.put(46, 31);
+        mainPathMap.put(31, 16);
+        mainPathMap.put(16, 1);
+        mainPathMap.put(1, 2);
+
+        // Initialize team configurations
+        teams = new HashMap<>();
+        teams.put("red", new TeamConfiguration(
+                new int[]{20, 34, 35, 36}, 5, 3,
+                new int[]{18, 48, 63, 78, 93}, new int[]{107, 108, 109, 123}));
+        teams.put("blue", new TeamConfiguration(
+                new int[]{58, 73, 88, 74}, 75, 45,
+                new int[]{44, 42, 41, 40, 39}, new int[]{23, 38, 53, 37}));
+        teams.put("yellow", new TeamConfiguration(
+                new int[]{190, 191, 192, 206}, 221, 223,
+                new int[]{208, 178, 163, 148, 133}, new int[]{118, 119, 103, 104}));
+        teams.put("green", new TeamConfiguration(
+                new int[]{138, 153, 168, 152}, 151, 181,
+                new int[]{182, 184, 185, 186, 187}, new int[]{173, 188, 203, 189}));
+
         // Initialize pawns in starting position
         initializePawns();
     }
 
     private void initializePawns() {
-        int[][] locations = {
-                {58, 73, 88, 74},     // Blue
-                {20, 34, 35, 36},     // Red
-                {191, 192, 206, 190}, // Yellow
-                {138, 153, 168, 152}  // Green
-        };
-        int[] colors = {Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN};
-        int[] drawableIds = {R.drawable.blue_pawn, R.drawable.red_pawn, R.drawable.yellow_pawn, R.drawable.green_pawn};
+        for (Map.Entry<String, TeamConfiguration> entry : teams.entrySet()) {
+            String color = entry.getKey();
+            TeamConfiguration teamConfig = entry.getValue();
 
-        for (int colorIndex = 0; colorIndex < colors.length; colorIndex++) {
-            for (int location : locations[colorIndex]) {
-                SorryPawn pawn = new SorryPawn(colors[colorIndex], drawableIds[colorIndex]);
+            for (int location : teamConfig.getStartBox()) {
+                SorryPawn pawn = new SorryPawn(getColorFromString(color), getDrawableIdFromColor(color));
                 pawn.location = location;
                 pawns.add(pawn);
             }
+        }
+    }
+
+    private int getColorFromString(String colorString) {
+        switch (colorString) {
+            case "red":
+                return Color.RED;
+            case "blue":
+                return Color.BLUE;
+            case "yellow":
+                return Color.YELLOW;
+            case "green":
+                return Color.GREEN;
+            default:
+                return Color.BLACK;
+        }
+    }
+
+    private int getDrawableIdFromColor(String colorString) {
+        switch (colorString) {
+            case "red":
+                return R.drawable.red_pawn;
+            case "blue":
+                return R.drawable.blue_pawn;
+            case "yellow":
+                return R.drawable.yellow_pawn;
+            case "green":
+                return R.drawable.green_pawn;
+            default:
+                return 0;
         }
     }
 
@@ -181,162 +294,55 @@ public class GameBoardView extends View {
         }
     }
 
-    public void setMargin(int margin) {
-        this.margin = margin;
-        updateOutlineRect();
-        invalidate();
-    }
-
     public void moveClockwise(int numSpaces) {
-        if (currentPawn != null) {
-            int currentLocation = currentPawn.location;
-            int newLocation = currentLocation;
+        int currentLocation = currentPawn.location;
+        int newLocation = currentLocation;
 
-            // Check if the pawn is in its start box
-            if ((currentPawn.color == Color.BLUE && isInStartBox(currentLocation, Color.BLUE)) ||
-                    (currentPawn.color == Color.RED && isInStartBox(currentLocation, Color.RED)) ||
-                    (currentPawn.color == Color.YELLOW && isInStartBox(currentLocation, Color.YELLOW)) ||
-                    (currentPawn.color == Color.GREEN && isInStartBox(currentLocation, Color.GREEN))) {
-                if (numSpaces == 1 || numSpaces == 2) {
-                    // Move the pawn to its start position
-                    newLocation = getStartPosition(currentPawn.color);
-                    currentLocation = newLocation;
-                } else {
-                    // Pawn cannot move from the start box with the given number of spaces
-                    return;
-                }
-            }
+        for (int i = 0; i < numSpaces; i++) {
+            if (mainPathMap.containsKey(newLocation)) {
+                newLocation = mainPathMap.get(newLocation);
+            } else {
+                // Check if the pawn is in the safe zone or home
+                String currentTeamColor = getTeamColorFromPawn(currentPawn);
+                TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
+                int[] safeZone = currentTeamConfig.getSafeZone();
+                int safeZoneIndex = -1;
 
-            // Move the pawn clockwise
-            for (int i = 0; i < numSpaces; i++) {
-                if (currentLocation == 2) {
-                    newLocation = 3;
-                    if (currentPawn.color == Color.RED) {
-                        newLocation = 18; // Move to the first safe zone for Red
+                for (int j = 0; j < safeZone.length; j++) {
+                    if (safeZone[j] == newLocation) {
+                        safeZoneIndex = j;
                         break;
-                    }
-                } else if (currentLocation >= 3 && currentLocation <= 6) {
-                    newLocation = currentLocation + 1; // Continue on the Red slide
-                } else if (currentLocation >= 10 && currentLocation <= 13) {
-                    newLocation = currentLocation + 1; // Continue on the Red slide
-                } else if (currentLocation == 15) {
-                    newLocation = 30;
-                } else if (currentLocation == 30) {
-                    newLocation = 45;
-                    if (currentPawn.color == Color.BLUE) {
-                        newLocation = 44; // Move to the first safe zone for Blue
-                        break;
-                    }
-                } else if (currentLocation == 45 || currentLocation == 60 || currentLocation == 75 || currentLocation == 90) {
-                    newLocation = currentLocation + 15; // Continue on the Blue slide
-                } else if (currentLocation == 150 || currentLocation == 165 || currentLocation == 180 || currentLocation == 195) {
-                    newLocation = currentLocation + 15; // Continue on the Blue slide
-                } else if (currentLocation == 225) {
-                    newLocation = 224;
-                } else if (currentLocation == 224) {
-                    newLocation = 223;
-                    if (currentPawn.color == Color.YELLOW) {
-                        newLocation = 208; // Move to the first safe zone for Yellow
-                        break;
-                    }
-                } else if (currentLocation >= 220 && currentLocation <= 223) {
-                    newLocation = currentLocation - 1; // Continue on the Yellow slide
-                } else if (currentLocation >= 213 && currentLocation <= 216) {
-                    newLocation = currentLocation - 1; // Continue on the Yellow slide
-                } else if (currentLocation == 211) {
-                    newLocation = 196;
-                } else if (currentLocation == 196) {
-                    newLocation = 181;
-                    if (currentPawn.color == Color.GREEN) {
-                        newLocation = 182; // Move to the first safe zone for Green
-                        break;
-                    }
-                } else if (currentLocation == 181 || currentLocation == 166 || currentLocation == 151 || currentLocation == 136) {
-                    newLocation = currentLocation - 15; // Continue on the Green slide
-                } else if (currentLocation == 76 || currentLocation == 61 || currentLocation == 46 || currentLocation == 31) {
-                    newLocation = currentLocation - 15; // Continue on the Green slide
-                } else {
-                    // Move to the next position on the board
-                    if (currentLocation >= 1 && currentLocation <= 15) {
-                        newLocation = (currentLocation % 15) + 1;
-                    } else if (currentLocation >= 16 && currentLocation <= 30) {
-                        newLocation = currentLocation + 15;
-                    } else if (currentLocation >= 211 && currentLocation <= 225) {
-                        newLocation = (currentLocation % 15) - 1;
-                        if (newLocation == 0) {
-                            newLocation = 15;
-                        }
-                    } else if (currentLocation >= 196 && currentLocation <= 210) {
-                        newLocation = currentLocation - 15;
                     }
                 }
 
-                // Check if the pawn has reached its home
-                if (isHome(newLocation, currentPawn.color)) {
-                    currentPawn.location = newLocation;
-                    break;
+                if (safeZoneIndex != -1) {
+                    if (safeZoneIndex < safeZone.length - 1) {
+                        newLocation = safeZone[safeZoneIndex + 1];
+                    } else {
+                        // Move to a random spot in the home position
+                        int[] home = currentTeamConfig.getHome();
+                        int randomHomeIndex = new Random().nextInt(home.length);
+                        newLocation = home[randomHomeIndex];
+                    }
                 }
-
-                currentLocation = newLocation;
-            }
-
-            movePawnTo(currentLocation);
-        }
-    }
-
-    private boolean isInStartBox(int location, int color) {
-        int[][] startBoxes = {
-                {58, 73, 88, 74},     // Blue
-                {20, 34, 35, 36},     // Red
-                {191, 192, 206, 190}, // Yellow
-                {138, 153, 168, 152}  // Green
-        };
-
-        int colorIndex = getColorIndex(color);
-        for (int startLocation : startBoxes[colorIndex]) {
-            if (location == startLocation) {
-                return true;
             }
         }
-        return false;
+
+        movePawnTo(newLocation);
     }
 
-    private int getStartPosition(int color) {
-        int[] startPositions = {75, 5, 221, 151};
-        int colorIndex = getColorIndex(color);
-        return startPositions[colorIndex];
-    }
-
-    private boolean isHome(int location, int color) {
-        int[][] homePositions = {
-                {107, 108, 109, 123}, // Red
-                {23, 38, 53, 37},     // Blue
-                {118, 119, 103, 104}, // Yellow
-                {173, 188, 203, 189}  // Green
-        };
-
-        int colorIndex = getColorIndex(color);
-        for (int homeLocation : homePositions[colorIndex]) {
-            if (location == homeLocation) {
-                return true;
-            }
+    private String getTeamColorFromPawn(SorryPawn pawn) {
+        int pawnColor = pawn.color;
+        if (pawnColor == Color.RED) {
+            return "red";
+        } else if (pawnColor == Color.BLUE) {
+            return "blue";
+        } else if (pawnColor == Color.YELLOW) {
+            return "yellow";
+        } else if (pawnColor == Color.GREEN) {
+            return "green";
         }
-        return false;
-    }
-
-    private int getColorIndex(int color) {
-        switch (color) {
-            case Color.BLUE:
-                return 0;
-            case Color.RED:
-                return 1;
-            case Color.YELLOW:
-                return 2;
-            case Color.GREEN:
-                return 3;
-            default:
-                return -1;
-        }
+        return "";
     }
 
     public void setCurrentPlayer(int playerIndex) {
@@ -346,4 +352,41 @@ public class GameBoardView extends View {
 
     public void selectPawn(int pawnIndex) {
         currentPawn = pawns.get(currentPlayerIndex * 4 + pawnIndex);
-    }}
+    }
+}
+
+class TeamConfiguration {
+    private int[] startBox;
+    private int startPos;
+    private int safeEntry;
+    private int[] safeZone;
+    private int[] home;
+
+    public TeamConfiguration(int[] startBox, int startPos, int safeEntry, int[] safeZone, int[] home) {
+        this.startBox = startBox;
+        this.startPos = startPos;
+        this.safeEntry = safeEntry;
+        this.safeZone = safeZone;
+        this.home = home;
+    }
+
+    public int[] getStartBox() {
+        return startBox;
+    }
+
+    public int getStartPos() {
+        return startPos;
+    }
+
+    public int getSafeEntry() {
+        return safeEntry;
+    }
+
+    public int[] getSafeZone() {
+        return safeZone;
+    }
+
+    public int[] getHome() {
+        return home;
+    }
+}

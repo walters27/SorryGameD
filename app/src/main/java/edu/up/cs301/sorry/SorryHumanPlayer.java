@@ -25,9 +25,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	private SorryState state;
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
-	private EditText editTextGridBox;
-	private EditText editTextNumSpaces;
-	private Button buttonMoveDot;
 	private Button buttonMoveClockwise;
 	private GameBoardView gameBoardView;
 	private Handler handler = new Handler();
@@ -54,7 +51,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		t.append(m); // Add the new message
 	}
 
-	public void onClick(View button) { if (game == null) return;
+	public void onClick(View button) {
+		if (game == null) return;
 		if (button.getId() == R.id.buttonDrawCards) {
 			drawCard();
 		} else if (button.getId() == R.id.buttonMoveClockwise) {
@@ -124,6 +122,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			}, 200);
 		}
 	}
+
 	private int getBestPawnIndex(int playerIndex) {
 		int bestPawnIndex = 0;
 		int maxDistance = -1;
@@ -139,10 +138,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 		return bestPawnIndex;
 	}
+
 	private int getDistanceToHome(SorryPawn pawn) {
 		int distance = 0;
 		int currentLocation = pawn.location;
-// Calculate distance based on pawn color and current location
+
+		// Calculate distance based on pawn color and current location
 		if (pawn.color == RED) {
 			if (currentLocation >= 1 && currentLocation <= 107) {
 				distance = 107 - currentLocation;
@@ -167,17 +168,10 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			}
 		}
 
-		return distance;}
+		return distance;
+	}
 
-
-
-
-
-
-
-
-
-	public void drawCard(){
+	public void drawCard() {
 		// generates/draws a random card number
 		Random rand = new Random();
 		int cardNum = rand.nextInt(11) + 1;
@@ -291,11 +285,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a Sorry card. Take one pawn from Start and move it directly to a square occupied by any opponent's pawn, sending that pawn back to its own Start.");
 	}
 
-	private List<Integer> getValidMovePositions(int cardNum) {
-		// TODO: Implement the logic to determine valid move positions based on the card number
-		return Collections.emptyList();
-	}
-
 	// receives game info and updates SorryState
 	@Override
 	public void receiveInfo(GameInfo info) {
@@ -312,15 +301,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		// initialize GUI elements
 		imageViewCard = activity.findViewById(R.id.imageViewCard);
 		Button buttonDrawCards = activity.findViewById(R.id.buttonDrawCards);
-		//editTextGridBox = activity.findViewById(R.id.editTextGridBox);
-		//editTextNumSpaces = activity.findViewById(R.id.editTextNumSpaces);
-		//buttonMoveDot = activity.findViewById(R.id.buttonMoveDot);
 		buttonMoveClockwise = activity.findViewById(R.id.buttonMoveClockwise);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
 
 		// register click listeners
 		buttonDrawCards.setOnClickListener(this);
-		//buttonMoveDot.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
 	}
 }

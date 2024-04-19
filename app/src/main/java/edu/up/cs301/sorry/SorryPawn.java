@@ -1,5 +1,9 @@
 package edu.up.cs301.sorry;
 
+import android.graphics.Color;
+
+import java.util.Random;
+
 // @authors Quince Pham, Kira Kunitake, Annalise Walkers, Corwin Carr
 public class SorryPawn {
    public int color;
@@ -7,33 +11,92 @@ public class SorryPawn {
    boolean isInStart;
    public int location;
    private int imageResourceId;
-
-   //x position of pawn
+   // x position of pawn
    public float x;
-
-   //y position of pawn
+   // y position of pawn
    public float y;
 
    public SorryPawn(SorryPawn s) {
-      if(s != null){
+      if (s != null) {
          this.color = s.color;
          this.isHome = s.isHome;
          this.isInStart = s.isInStart;
          this.location = s.location;
          this.imageResourceId = s.imageResourceId;
+         this.x = s.x;
+         this.y = s.y;
       }
    }
 
    public SorryPawn(int color, int imageResourceId) {
       this.color = color;
-      this.isHome = true;
+      this.isHome = false;
       this.isInStart = true;
-      this.location = 1;
+      this.location = getStartBoxLocation(color);
       this.imageResourceId = imageResourceId;
    }
 
+   private int getStartBoxLocation(int color) {
+      switch (color) {
+         case Color.RED:
+            return 20; // Assuming red's start box locations are 20, 34, 35, 36
+         case Color.BLUE:
+            return 58; // Assuming blue's start box locations are 58, 73, 88, 74
+         case Color.YELLOW:
+            return 191; // Assuming yellow's start box locations are 191, 192, 206, 207
+         case Color.GREEN:
+            return 138; // Assuming green's start box locations are 138, 153, 168, 152
+         default:
+            return 1;
+      }
+   }
 
    public int getImageResourceId() {
       return imageResourceId;
+   }
+
+   public void moveToStartPos() {
+      if (isInStart) {
+         int startPos = getStartPos(color);
+         location = startPos;
+         isInStart = false;
+      }
+   }
+
+   private int getStartPos(int color) {
+      switch (color) {
+         case Color.RED:
+            return 5;
+         case Color.BLUE:
+            return 75;
+         case Color.YELLOW:
+            return 221;
+         case Color.GREEN:
+            return 151;
+         default:
+            return 1;
+      }
+   }
+
+   public void moveToHome() {
+      int[] homeLocations = getHomeLocations(color);
+      int randomIndex = new Random().nextInt(homeLocations.length);
+      location = homeLocations[randomIndex];
+      isHome = true;
+   }
+
+   private int[] getHomeLocations(int color) {
+      switch (color) {
+         case Color.RED:
+            return new int[]{107, 108, 109, 123};
+         case Color.BLUE:
+            return new int[]{23, 38, 53, 37};
+         case Color.YELLOW:
+            return new int[]{118, 119, 103, 104};
+         case Color.GREEN:
+            return new int[]{173, 188, 203, 189};
+         default:
+            return new int[]{1};
+      }
    }
 }
