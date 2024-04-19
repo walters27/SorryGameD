@@ -281,20 +281,26 @@ public class GameBoardView extends View {
         Log.d("SorryGame", "Current pawn location: " + currentPawn.location);
         Log.d("SorryGame", "Current team color: " + currentTeamColor);
 
+        boolean enteredSafeZone = false;
+
         for (int i = 0; i < numSpaces; i++) {
             if (currentPawn.isInStart) {
                 // Move from start box to start position
                 newLocation = currentTeamConfig.getStartPos();
                 currentPawn.isInStart = false;
                 Log.d("SorryGame", "Moved from start box to start position: " + newLocation);
-            } else if (mainPathMap.containsKey(newLocation)) {
+            } else if (mainPathMap.containsKey(newLocation) && !enteredSafeZone) {
                 // Move along the main path
-                newLocation = mainPathMap.get(newLocation);
-                Log.d("SorryGame", "Moved along main path to: " + newLocation);
-            } else if (newLocation == currentTeamConfig.getSafeEntry()) {
-                // Enter the safe zone
-                newLocation = currentTeamConfig.getSafeZone()[0];
-                Log.d("SorryGame", "Entered safe zone at: " + newLocation);
+                int nextLocation = mainPathMap.get(newLocation);
+                if (nextLocation == currentTeamConfig.getSafeEntry()) {
+                    // Pawn will pass over the safe entry, switch to safe zone path
+                    newLocation = currentTeamConfig.getSafeZone()[0];
+                    enteredSafeZone = true;
+                    Log.d("SorryGame", "Entered safe zone at: " + newLocation);
+                } else {
+                    newLocation = nextLocation;
+                    Log.d("SorryGame", "Moved along main path to: " + newLocation);
+                }
             } else {
                 int[] safeZone = currentTeamConfig.getSafeZone();
                 int safeZoneIndex = Arrays.asList(safeZone).indexOf(newLocation);
@@ -305,12 +311,30 @@ public class GameBoardView extends View {
                         newLocation = safeZone[safeZoneIndex + 1];
                         Log.d("SorryGame", "Moved within safe zone to: " + newLocation);
                     } else {
-                        // Move to a random spot in the home position
+                        // Move to a random unoccupied spot in the home position
                         int[] home = currentTeamConfig.getHome();
-                        int randomHomeIndex = new Random().nextInt(home.length);
-                        newLocation = home[randomHomeIndex];
-                        currentPawn.isHome = true;
-                        Log.d("SorryGame", "Moved to home position: " + newLocation);
+                        List<Integer> unoccupiedHomeSpots = new ArrayList<>();
+                        for (int homeSpot : home) {
+                            boolean isOccupied = false;
+                            for (SorryPawn pawn : pawns) {
+                                if (pawn.location == homeSpot) {
+                                    isOccupied = true;
+                                    break;
+                                }
+                            }
+                            if (!isOccupied) {
+                                unoccupiedHomeSpots.add(homeSpot);
+                            }
+                        }
+                        if (!unoccupiedHomeSpots.isEmpty()) {
+                            int randomIndex = new Random().nextInt(unoccupiedHomeSpots.size());
+                            newLocation = unoccupiedHomeSpots.get(randomIndex);
+                            currentPawn.isHome = true;
+                            Log.d("SorryGame", "Moved to unoccupied home position: " + newLocation);
+                        } else {
+                            Log.d("SorryGame", "All home positions are occupied. Pawn stays in the safe zone.");
+                        }
+                        break; // Stop moving further, as the pawn has reached the end of the safe zone
                     }
                 }
             }
