@@ -1,5 +1,7 @@
 package edu.up.cs301.sorry;
 
+import java.util.Random;
+
 import edu.up.cs301.GameFramework.infoMessage.GameState;
 
 /**
@@ -16,11 +18,14 @@ public class SorryState extends GameState {
 	private int[] pawnHomeCount;
 	private int[] pawnStartCount;
 	private SorryPawn[] pawns;
-	private int cardNumber;
+	private int cardNumber;  //this currently face up card
 	private int playerId;
 	private boolean cardDrawn;
 	private int movesToWin;
 	private int currentPawnIndex;
+
+	private Random rand = new Random();
+
 
 	// constructor to initialize game state
 	public SorryState() {
@@ -141,5 +146,13 @@ public class SorryState extends GameState {
 			default:
 				return "";
 		}
+	}
+
+	/** Handler for the SorryDrawCard action.
+	 *
+	 * Caveat: This code assumes it is the associated player's turn
+	 */
+	public void drawCard(SorryDrawCard sdc) {
+		this.cardNumber = rand.nextInt(11) + 1;
 	}
 }

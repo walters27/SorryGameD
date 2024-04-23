@@ -8,7 +8,7 @@ import edu.up.cs301.GameFramework.utilities.Tickable;
 
 /**
  * Dumb computer player
- * 
+ *
  * @author Steven R. Vegdahl
  * @author Andrew M. Nuxoll, Annalise Walters, Kira Kunitake, Quince Pham, Corwin Carr
  * @version September 2013
@@ -25,6 +25,10 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 		super(name);
 	}
 
+	//TODO: Nux says it's better to put variables like this in the game state
+	//Example:  gameState.phase =  DRAW_PHASE | SELECT_PAWN_PHASE | MOVE_OR_SELECT_PHASE
+	private boolean needToDraw = true;
+
 	/**
 	 * callback method--game's state has changed
 	 *
@@ -37,16 +41,23 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 		//check if it's the current players turn
 		if(info instanceof SorryState &&
 				gameState.getPlayerId() == this.playerNum){
-			//generate a random card
-			Random rand = new Random();
-			int cardNum = rand.nextInt(11) + 1;
-			//create a MoveForward action
-			MoveForwardAction forward = new MoveForwardAction (this);
-			//send move forward to the game
-			game.sendAction(forward);
-			// if turn = myturn
-			// drawcard/
-			// mvoe
+
+			//Do I need to draw a card
+			if (needToDraw) {
+				SorryDrawCard sdc = new SorryDrawCard(this);
+				game.sendAction(sdc);
+				needToDraw = false;
+			}
+			else {  //move
+				//TODO: choose which pawn to move
+				SorryPawn pawn = null;
+
+				//create a MoveForward action
+				MoveForwardAction forward = new MoveForwardAction(this, pawn);
+				//send move forward to the game
+				game.sendAction(forward);
+				needToDraw = true;
+			}
 		}
 	}
 }

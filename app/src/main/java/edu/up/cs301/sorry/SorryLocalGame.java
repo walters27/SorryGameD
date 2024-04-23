@@ -12,7 +12,7 @@ import java.util.Random;
  * A class that represents the state of a game. In our counter game, the only
  * relevant piece of information is the value of the game's counter. The
  * CounterState object is therefore very simple.
- * 
+ *
  * @author Steven R. Vegdahl
  * @author Andrew M. Nuxoll, Annalise Walters, Kira Kunitake, Corwin Carr, Quince Pham.
  * @version July 2013
@@ -67,12 +67,21 @@ public class SorryLocalGame extends LocalGame {
 	protected boolean makeMove(GameAction action) {
 		Log.i("action", action.getClass().toString());
 
-		if (action instanceof SorryMoveAction) {
+		//Reject  moves if it's  not your turn
+		if (! this.players[this.gameState.getPlayerId()].equals(action.getPlayer())) {
+			return false;
+		}
 
-			// cast so that we Java knows it's a CounterMoveAction
-			SorryMoveAction cma = (SorryMoveAction) action;
+		if (action instanceof SorryDrawCard) {
+			SorryDrawCard sdc = (SorryDrawCard)action;
+			this.gameState.drawCard(sdc);
+			return true;
+		}
+		else if (action instanceof SorryMoveAction) {
+			SorryMoveAction sma = (SorryMoveAction) action;
 
-			// denote that this was a legal/successful move
+			//TODO:  Call the method in SorryState for this action
+
 			return true;
 		} else {
 			// denote that this was an illegal move

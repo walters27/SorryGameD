@@ -40,6 +40,83 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	}
 
 	protected void updateDisplay() {
+
+		updateCurrentCard();
+
+		//TODO:  Update pawn positions (helper)
+
+		//TODO: update message box (winner?)
+
+		gameBoardView.invalidate();
+	}
+
+	/** Displays the currently face up card for the user */
+	private void updateCurrentCard() {
+		// generates/draws a random card number
+		int cardNum = state.getCardNumber();
+		int drawFace = 0;
+
+		// displays card depending on what number card was drawn
+		switch (cardNum) {
+			case 1:
+				drawFace = R.drawable.sorrycardone;
+				state.setCardNumber(1);
+				handleOneCard();
+				break;
+			case 2:
+				drawFace = R.drawable.sorrycardtwo;
+				state.setCardNumber(2);
+				handleTwoCard();
+				break;
+			case 3:
+				drawFace = R.drawable.sorrycardthree;
+				handleThreeCard();
+				state.setCardNumber(3);
+				break;
+			case 4:
+				drawFace = R.drawable.sorrycardfour;
+				handleFourCard();
+				state.setCardNumber(4);
+				break;
+			case 5:
+				drawFace = R.drawable.sorrycardfive;
+				handleFiveCard();
+				state.setCardNumber(5);
+				break;
+			case 6:
+				drawFace = R.drawable.sorrycardseven;
+				handleSevenCard();
+				state.setCardNumber(7);
+				break;
+			case 7:
+				drawFace = R.drawable.sorrycardeight;
+				handleEightCard();
+				state.setCardNumber(8);
+				break;
+			case 8:
+				drawFace = R.drawable.sorrycardten;
+				handleTenCard();
+				state.setCardNumber(10);
+				break;
+			case 9:
+				drawFace = R.drawable.sorrycardeleven;
+				handleElevenCard();
+				state.setCardNumber(11);
+				break;
+			case 10:
+				drawFace = R.drawable.sorrycardtwelve;
+				handleTwelveCard();
+				state.setCardNumber(12);
+				break;
+			case 11:
+				drawFace = R.drawable.sorrycardsorry;
+				handleSorryCard();
+				state.setCardNumber(13);
+				break;
+		}
+
+		imageViewCard.setImageResource(drawFace);
+		state.setCardDrawn(true);
 	}
 
 	// gets text box for displaying messages
@@ -174,72 +251,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	}
 
 	public void drawCard() {
-		// generates/draws a random card number
-		Random rand = new Random();
-		int cardNum = rand.nextInt(11) + 1;
-		int drawFace = 0;
-
-		// displays card depending on what number card was drawn
-		switch (cardNum) {
-			case 1:
-				drawFace = R.drawable.sorrycardone;
-				state.setCardNumber(1);
-				handleOneCard();
-				break;
-			case 2:
-				drawFace = R.drawable.sorrycardtwo;
-				state.setCardNumber(2);
-				handleTwoCard();
-				break;
-			case 3:
-				drawFace = R.drawable.sorrycardthree;
-				handleThreeCard();
-				state.setCardNumber(3);
-				break;
-			case 4:
-				drawFace = R.drawable.sorrycardfour;
-				handleFourCard();
-				state.setCardNumber(4);
-				break;
-			case 5:
-				drawFace = R.drawable.sorrycardfive;
-				handleFiveCard();
-				state.setCardNumber(5);
-				break;
-			case 6:
-				drawFace = R.drawable.sorrycardseven;
-				handleSevenCard();
-				state.setCardNumber(7);
-				break;
-			case 7:
-				drawFace = R.drawable.sorrycardeight;
-				handleEightCard();
-				state.setCardNumber(8);
-				break;
-			case 8:
-				drawFace = R.drawable.sorrycardten;
-				handleTenCard();
-				state.setCardNumber(10);
-				break;
-			case 9:
-				drawFace = R.drawable.sorrycardeleven;
-				handleElevenCard();
-				state.setCardNumber(11);
-				break;
-			case 10:
-				drawFace = R.drawable.sorrycardtwelve;
-				handleTwelveCard();
-				state.setCardNumber(12);
-				break;
-			case 11:
-				drawFace = R.drawable.sorrycardsorry;
-				handleSorryCard();
-				state.setCardNumber(13);
-				break;
-		}
-
-		imageViewCard.setImageResource(drawFace);
-		state.setCardDrawn(true);
+		SorryDrawCard act = new SorryDrawCard(this);
+		game.sendAction(act);
 	}
 
 	// displays message to text box depending on which card was drawn
@@ -338,9 +351,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			}
 			if (selected != null)
 			{
-			gameBoardView.currentPawn = selected;
-			gameBoardView.targetPawn = selected;
-			sendTextMessage(getTextBox(), "selected a " + selected.color + " color pawn" + " x:" + transx + " y:" + transy);
+				gameBoardView.currentPawn = selected;
+				gameBoardView.targetPawn = selected;
+				sendTextMessage(getTextBox(), "selected a " + selected.color + " color pawn" + " x:" + transx + " y:" + transy);
 			}
 			return true;
 		}
