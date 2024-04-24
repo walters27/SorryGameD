@@ -65,7 +65,6 @@ public class SorryLocalGame extends LocalGame {
 	 */
 	@Override
 	protected boolean makeMove(GameAction action) {
-		Log.i("action", action.getClass().toString());
 
 		//Reject  moves if it's  not your turn
 		if (! this.players[this.gameState.getPlayerId()].equals(action.getPlayer())) {
@@ -79,6 +78,7 @@ public class SorryLocalGame extends LocalGame {
 		}
 		else if (action instanceof SorryMoveAction) {
 			SorryMoveAction sma = (SorryMoveAction) action;
+			gameState.moveClockwise(gameState.getCardNumber());
 
 			//TODO:  Call the method in SorryState for this action
 

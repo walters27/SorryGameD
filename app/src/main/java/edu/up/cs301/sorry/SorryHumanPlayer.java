@@ -30,6 +30,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	private Button buttonMoveClockwise;
 	private GameBoardView gameBoardView;
 	private Handler handler = new Handler();
+	private SorryPawn selectedPawn;
 
 	public SorryHumanPlayer(String name) {
 		super(name);
@@ -136,11 +137,13 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			drawCard();
 		} else if (button.getId() == R.id.buttonMoveClockwise) {
 			// Real player's turn
-			gameBoardView.setCurrentPlayer(0);
-			int bestPawnIndex = getBestPawnIndex(0);
+			state.setCurrentPlayer(0);
+			/*int bestPawnIndex = getBestPawnIndex(0);
 			gameBoardView.selectPawn(bestPawnIndex);
-			gameBoardView.moveClockwise(state.getCardNumber());
+			gameBoardView.moveClockwise(state.getCardNumber());*/
 			state.setCardDrawn(false);
+			MoveForwardAction move = new MoveForwardAction(this,selectedPawn);
+			game.sendAction(move);
 			if (gameBoardView.youWon) {
 				sendTextMessage(getTextBox(), "You win");
 				return;
@@ -149,11 +152,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			// Automated player 1's turn
 			new Handler().postDelayed(new Runnable() {
 				public void run() {
-					gameBoardView.setCurrentPlayer(1);
+					state.setCurrentPlayer(1);
 					int bestPawnIndex = getBestPawnIndex(1);
-					gameBoardView.selectPawn(bestPawnIndex);
+					state.selectPawn(bestPawnIndex);
 					drawCard();
-					gameBoardView.moveClockwise(state.getCardNumber());
+					state.moveClockwise(state.getCardNumber());
 					if (gameBoardView.youLost) {
 						sendTextMessage(getTextBox(), "You lost");
 						return;
@@ -162,11 +165,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 					// Automated player 2's turn
 					new Handler().postDelayed(new Runnable() {
 						public void run() {
-							gameBoardView.setCurrentPlayer(2);
+							state.setCurrentPlayer(2);
 							int bestPawnIndex = getBestPawnIndex(2);
-							gameBoardView.selectPawn(bestPawnIndex);
+							state.selectPawn(bestPawnIndex);
 							drawCard();
-							gameBoardView.moveClockwise(state.getCardNumber());
+							state.moveClockwise(state.getCardNumber());
 							if (gameBoardView.youLost) {
 								sendTextMessage(getTextBox(), "You lost");
 								return;
@@ -175,11 +178,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 							// Automated player 3's turn
 							new Handler().postDelayed(new Runnable() {
 								public void run() {
-									gameBoardView.setCurrentPlayer(3);
+									state.setCurrentPlayer(3);
 									int bestPawnIndex = getBestPawnIndex(3);
-									gameBoardView.selectPawn(bestPawnIndex);
+									state.selectPawn(bestPawnIndex);
 									drawCard();
-									gameBoardView.moveClockwise(state.getCardNumber());
+									state.moveClockwise(state.getCardNumber());
 									if (gameBoardView.youLost) {
 										sendTextMessage(getTextBox(), "You lost");
 										return;
@@ -188,9 +191,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 									// Real player's turn again
 									new Handler().postDelayed(new Runnable() {
 										public void run() {
-											gameBoardView.setCurrentPlayer(0);
+											state.setCurrentPlayer(0);
 											int bestPawnIndex = getBestPawnIndex(0);
-											gameBoardView.selectPawn(bestPawnIndex);
+											state.selectPawn(bestPawnIndex);
 										}
 									}, 200);
 								}
@@ -353,6 +356,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			{
 				gameBoardView.currentPawn = selected;
 				gameBoardView.targetPawn = selected;
+				selectedPawn = selected;
 				sendTextMessage(getTextBox(), "selected a " + selected.color + " color pawn" + " x:" + transx + " y:" + transy);
 			}
 			return true;

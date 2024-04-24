@@ -78,7 +78,7 @@ public class GameBoardView extends View {
         pawns = new ArrayList<>();
 
         // Initialize main path mapping
-        mainPathMap = new HashMap<>();
+       /* mainPathMap = new HashMap<>();
         mainPathMap.put(2, 3);
         mainPathMap.put(3, 4);
         mainPathMap.put(4, 5);
@@ -134,10 +134,10 @@ public class GameBoardView extends View {
         mainPathMap.put(46, 31);
         mainPathMap.put(31, 16);
         mainPathMap.put(16, 1);
-        mainPathMap.put(1, 2);
+        mainPathMap.put(1, 2);*/
 
         // Initialize team configurations
-        teams = new HashMap<>();
+        /*teams  = new HashMap<>();
         teams.put("red", new TeamConfiguration(
                 new int[]{20, 34, 35, 36}, 5, 3,
                 new int[]{18, 48, 63, 78, 93}, new int[]{107, 108, 109, 123}));
@@ -150,18 +150,38 @@ public class GameBoardView extends View {
         teams.put("green", new TeamConfiguration(
                 new int[]{138, 153, 168, 152}, 151, 181,
                 new int[]{182, 184, 185, 186, 187}, new int[]{173, 188, 203, 189}));
-
-        // Initialize pawns in starting position
-        initializePawns();
+*/
+// Initialize pawns in starting position
+       initializePawns();
     }
 
-    private void initializePawns() {
+
+    private void initializeTeam() {
         for (Map.Entry<String, TeamConfiguration> entry : teams.entrySet()) {
             String color = entry.getKey();
             TeamConfiguration teamConfig = entry.getValue();
 
             for (int location : teamConfig.getStartBox()) {
                 SorryPawn pawn = new SorryPawn(getColorFromString(color), getDrawableIdFromColor(color));
+                pawn.location = location;
+                pawns.add(pawn);
+            }
+        }
+    }
+
+    private void initializePawns() {
+        int[][] locations = {
+                {58, 73, 88, 74},     // Blue
+                {20, 34, 35, 36},     // Red
+                {191, 192, 206, 190}, // Yellow
+                {138, 153, 168, 152}  // Green
+        };
+        int[] colors = {Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN};
+        int[] drawableIds = {R.drawable.blue_pawn, R.drawable.red_pawn, R.drawable.yellow_pawn, R.drawable.green_pawn};
+
+        for (int colorIndex = 0; colorIndex < colors.length; colorIndex++) {
+            for (int location : locations[colorIndex]) {
+                SorryPawn pawn = new SorryPawn(colors[colorIndex], drawableIds[colorIndex]);
                 pawn.location = location;
                 pawns.add(pawn);
             }
@@ -215,6 +235,7 @@ public class GameBoardView extends View {
     private float interpolate(float start, float end, float t) {
         return start + (end - start) * t;
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -273,7 +294,7 @@ public class GameBoardView extends View {
         }
     }
 
-    public void moveClockwise(int numSpaces) {
+    /*public void moveClockwise(int numSpaces) {
         int newLocation = currentPawn.location;
         String currentTeamColor = getTeamColorFromPawn(currentPawn);
         TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
@@ -341,11 +362,11 @@ public class GameBoardView extends View {
         }
         Log.d("SorryGame", "Final pawn location: " + newLocation);
         movePawnTo(newLocation);
-    }
+    }*/
 
 
 
-    private String getTeamColorFromPawn(SorryPawn pawn) {
+    /*private String getTeamColorFromPawn(SorryPawn pawn) {
         int pawnColor = pawn.color;
         if (pawnColor == Color.RED) {
             return "red";
@@ -357,16 +378,16 @@ public class GameBoardView extends View {
             return "green";
         }
         return "";
-    }
+    }*/
 
-    public void setCurrentPlayer(int playerIndex) {
+   /* public void setCurrentPlayer(int playerIndex) {
         currentPlayerIndex = playerIndex;
         currentPawn = pawns.get(playerIndex * 4); // Assumes 4 pawns per player
-    }
+    }*/
 
-    public void selectPawn(int pawnIndex) {
+    /*public void selectPawn(int pawnIndex) {
         currentPawn = pawns.get(currentPlayerIndex * 4 + pawnIndex);
-    }
+    }*/
 }
 
 class TeamConfiguration {
