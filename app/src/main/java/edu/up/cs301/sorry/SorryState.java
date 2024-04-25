@@ -156,6 +156,10 @@ public class SorryState extends GameState {
 		playerId = s;
 	}
 
+	public ArrayList<SorryPawn> getPawns() {
+		return pawns;
+	}
+
 	public boolean getCardDrawn() {
 		return cardDrawn;
 	}
@@ -259,7 +263,9 @@ public class SorryState extends GameState {
 	 */
 
 	public void moveClockwise(int numSpaces) {
+		//TODO: keep the index of current pawn by checking position
 		if(this.getPlayerId() != getTeamIdFromPawn(currentPawn)){
+			Log.d("", "aklsmdlaskfeojaf");
 			return;
 		}
 		if(teams == null){
@@ -335,13 +341,14 @@ public class SorryState extends GameState {
 			}
 			newLocation =location.get(0);
 			}
-
+			//TODO: make this apply to the state pawn index
 			movePawnTo(newLocation);
 
 			this.playerId = ((this.playerId+1)%4);
-			Log.d("CurrentPlayerIndex", "Current player index: " + currentPlayerIndex + "  " + this.playerId);
+			Log.d("CurrentPlayerIndex", "Current player index: " + currentPlayerIndex + "  playerid:" + this.playerId);
 		}
 		else{
+			Log.d("", "current pawn is null");
 			return;
 		}
 	}

@@ -70,62 +70,31 @@ public class SorryLocalGame extends LocalGame {
 	protected boolean makeMove(GameAction action) {
 
 		//Reject  moves if it's  not your turn
-		Log.d("","sfwefewge");
-		if (! this.players[this.gameState.getPlayerId()].equals(action.getPlayer())) {
-			Log.d("", "ihbibni");
+		if (!this.players[this.gameState.getPlayerId()].equals(action.getPlayer())) {
 			return false;
 		}
-		Log.d("turn", "player:" +action.getPlayer() + " " + this.players[this.gameState.getPlayerId()]);
+		Log.d("turn", "action sender:" + action.getPlayer() + " current player:" + this.players[this.gameState.getPlayerId()]);
+		Log.d("", "gamestate player id: "+gameState.getPlayerId());
 		if (action instanceof SorryDrawCard) {
-			SorryDrawCard sdc = (SorryDrawCard)action;
+			SorryDrawCard sdc = (SorryDrawCard) action;
 			this.gameState.drawCard(sdc);
 			return true;
-		}
-		else if (action instanceof MoveForwardAction) {
+		} else if (action instanceof MoveForwardAction) {
 			//SorryMoveAction sma = (SorryMoveAction) action;
 			gameState.moveClockwise(gameState.getCardNumber());
 
 			//TODO:  Call the method in SorryState for this action
 
 			return true;
-		}
-		else if (action instanceof StateChangeCurrentPawn) {
-			StateChangeCurrentPawn sta = (StateChangeCurrentPawn) action;
+		} else if (action instanceof StateChangeCurrentPawn) {
+			//StateChangeCurrentPawn sta = (StateChangeCurrentPawn) action;
 			gameState.currentPawn = ((StateChangeCurrentPawn) action).getPawn();
 			return true;
-		}
-		else {
+		} else {
 			// denote that this was an illegal move
 			return false;
 		}
 	}//makeMove
-
-	// helper method to update player turn after a move
-	protected boolean movePiece(GameAction action) {
-
-		if (action instanceof SorryMoveAction) {
-
-			SorryMoveAction cma = (SorryMoveAction) action;
-
-			if (gameState.getPlayerId() == 0) {
-
-				gameState.setPlayerId(1);
-			} else if (gameState.getPlayerId() == 1) {
-
-				gameState.setPlayerId(2);
-			} else if (gameState.getPlayerId() == 2) {
-
-				gameState.setPlayerId(3);
-			} else if (gameState.getPlayerId() == 3) {
-
-				gameState.setPlayerId(0);
-			}
-			this.sendAllUpdatedState();
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	/**
 	 * send the updated state to a given player
@@ -137,17 +106,4 @@ public class SorryLocalGame extends LocalGame {
 		p.sendInfo(new SorryState(this.gameState));
 
 	}//sendUpdatedSate
-
-/*	@Override
-	protected String checkIfGameOver() {
-		for (int i = 0; i < 4; i++) {
-			if(gameState.getPawnHomeCount(i) == 1){
-				return "Player " + (i+1) + " wins!";
-			}
-		}
-		return null;
-	}*/
-
 }
-
-// class CounterLocalGame

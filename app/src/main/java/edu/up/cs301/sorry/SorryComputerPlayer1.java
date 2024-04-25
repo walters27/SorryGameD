@@ -1,7 +1,10 @@
 package edu.up.cs301.sorry;
 
+import android.util.Log;
+
 import java.util.Random;
 
+import edu.up.cs301.GameFramework.infoMessage.IllegalMoveInfo;
 import edu.up.cs301.GameFramework.players.GameComputerPlayer;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 import edu.up.cs301.GameFramework.utilities.Tickable;
@@ -38,23 +41,26 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 	@Override
 	protected void receiveInfo(GameInfo info) {
 		//cast info to SorryState
+		if (info instanceof IllegalMoveInfo) {return;}
 		SorryState gameState = (SorryState)info;
 		//check if it's the current players turn
-		if(info instanceof SorryState &&
-				gameState.getCurrentPlayer() == this.playerNum){
-
+		if(info instanceof SorryState && gameState.getPlayerId() == this.playerNum){
 			//Do I need to draw a card
 			if (needToDraw) {
 				SorryDrawCard sdc = new SorryDrawCard(this);
-				game.sendAction(sdc);
 				needToDraw = false;
+				game.sendAction(sdc);
 			}
 			else {  //move
 				//TODO: choose which pawn to move
+
+
+
 				SorryPawn[] movePawn = gameState.getPlayerPawns(playerNum);
 				Random rand = new Random();
 				SorryPawn pawn = movePawn[rand.nextInt(movePawn.length)];
-
+				StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, pawn);
+				game.sendAction(sta);
 				//create a MoveForward action
 				MoveForwardAction forward = new MoveForwardAction(this, pawn);
 				//send move forward to the game

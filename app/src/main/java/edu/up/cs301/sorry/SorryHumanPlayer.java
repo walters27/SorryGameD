@@ -5,6 +5,7 @@ import static android.graphics.Color.GREEN;
 import static android.graphics.Color.RED;
 import static android.graphics.Color.YELLOW;
 
+import edu.up.cs301.GameFramework.actionMessage.MyNameIsAction;
 import edu.up.cs301.GameFramework.infoMessage.GameState;
 import edu.up.cs301.GameFramework.players.GameHumanPlayer;
 import edu.up.cs301.GameFramework.GameMainActivity;
@@ -13,6 +14,7 @@ import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -46,10 +48,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		updateCurrentCard();
 
 		//TODO:  Update pawn positions (helper)
+		gameBoardView.pawns = state.getPawns();
+		for (SorryPawn s : gameBoardView.pawns) {Log.d("", "locaiton"+ s.location);}
+		gameBoardView.invalidate();
 
 		//TODO: update message box (winner?)
-
-		gameBoardView.invalidate();
 	}
 
 	/** Displays the currently face up card for the user */
@@ -62,58 +65,58 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		switch (cardNum) {
 			case 1:
 				drawFace = R.drawable.sorrycardone;
-				state.setCardNumber(1);
+				//state.setCardNumber(1);
 				handleOneCard();
 				break;
 			case 2:
 				drawFace = R.drawable.sorrycardtwo;
-				state.setCardNumber(2);
+				//state.setCardNumber(2);
 				handleTwoCard();
 				break;
 			case 3:
 				drawFace = R.drawable.sorrycardthree;
 				handleThreeCard();
-				state.setCardNumber(3);
+				//state.setCardNumber(3);
 				break;
 			case 4:
 				drawFace = R.drawable.sorrycardfour;
 				handleFourCard();
-				state.setCardNumber(4);
+				//state.setCardNumber(4);
 				break;
 			case 5:
 				drawFace = R.drawable.sorrycardfive;
 				handleFiveCard();
-				state.setCardNumber(5);
+				//state.setCardNumber(5);
 				break;
 			case 6:
 				drawFace = R.drawable.sorrycardseven;
 				handleSevenCard();
-				state.setCardNumber(7);
+				//state.setCardNumber(7);
 				break;
 			case 7:
 				drawFace = R.drawable.sorrycardeight;
 				handleEightCard();
-				state.setCardNumber(8);
+				//state.setCardNumber(8);
 				break;
 			case 8:
 				drawFace = R.drawable.sorrycardten;
 				handleTenCard();
-				state.setCardNumber(10);
+				//state.setCardNumber(10);
 				break;
 			case 9:
 				drawFace = R.drawable.sorrycardeleven;
 				handleElevenCard();
-				state.setCardNumber(11);
+				//state.setCardNumber(11);
 				break;
 			case 10:
 				drawFace = R.drawable.sorrycardtwelve;
 				handleTwelveCard();
-				state.setCardNumber(12);
+				//state.setCardNumber(12);
 				break;
 			case 11:
 				drawFace = R.drawable.sorrycardsorry;
 				handleSorryCard();
-				state.setCardNumber(13);
+				//state.setCardNumber(13);
 				break;
 		}
 
@@ -137,10 +140,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			if (button.getId() == R.id.buttonDrawCards) {
 				drawCard();
 			} else if (button.getId() == R.id.buttonMoveClockwise) {
-				// Real player's turn
-			/*int bestPawnIndex = getBestPawnIndex(0);
-			gameBoardView.selectPawn(bestPawnIndex);
-			gameBoardView.moveClockwise(state.getCardNumber());*/
 				state.setCardDrawn(false);
 				MoveForwardAction move = new MoveForwardAction(this,selectedPawn);
 				game.sendAction(move);
@@ -150,22 +149,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 					return;
 				}
 			}
-	}
-
-	private int getBestPawnIndex(int playerIndex) {
-		int bestPawnIndex = 0;
-		int maxDistance = -1;
-		for (int i = 0; i < 4; i++) {
-			SorryPawn pawn = gameBoardView.pawns.get(playerIndex * 4 + i);
-			int distance = getDistanceToHome(pawn);
-
-			if (distance > maxDistance) {
-				maxDistance = distance;
-				bestPawnIndex = i;
-			}
-		}
-
-		return bestPawnIndex;
 	}
 
 	private int getDistanceToHome(SorryPawn pawn) {
@@ -281,7 +264,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		if (v instanceof GameBoardView)
 		{
 			SorryPawn selected = null;
-			List<SorryPawn> sp = gameBoardView.pawns;
+			List<SorryPawn> sp = state.getPawns();
 			// code citation DJhon Stackoverflow
 			// get x and y location of click
 			int transx = (int) event.getX();

@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -12,6 +14,12 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+        ArrayList<Integer> location = new ArrayList<>();
+        location.add(4);
+        location.add(5);
+        location.add(6);
+        location.remove(location.lastIndexOf(4));
+        assert location.get(0) == 5;
+
     }
 }
