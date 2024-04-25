@@ -6,6 +6,8 @@ import edu.up.cs301.GameFramework.LocalGame;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import android.util.Log;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import java.util.Random;
 
 /**
@@ -76,14 +78,20 @@ public class SorryLocalGame extends LocalGame {
 			this.gameState.drawCard(sdc);
 			return true;
 		}
-		else if (action instanceof SorryMoveAction) {
-			SorryMoveAction sma = (SorryMoveAction) action;
+		else if (action instanceof MoveForwardAction) {
+			//SorryMoveAction sma = (SorryMoveAction) action;
 			gameState.moveClockwise(gameState.getCardNumber());
 
 			//TODO:  Call the method in SorryState for this action
 
 			return true;
-		} else {
+		}
+		else if (action instanceof StateChangeCurrentPawn) {
+			StateChangeCurrentPawn sta = (StateChangeCurrentPawn) action;
+			gameState.currentPawn = ((StateChangeCurrentPawn) action).getPawn();
+			return true;
+		}
+		else {
 			// denote that this was an illegal move
 			return false;
 		}

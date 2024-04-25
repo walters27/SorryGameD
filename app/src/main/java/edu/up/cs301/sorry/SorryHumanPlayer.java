@@ -144,6 +144,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			state.setCardDrawn(false);
 			MoveForwardAction move = new MoveForwardAction(this,selectedPawn);
 			game.sendAction(move);
+			gameBoardView.invalidate();
 			if (gameBoardView.youWon) {
 				sendTextMessage(getTextBox(), "You win");
 				return;
@@ -309,6 +310,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		if (!(info instanceof SorryState)) return;
 		this.state = (SorryState) info;
 		updateDisplay();
+		gameBoardView.invalidate();
 	}
 
 	public void setAsGui(GameMainActivity activity) {
@@ -354,8 +356,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			}
 			if (selected != null)
 			{
-				gameBoardView.currentPawn = selected;
-				gameBoardView.targetPawn = selected;
+				StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, selected);
+				game.sendAction(sta);
+				//state.targetPawn = selected;
 				selectedPawn = selected;
 				sendTextMessage(getTextBox(), "selected a " + selected.color + " color pawn" + " x:" + transx + " y:" + transy);
 			}

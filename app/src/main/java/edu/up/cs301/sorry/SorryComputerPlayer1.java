@@ -6,6 +6,7 @@ import edu.up.cs301.GameFramework.players.GameComputerPlayer;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 import edu.up.cs301.GameFramework.utilities.Tickable;
 
+
 /**
  * Dumb computer player
  *
@@ -51,6 +52,7 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 			else {  //move
 				//TODO: choose which pawn to move
 				SorryPawn pawn = null;
+
 
 				//create a MoveForward action
 				MoveForwardAction forward = new MoveForwardAction(this, pawn);
