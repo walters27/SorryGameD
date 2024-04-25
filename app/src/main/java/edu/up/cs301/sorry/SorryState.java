@@ -340,9 +340,9 @@ public class SorryState extends GameState {
 				location.add(109);
 				location.add(123);
 			for (SorryPawn s : pawns) {
-				for (int i : location) {
-					if (s.location == i) {location.remove(location.lastIndexOf(i));}
-
+				if (location.contains(s.location))
+				{
+					location.remove(location.indexOf(s.location));
 				}
 			}
 			newLocation =location.get(0);
