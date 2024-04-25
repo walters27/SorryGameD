@@ -264,6 +264,7 @@ public class SorryState extends GameState {
 
 	public void moveClockwise(int numSpaces) {
 		//TODO: keep the index of current pawn by checking position
+		SorryPawn statepawn = null;
 		if(this.getPlayerId() != getTeamIdFromPawn(currentPawn)){
 			Log.d("", "aklsmdlaskfeojaf");
 			return;
@@ -272,6 +273,10 @@ public class SorryState extends GameState {
 			return;
 		}
 		if (currentPawn != null){
+			for (int i = 0; i < 16; i++)
+			{
+				if (pawns.get(i).location == currentPawn.location) {statepawn = pawns.get(i);}
+			}
 			int newLocation = currentPawn.location;
 			String currentTeamColor = getTeamColorFromPawn(currentPawn);
 			TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
@@ -343,6 +348,7 @@ public class SorryState extends GameState {
 			}
 			//TODO: make this apply to the state pawn index
 			movePawnTo(newLocation);
+			statepawn.location = newLocation;
 
 			this.playerId = ((this.playerId+1)%4);
 			Log.d("CurrentPlayerIndex", "Current player index: " + currentPlayerIndex + "  playerid:" + this.playerId);
