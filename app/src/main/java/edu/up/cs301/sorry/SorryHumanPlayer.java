@@ -47,9 +47,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 		updateCurrentCard();
 
-		//TODO:  Update pawn positions (helper)
 		gameBoardView.pawns = state.getPawns();
-		for (SorryPawn s : gameBoardView.pawns) {Log.d("", "locaiton"+ s.location);}
 		gameBoardView.invalidate();
 
 		//TODO: update message box (winner?)

@@ -288,6 +288,7 @@ public class SorryState extends GameState {
 					// Move from start box to start position
 					newLocation = currentTeamConfig.getStartPos();
 					currentPawn.isInStart = false;
+					statepawn.isInStart = false;
 				} else if (mainPathMap.containsKey(newLocation) && !enteredSafeZone) {
 					// Move along the main path
 					int nextLocation = mainPathMap.get(newLocation);
@@ -346,10 +347,12 @@ public class SorryState extends GameState {
 			}
 			newLocation =location.get(0);
 			}
+
 			//TODO: make this apply to the state pawn index
 			movePawnTo(newLocation);
-			statepawn.location = newLocation;
-
+			if (statepawn != null) {
+				statepawn.location = newLocation;
+			}
 			this.playerId = ((this.playerId+1)%4);
 			Log.d("CurrentPlayerIndex", "Current player index: " + currentPlayerIndex + "  playerid:" + this.playerId);
 		}
