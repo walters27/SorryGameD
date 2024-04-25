@@ -141,11 +141,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				state.setCardDrawn(false);
 				MoveForwardAction move = new MoveForwardAction(this,selectedPawn);
 				game.sendAction(move);
-				gameBoardView.invalidate();
-				if (gameBoardView.youWon) {
-					sendTextMessage(getTextBox(), "You win");
-					return;
-				}
 			}
 	}
 

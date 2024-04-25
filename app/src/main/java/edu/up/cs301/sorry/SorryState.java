@@ -49,7 +49,7 @@ public class SorryState extends GameState {
 
 		int[][] locations = {
 				{58, 73, 88, 74},     // Blue
-				{20, 34, 35, 36},     // Red
+				{2, 34, 35, 36},     // Red
 				{191, 192, 206, 190}, // Yellow
 				{138, 153, 168, 152}  // Green
 		};
@@ -184,10 +184,6 @@ public class SorryState extends GameState {
 		pawnStartCount[color] = num;
 	}
 
-	public SorryPawn getPawn(int i) {
-		return pawns.get(i);
-	}
-
 	public int getCardNumber() {
 		return cardNumber;
 	}
@@ -202,6 +198,10 @@ public class SorryState extends GameState {
 
 	public void setCurrentPawnIndex(int index) {
 		currentPawnIndex = index;
+	}
+
+	public void setPawns (ArrayList <SorryPawn> newPawn){
+		this.pawns = newPawn;
 	}
 
 	public SorryState(SorryState orig) {
@@ -277,7 +277,7 @@ public class SorryState extends GameState {
 			{
 				if (pawns.get(i).location == currentPawn.location) {statepawn = pawns.get(i);}
 			}
-			int newLocation = currentPawn.location;
+			int currLocation = currentPawn.location;
 			String currentTeamColor = getTeamColorFromPawn(currentPawn);
 			TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
 
@@ -286,27 +286,35 @@ public class SorryState extends GameState {
 			for (int i = 0; i < numSpaces; i++) {
 				if (currentPawn.isInStart) {
 					// Move from start box to start position
-					newLocation = currentTeamConfig.getStartPos();
+					currLocation = currentTeamConfig.getStartPos();
 					currentPawn.isInStart = false;
 					statepawn.isInStart = false;
-				} else if (mainPathMap.containsKey(newLocation) && !enteredSafeZone) {
+				} else if (mainPathMap.containsKey(currLocation) && !enteredSafeZone) {
 					// Move along the main path
-					int nextLocation = mainPathMap.get(newLocation);
+					int nextLocation = mainPathMap.get(currLocation);
 					if (nextLocation == currentTeamConfig.getSafeEntry()) {
 						// Pawn will pass over the safe entry, switch to safe zone path
-						newLocation = currentTeamConfig.getSafeZone()[0];
+						currLocation = currentTeamConfig.getSafeZone()[0];
+						currentPawn.location = currLocation;
 						enteredSafeZone = true;
 					} else {
-						newLocation = nextLocation;
+						currLocation = nextLocation;
 					}
 				} else {
 					int[] safeZone = currentTeamConfig.getSafeZone();
-					int safeZoneIndex = Arrays.asList(safeZone).indexOf(newLocation);
+
+					int safeZoneIndex = -1;
+					for(int j = 0; j < safeZone.length; j++){
+						if(safeZone[j] == currLocation){
+							safeZoneIndex = j;
+							break;
+						}
+					}
 
 					if (safeZoneIndex != -1) {
 						// Move within the safe zone
 						if (safeZoneIndex < safeZone.length - 1) {
-							newLocation = safeZone[safeZoneIndex + 1];
+							currLocation = safeZone[safeZoneIndex + 1];
 						} else {
 							// Move to a random unoccupied spot in the home position
 							int[] home = currentTeamConfig.getHome();
@@ -325,7 +333,7 @@ public class SorryState extends GameState {
 							}
 							if (!unoccupiedHomeSpots.isEmpty()) {
 								int randomIndex = new Random().nextInt(unoccupiedHomeSpots.size());
-								newLocation = unoccupiedHomeSpots.get(randomIndex);
+								currLocation = unoccupiedHomeSpots.get(randomIndex);
 								currentPawn.isHome = true;
 							}
 							break; // Stop moving further, as the pawn has reached the end of the safe zone
@@ -333,7 +341,7 @@ public class SorryState extends GameState {
 					}
 				}
 			}
-			if (newLocation == 108) {currentPawn.isHome = true;
+			if (currLocation == 108) {currentPawn.isHome = true;
 				ArrayList<Integer> location = new ArrayList<>();
 				location.add(107);
 				location.add(108);
@@ -345,13 +353,13 @@ public class SorryState extends GameState {
 
 				}
 			}
-			newLocation =location.get(0);
+			currLocation =location.get(0);
 			}
 
 			//TODO: make this apply to the state pawn index
-			movePawnTo(newLocation);
+			movePawnTo(currLocation);
 			if (statepawn != null) {
-				statepawn.location = newLocation;
+				statepawn.location = currLocation;
 			}
 			this.playerId = ((this.playerId+1)%4);
 			Log.d("CurrentPlayerIndex", "Current player index: " + currentPlayerIndex + "  playerid:" + this.playerId);

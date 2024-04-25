@@ -36,7 +36,7 @@ public class GameBoardView extends View {
     private Bitmap boardImage;
     private int margin;
     private RectF outlineRect;
-    public List<SorryPawn> pawns;
+    public ArrayList<SorryPawn> pawns;
     public SorryPawn currentPawn;
     public SorryPawn targetPawn;
     public boolean youWon = false;

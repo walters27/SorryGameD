@@ -54,8 +54,6 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 			else {  //move
 				//TODO: choose which pawn to move
 
-
-
 				SorryPawn[] movePawn = gameState.getPlayerPawns(playerNum);
 				Random rand = new Random();
 				SorryPawn pawn = movePawn[rand.nextInt(movePawn.length)];

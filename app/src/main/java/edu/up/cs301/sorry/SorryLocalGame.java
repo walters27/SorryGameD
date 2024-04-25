@@ -83,8 +83,6 @@ public class SorryLocalGame extends LocalGame {
 			//SorryMoveAction sma = (SorryMoveAction) action;
 			gameState.moveClockwise(gameState.getCardNumber());
 
-			//TODO:  Call the method in SorryState for this action
-
 			return true;
 		} else if (action instanceof StateChangeCurrentPawn) {
 			//StateChangeCurrentPawn sta = (StateChangeCurrentPawn) action;
