@@ -259,7 +259,8 @@ public class SorryState extends GameState {
 	 */
 
 	public void moveClockwise(int numSpaces) {
-		if(currentPawn.color != getTeamIdFromPawn(currentPawn)){
+		if(this.getPlayerId() != getTeamIdFromPawn(currentPawn)){
+			return;
 		}
 		if(teams == null){
 			Log.e("SorryGame","Teams map is null");
@@ -349,6 +350,7 @@ public class SorryState extends GameState {
 
 			movePawnTo(newLocation);
 
+			setCurrentPlayer((currentPlayerIndex+1)%4);
 		}
 		else{
 			return;
@@ -369,15 +371,17 @@ public class SorryState extends GameState {
 	}
 
 	private int getTeamIdFromPawn(SorryPawn pawn) {
-		int pawnColor = pawn.color;
-		if (pawnColor == Color.RED) {
-			return  0;
-		} else if (pawnColor == Color.BLUE) {
-			return 1;
-		} else if (pawnColor == Color.YELLOW) {
-			return 2;
-		} else if (pawnColor == Color.GREEN) {
-			return 3;
+		if(pawn != null){
+			int pawnColor = pawn.color;
+			if (pawnColor == Color.RED) {
+				return  0;
+			} else if (pawnColor == Color.BLUE) {
+				return 1;
+			} else if (pawnColor == Color.YELLOW) {
+				return 2;
+			} else if (pawnColor == Color.GREEN) {
+				return 3;
+			}
 		}
 		return -1;
 	}
@@ -394,10 +398,25 @@ public class SorryState extends GameState {
 
 	public void setCurrentPlayer(int playerIndex) {
 		currentPlayerIndex = playerIndex;
-		currentPawn = pawns.get(playerIndex * 4); // Assumes 4 pawns per player
+		//currentPawn = pawns.get(playerIndex * 4); // Assumes 4 pawns per player
+	}
+
+	public int getCurrentPlayer(){
+		return currentPlayerIndex;
 	}
 	public void drawCard(SorryDrawCard sdc) {
 		this.cardNumber = rand.nextInt(11) + 1;
+	}
+
+	public SorryPawn[] getPlayerPawns(int playerId){
+		ArrayList <SorryPawn> playerPawns = new ArrayList<>();
+		for (SorryPawn pawn:pawns){
+			int pawnTeamId = getTeamIdFromPawn(pawn);
+			if(pawnTeamId==playerId){
+				playerPawns.add(pawn);
+			}
+		}
+		return playerPawns.toArray(new SorryPawn[playerPawns.size()]);
 	}
 }
 

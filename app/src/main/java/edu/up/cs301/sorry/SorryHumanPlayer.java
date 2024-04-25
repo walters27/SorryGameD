@@ -137,7 +137,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			drawCard();
 		} else if (button.getId() == R.id.buttonMoveClockwise) {
 			// Real player's turn
-			state.setCurrentPlayer(0);
+			//state.setCurrentPlayer(0);
 			/*int bestPawnIndex = getBestPawnIndex(0);
 			gameBoardView.selectPawn(bestPawnIndex);
 			gameBoardView.moveClockwise(state.getCardNumber());*/
@@ -149,60 +149,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				sendTextMessage(getTextBox(), "You win");
 				return;
 			}
-
-			// Automated player 1's turn
-			new Handler().postDelayed(new Runnable() {
-				public void run() {
-					state.setCurrentPlayer(1);
-					int bestPawnIndex = getBestPawnIndex(1);
-					state.selectPawn(bestPawnIndex);
-					drawCard();
-					state.moveClockwise(state.getCardNumber());
-					if (gameBoardView.youLost) {
-						sendTextMessage(getTextBox(), "You lost");
-						return;
-					}
-
-					// Automated player 2's turn
-					new Handler().postDelayed(new Runnable() {
-						public void run() {
-							state.setCurrentPlayer(2);
-							int bestPawnIndex = getBestPawnIndex(2);
-							state.selectPawn(bestPawnIndex);
-							drawCard();
-							state.moveClockwise(state.getCardNumber());
-							if (gameBoardView.youLost) {
-								sendTextMessage(getTextBox(), "You lost");
-								return;
-							}
-
-							// Automated player 3's turn
-							new Handler().postDelayed(new Runnable() {
-								public void run() {
-									state.setCurrentPlayer(3);
-									int bestPawnIndex = getBestPawnIndex(3);
-									state.selectPawn(bestPawnIndex);
-									drawCard();
-									state.moveClockwise(state.getCardNumber());
-									if (gameBoardView.youLost) {
-										sendTextMessage(getTextBox(), "You lost");
-										return;
-									}
-
-									// Real player's turn again
-									new Handler().postDelayed(new Runnable() {
-										public void run() {
-											state.setCurrentPlayer(0);
-											int bestPawnIndex = getBestPawnIndex(0);
-											state.selectPawn(bestPawnIndex);
-										}
-									}, 200);
-								}
-							}, 200);
-						}
-					}, 200);
-				}
-			}, 200);
 		}
 	}
 

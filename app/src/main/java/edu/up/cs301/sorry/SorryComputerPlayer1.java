@@ -41,7 +41,7 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 		SorryState gameState = (SorryState)info;
 		//check if it's the current players turn
 		if(info instanceof SorryState &&
-				gameState.getPlayerId() == this.playerNum){
+				gameState.getCurrentPlayer() == this.playerNum){
 
 			//Do I need to draw a card
 			if (needToDraw) {
@@ -51,8 +51,9 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 			}
 			else {  //move
 				//TODO: choose which pawn to move
-				SorryPawn pawn = null;
-
+				SorryPawn[] movePawn = gameState.getPlayerPawns(playerNum);
+				Random rand = new Random();
+				SorryPawn pawn = movePawn[rand.nextInt(movePawn.length)];
 
 				//create a MoveForward action
 				MoveForwardAction forward = new MoveForwardAction(this, pawn);
