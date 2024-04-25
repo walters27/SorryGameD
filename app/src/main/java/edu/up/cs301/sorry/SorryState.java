@@ -263,16 +263,12 @@ public class SorryState extends GameState {
 			return;
 		}
 		if(teams == null){
-			Log.e("SorryGame","Teams map is null");
 			return;
 		}
 		if (currentPawn != null){
 			int newLocation = currentPawn.location;
 			String currentTeamColor = getTeamColorFromPawn(currentPawn);
 			TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
-
-			Log.d("SorryGame", "Current pawn location: " + currentPawn.location);
-			Log.d("SorryGame", "Current team color: " + currentTeamColor);
 
 			boolean enteredSafeZone = false;
 
@@ -281,7 +277,6 @@ public class SorryState extends GameState {
 					// Move from start box to start position
 					newLocation = currentTeamConfig.getStartPos();
 					currentPawn.isInStart = false;
-					Log.d("SorryGame", "Moved from start box to start position: " + newLocation);
 				} else if (mainPathMap.containsKey(newLocation) && !enteredSafeZone) {
 					// Move along the main path
 					int nextLocation = mainPathMap.get(newLocation);
@@ -289,10 +284,8 @@ public class SorryState extends GameState {
 						// Pawn will pass over the safe entry, switch to safe zone path
 						newLocation = currentTeamConfig.getSafeZone()[0];
 						enteredSafeZone = true;
-						Log.d("SorryGame", "Entered safe zone at: " + newLocation);
 					} else {
 						newLocation = nextLocation;
-						Log.d("SorryGame", "Moved along main path to: " + newLocation);
 					}
 				} else {
 					int[] safeZone = currentTeamConfig.getSafeZone();
@@ -302,7 +295,6 @@ public class SorryState extends GameState {
 						// Move within the safe zone
 						if (safeZoneIndex < safeZone.length - 1) {
 							newLocation = safeZone[safeZoneIndex + 1];
-							Log.d("SorryGame", "Moved within safe zone to: " + newLocation);
 						} else {
 							// Move to a random unoccupied spot in the home position
 							int[] home = currentTeamConfig.getHome();
@@ -323,16 +315,12 @@ public class SorryState extends GameState {
 								int randomIndex = new Random().nextInt(unoccupiedHomeSpots.size());
 								newLocation = unoccupiedHomeSpots.get(randomIndex);
 								currentPawn.isHome = true;
-								Log.d("SorryGame", "Moved to unoccupied home position: " + newLocation);
-							} else {
-								Log.d("SorryGame", "All home positions are occupied. Pawn stays in the safe zone.");
 							}
 							break; // Stop moving further, as the pawn has reached the end of the safe zone
 						}
 					}
 				}
 			}
-			Log.d("SorryGame", "Final pawn location: " + newLocation);
 			if (newLocation == 108) {currentPawn.isHome = true;
 				ArrayList<Integer> location = new ArrayList<>();
 				location.add(107);
@@ -350,7 +338,8 @@ public class SorryState extends GameState {
 
 			movePawnTo(newLocation);
 
-			setCurrentPlayer((currentPlayerIndex+1)%4);
+			this.playerId = ((this.playerId+1)%4);
+			Log.d("CurrentPlayerIndex", "Current player index: " + currentPlayerIndex + "  " + this.playerId);
 		}
 		else{
 			return;

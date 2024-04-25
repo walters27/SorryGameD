@@ -41,6 +41,7 @@ public class SorryLocalGame extends LocalGame {
 	 */
 	@Override
 	protected boolean canMove(int playerIdx) {
+
 		return true;
 	}
 
@@ -69,10 +70,12 @@ public class SorryLocalGame extends LocalGame {
 	protected boolean makeMove(GameAction action) {
 
 		//Reject  moves if it's  not your turn
+		Log.d("","sfwefewge");
 		if (! this.players[this.gameState.getPlayerId()].equals(action.getPlayer())) {
+			Log.d("", "ihbibni");
 			return false;
 		}
-
+		Log.d("turn", "player:" +action.getPlayer() + " " + this.players[this.gameState.getPlayerId()]);
 		if (action instanceof SorryDrawCard) {
 			SorryDrawCard sdc = (SorryDrawCard)action;
 			this.gameState.drawCard(sdc);
@@ -117,6 +120,7 @@ public class SorryLocalGame extends LocalGame {
 
 				gameState.setPlayerId(0);
 			}
+			this.sendAllUpdatedState();
 			return true;
 		} else {
 			return false;

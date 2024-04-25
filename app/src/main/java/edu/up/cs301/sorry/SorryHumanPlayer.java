@@ -5,6 +5,7 @@ import static android.graphics.Color.GREEN;
 import static android.graphics.Color.RED;
 import static android.graphics.Color.YELLOW;
 
+import edu.up.cs301.GameFramework.infoMessage.GameState;
 import edu.up.cs301.GameFramework.players.GameHumanPlayer;
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
@@ -133,23 +134,22 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 	public void onClick(View button) {
 		if (game == null) return;
-		if (button.getId() == R.id.buttonDrawCards) {
-			drawCard();
-		} else if (button.getId() == R.id.buttonMoveClockwise) {
-			// Real player's turn
-			//state.setCurrentPlayer(0);
+			if (button.getId() == R.id.buttonDrawCards) {
+				drawCard();
+			} else if (button.getId() == R.id.buttonMoveClockwise) {
+				// Real player's turn
 			/*int bestPawnIndex = getBestPawnIndex(0);
 			gameBoardView.selectPawn(bestPawnIndex);
 			gameBoardView.moveClockwise(state.getCardNumber());*/
-			state.setCardDrawn(false);
-			MoveForwardAction move = new MoveForwardAction(this,selectedPawn);
-			game.sendAction(move);
-			gameBoardView.invalidate();
-			if (gameBoardView.youWon) {
-				sendTextMessage(getTextBox(), "You win");
-				return;
+				state.setCardDrawn(false);
+				MoveForwardAction move = new MoveForwardAction(this,selectedPawn);
+				game.sendAction(move);
+				gameBoardView.invalidate();
+				if (gameBoardView.youWon) {
+					sendTextMessage(getTextBox(), "You win");
+					return;
+				}
 			}
-		}
 	}
 
 	private int getBestPawnIndex(int playerIndex) {
