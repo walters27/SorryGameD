@@ -23,8 +23,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener, View.OnTouchListener {
@@ -49,6 +52,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	public View getTopView() {
 		return myActivity.findViewById(R.id.sorry_gui_layout);
 	}
+
+	private List<Integer> highlightedSpaces = new ArrayList<>();
 
 	protected void updateDisplay() {
 
@@ -93,27 +98,27 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				handleFiveCard();
 				//state.setCardNumber(5);
 				break;
-			case 6:
+			case 8:
 				drawFace = R.drawable.sorrycardeight;
 				handleEightCard();
 				//state.setCardNumber(8);
 				break;
-			case 7:
+			case 10:
 				drawFace = R.drawable.sorrycardten;
 				handleTenCard();
 				//state.setCardNumber(10);
 				break;
-			case 8:
+			case 11:
 				drawFace = R.drawable.sorrycardeleven;
 				handleElevenCard();
 				//state.setCardNumber(11);
 				break;
-			case 9:
+			case 12:
 				drawFace = R.drawable.sorrycardtwelve;
 				handleTwelveCard();
 				//state.setCardNumber(12);
 				break;
-			case 10:
+			case 13:
 				drawFace = R.drawable.sorrycardsorry;
 				handleSorryCard();
 				//state.setCardNumber(13);
@@ -261,39 +266,106 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		if (v instanceof GameBoardView)
-		{
+		if (v instanceof GameBoardView) {
 			SorryPawn selected = null;
 			List<SorryPawn> sp = state.getPawns();
 			// code citation DJhon Stackoverflow
 			// get x and y location of click
 			int transx = (int) event.getX();
 			int transy = (int) event.getY();
-			int ydiff =0;
-			int xdiff =0;
-			for (int i = 0; i < 16; i++)
-			{
+			int ydiff = 0;
+			int xdiff = 0;
+			for (int i = 0; i < 16; i++) {
 				int pawnrow = (sp.get(i).location - 1) / 15;
 				int pawncol = (sp.get(i).location - 1) % 15;
 				//get pawn location and compare with transx, transy
-				//      margin         row/col number              compare           center on box
+				// margin row/col number compare center on box
 				ydiff = (50 + (pawnrow * gameBoardView.cellSize)) - transy + gameBoardView.cellSize / 2;
 				xdiff = (50 + (pawncol * gameBoardView.cellSize)) - transx + gameBoardView.cellSize / 2;
 				//if the distance between touch and pawn position < 25, pawn is selected pawn
-				if (Math.sqrt((double)(xdiff * xdiff + ydiff * ydiff)) < 25)
-				{selected = sp.get(i);}
+				if (Math.sqrt((double) (xdiff * xdiff + ydiff * ydiff)) < 25) {
+					selected = sp.get(i);
+				}
 			}
-			if (selected != null)
-			{
+			if (selected != null) {
 				StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, selected);
 				game.sendAction(sta);
 				//state.targetPawn = selected;
 				selectedPawn = selected;
 				sendTextMessage(getTextBox(), "selected a " + selected.color + " color pawn" + " x:" + transx + " y:" + transy);
+
+				// Clear the previously highlighted spaces
+				highlightedSpaces.clear();
+
+				// Calculate the possible spaces based on the drawn card
+				int cardNum = state.getCardNumber();
+				int currentBlock = selected.location;
+
+				switch (cardNum) {
+					case 1:
+						highlightSpaces(currentBlock, 1);
+						break;
+					case 2:
+						highlightSpaces(currentBlock, 2);
+						break;
+					case 3:
+						highlightSpaces(currentBlock, 3);
+						break;
+					case 4:
+						highlightSpaces(currentBlock, 4);
+						break;
+					case 5:
+						highlightSpaces(currentBlock, 5);
+						break;
+					case 8:
+						highlightSpaces(currentBlock, 8);
+						break;
+					case 10:
+						highlightSpaces(currentBlock, 10);
+						break;
+					case 11:
+						highlightSpaces(currentBlock, 11);
+						break;
+					case 12:
+						highlightSpaces(currentBlock, 12);
+						// Add code to handle switching places with an opponent
+						break;
+					case 13:
+						highlightSpaces(currentBlock, 13);
+						break;
+				}
+
+				// Update the GameBoardView to display the highlighted spaces
+				gameBoardView.setHighlightedSpaces(highlightedSpaces);
+				gameBoardView.invalidate();
 			}
 			return true;
 		}
 		return false;
+	}
+
+	private void highlightSpaces(int currentBlock, int steps) {
+		Map<Integer, Integer> mainPathMap = state.getMainPathMap();
+		int nextBlock = currentBlock;
+
+		for (int i = 0; i < Math.abs(steps); i++) {
+			if (steps > 0) {
+				nextBlock = mainPathMap.getOrDefault(nextBlock, nextBlock);
+			} else {
+				nextBlock = getKeyByValue(mainPathMap, nextBlock);
+			}
+		}
+
+		highlightedSpaces.add(nextBlock);
+	}
+
+	private Integer getKeyByValue(Map<Integer, Integer> map, int value) {
+		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			if (entry.getValue().equals(value)) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 
 	public void setBoardView(GameBoardView gb)
