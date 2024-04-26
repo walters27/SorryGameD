@@ -44,7 +44,6 @@ public class ExampleInstrumentedTest {
         float y = 50 + gb.cellSize/2;
         // set x and y coords to location 1, this should select testpawn
         MotionEvent motion = MotionEvent.obtain(downtime, eventtime, MotionEvent.ACTION_DOWN, x, y, 0);
-        human.setBoardView(gb);
         human.onTouch(gb, motion);
         result = gb.currentPawn;
         assert result == testpawn;
