@@ -1,5 +1,7 @@
 package edu.up.cs301.sorry;
 
+import android.content.res.Configuration;
+
 import java.util.ArrayList;
 
 import edu.up.cs301.GameFramework.GameMainActivity;
@@ -77,6 +79,13 @@ public class SorryMainActivity extends GameMainActivity {
 		return defaultConfig;
 	}//createDefaultConfig
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.layout.sorry_xml_multi_line);
+	}
+
 	/**
 	 * create a local game
 	 * 
@@ -88,5 +97,7 @@ public class SorryMainActivity extends GameMainActivity {
 
 		return new SorryLocalGame(state);
 	}
+
+
 
 }
