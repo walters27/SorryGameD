@@ -47,6 +47,12 @@ public class GameBoardView extends View {
     private Map<Integer, Integer> mainPathMap;
     private Map<String, TeamConfiguration> teams;
 
+    private List<Integer> highlightedSpaces = new ArrayList<>();
+
+    public void setHighlightedSpaces(List<Integer> spaces) {
+        highlightedSpaces = spaces;
+    }
+
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -205,6 +211,22 @@ public class GameBoardView extends View {
 
             canvas.drawBitmap(resizedPawnBitmap, pawnX, pawnY, null);
         }
+
+        // Draw the highlighted spaces
+        Paint highlightPaint = new Paint();
+        highlightPaint.setColor(Color.YELLOW);
+        highlightPaint.setAlpha(128);
+
+        for (int space : highlightedSpaces) {
+            int row = (space - 1) / 15;
+            int col = (space - 1) % 15;
+            int left = margin + col * cellSize;
+            int top = margin + row * cellSize;
+            int right = left + cellSize;
+            int bottom = top + cellSize;
+            canvas.drawRect(left, top, right, bottom, highlightPaint);
+        }
+
     }
 
     public void movePawnTo(int position) {
