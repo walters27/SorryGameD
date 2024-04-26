@@ -290,35 +290,39 @@ public class SorryState extends GameState {
 	 */
 
 	public void moveClockwise(int numSpaces) {
-		//TODO: keep the index of current pawn by checking position
 		SorryPawn statepawn = null;
+		//check if current player is allowed to move this pawn
 		if(this.getPlayerId() != getTeamIdFromPawn(currentPawn)){
-			Log.d("", "aklsmdlaskfeojaf");
 			return;
 		}
 		if(teams == null){
 			return;
 		}
 		if (currentPawn != null){
+			//Loop through pawn to find current pawn's index
 			for (int i = 0; i < 16; i++)
 			{
 				if (pawns.get(i).location == currentPawn.location) {statepawn = pawns.get(i);}
 			}
+
 			int currLocation = currentPawn.location;
 			String currentTeamColor = getTeamColorFromPawn(currentPawn);
 			TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
-
 			boolean enteredSafeZone = false;
 
+			//Move the pawn
 			for (int i = 0; i < numSpaces; i++) {
+				//if pawn is in start
 				if (currentPawn.isInStart) {
 					// Move from start box to start position
 					currLocation = currentTeamConfig.getStartPos();
 					currentPawn.isInStart = false;
 					statepawn.isInStart = false;
+					//if pawn has not entered safe zone
 				} else if (mainPathMap.containsKey(currLocation) && !enteredSafeZone) {
 					// Move along the main path
 					int nextLocation = mainPathMap.get(currLocation);
+					//if pawn has entered safe zone
 					if (nextLocation == currentTeamConfig.getSafeEntry()) {
 						// Pawn will pass over the safe entry, switch to safe zone path
 						currLocation = currentTeamConfig.getSafeZone()[0];
@@ -328,24 +332,38 @@ public class SorryState extends GameState {
 						currLocation = nextLocation;
 					}
 				} else {
+					//get safe zone for current team
 					int[] safeZone = currentTeamConfig.getSafeZone();
+
+					/**
+					 * External Citation
+					 * Date: 4/25/24
+					 * Problem: safeZoneIndex remained -1 when iterating
+					 * through the ArrayList so it was not entering the if
+					 * statement so the pawns could not move in the safeZone.
+					 * Resource: Professor Nux
+					 * Solution: Changed ArrayList to Array to properly update
+					 * safeZoneIndex.
+					 */
 
 					int safeZoneIndex = -1;
 					for(int j = 0; j < safeZone.length; j++){
+						//find index of current location in the safe zone
 						if(safeZone[j] == currLocation){
 							safeZoneIndex = j;
 							break;
 						}
 					}
-
 					if (safeZoneIndex != -1) {
 						// Move within the safe zone
 						if (safeZoneIndex < safeZone.length - 1) {
+							//move to next spot in the safe zone
 							currLocation = safeZone[safeZoneIndex + 1];
 						} else {
 							// Move to a random unoccupied spot in the home position
 							int[] home = currentTeamConfig.getHome();
 							List<Integer> unoccupiedHomeSpots = new ArrayList<>();
+							//find unoccupied spot in home position
 							for (int homeSpot : home) {
 								boolean isOccupied = false;
 								for (SorryPawn pawn : pawns) {
@@ -354,83 +372,99 @@ public class SorryState extends GameState {
 										break;
 									}
 								}
+								//if spot is not occupied
 								if (!isOccupied) {
+									//add to unoccupied spots
 									unoccupiedHomeSpots.add(homeSpot);
 								}
 							}
 							if (!unoccupiedHomeSpots.isEmpty()) {
+								//choose a random unoccupied spot
 								int randomIndex = new Random().nextInt(unoccupiedHomeSpots.size());
 								currLocation = unoccupiedHomeSpots.get(randomIndex);
 								currentPawn.isHome = true;
 							}
-							break; // Stop moving further, as the pawn has reached the end of the safe zone
+							// Stop moving further, as the pawn has reached the end of the safe zone
+							break;
 						}
 					}
 				}
 			}
-			if (currLocation == 108) {currentPawn.isHome = true;
+			//red home location
+			if (currLocation == 108) {
+				//mark pawn as home
+				currentPawn.isHome = true;
+				//list of red home positions
 				ArrayList<Integer> location = new ArrayList<>();
 				location.add(107);
 				location.add(108);
 				location.add(109);
 				location.add(123);
+				//remove location from ArrayList if it is occupied
 			for (SorryPawn s : pawns) {
 				if (location.contains(s.location))
 				{
 					location.remove(location.indexOf(s.location));
 				}
 			}
+			//move pawn to first available location
 			currLocation =location.get(0);
 			}
-
-			if (currLocation == 38) {currentPawn.isHome = true;
-			ArrayList<Integer> location = new ArrayList<>();
-			location.add(23);
-			location.add(53);
-			location.add(37);
-			location.add(38);
+			//blue home location
+			if (currLocation == 38) {
+				//mark pawn as home
+				currentPawn.isHome = true;
+				//list of blue home positions
+				ArrayList<Integer> location = new ArrayList<>();
+				location.add(23);
+				location.add(53);
+				location.add(37);
+				location.add(38);
+				//remove location from ArrayList if it is occupied
 				for (SorryPawn s : pawns) {
 					if (location.contains(s.location))
 					{
 						location.remove(location.indexOf(s.location));
 					}
 			}}
+			//green home location
 			if (currLocation == 188) {
-			ArrayList<Integer> location = new ArrayList<>();
-			location.add(188);
-			location.add(189);
-			location.add(173);
-			location.add(174);
+				//list of green home positions
+				ArrayList<Integer> location = new ArrayList<>();
+				location.add(188);
+				location.add(189);
+				location.add(173);
+				location.add(174);
+				//remove location from ArrayList if it is occupied
 				for (SorryPawn s : pawns) {
 					if (location.contains(s.location))
 					{
 						location.remove(location.indexOf(s.location));
 					}}
 			}
+			//yellow home location
 			if (currLocation == 118) {
+				//list of yellow home positions
 				ArrayList<Integer> location = new ArrayList<>();
 				location.add(118);
 				location.add(119);
 				location.add(103);
 				location.add(104);
+				//remove location from ArrayList if it is occupied
 				for (SorryPawn s : pawns) {
 					if (location.contains(s.location))
 					{
 						location.remove(location.indexOf(s.location));
 					}}
 			}
-
-			//TODO: make this apply to the state pawn index
+			//move pawn to new location
 			movePawnTo(currLocation);
+			//update state pawn's location if it exists
 			if (statepawn != null) {
 				statepawn.location = currLocation;
 			}
+			//switch to next player's turn
 			this.playerId = ((this.playerId+1)%4);
-			Log.d("CurrentPlayerIndex", "Current player index: " + currentPlayerIndex + "  playerid:" + this.playerId);
-		}
-		else{
-			Log.d("", "current pawn is null");
-			return;
 		}
 	}
 	private String getTeamColorFromPawn(SorryPawn pawn) {
