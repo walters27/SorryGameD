@@ -38,6 +38,10 @@ public class SorryState extends GameState {
 
 	private Random rand = new Random();
 
+	public Map<Integer, Integer> getMainPathMap() {
+		return mainPathMap;
+	}
+
 
 	// constructor to initialize game state
 	public SorryState() {
