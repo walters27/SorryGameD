@@ -12,8 +12,10 @@ import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 
+import android.content.Intent;
 import android.media.Image;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -156,6 +158,14 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				state.setCardDrawn(false);
 				MoveForwardAction move = new MoveForwardAction(this,selectedPawn);
 				game.sendAction(move);
+			} else if (button.getId() == R.id.tutorial) {
+				// EXTERNAL CITATION
+				// Mark B, StackOverFlow
+				// Problem: dunno how to link to site
+				// Solution: use this
+				// https://stackoverflow.com/questions/2201917/how-can-i-open-a-url-in-androids-web-browser-from-my-application
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=x2ot0pV9UfaR_4pX"));
+				myActivity.startActivity(browserIntent);
 			}
 	}
 
@@ -260,12 +270,15 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		Button buttonDrawCards = activity.findViewById(R.id.buttonDrawCards);
 		buttonMoveClockwise = activity.findViewById(R.id.buttonMoveClockwise);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
+		Button tutorial = activity.findViewById(R.id.tutorial);
 
 		// register click listeners
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
 		gameBoardView.setOnTouchListener(this);
 		imageViewCard.setOnTouchListener(this);
+		tutorial.setOnClickListener(this);
+
 
 
 		//add music
