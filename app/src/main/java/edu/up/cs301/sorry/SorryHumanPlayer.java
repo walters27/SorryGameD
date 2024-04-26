@@ -98,27 +98,27 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				handleFiveCard();
 				//state.setCardNumber(5);
 				break;
-			case 6:
+			case 8:
 				drawFace = R.drawable.sorrycardeight;
 				handleEightCard();
 				//state.setCardNumber(8);
 				break;
-			case 7:
+			case 10:
 				drawFace = R.drawable.sorrycardten;
 				handleTenCard();
 				//state.setCardNumber(10);
 				break;
-			case 8:
+			case 11:
 				drawFace = R.drawable.sorrycardeleven;
 				handleElevenCard();
 				//state.setCardNumber(11);
 				break;
-			case 9:
+			case 12:
 				drawFace = R.drawable.sorrycardtwelve;
 				handleTwelveCard();
 				//state.setCardNumber(12);
 				break;
-			case 10:
+			case 13:
 				drawFace = R.drawable.sorrycardsorry;
 				handleSorryCard();
 				//state.setCardNumber(13);
@@ -312,30 +312,26 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 						highlightSpaces(currentBlock, 3);
 						break;
 					case 4:
-						highlightSpaces(currentBlock, -4);
+						highlightSpaces(currentBlock, 4);
 						break;
 					case 5:
 						highlightSpaces(currentBlock, 5);
 						break;
-					case 6:
-						highlightSpaces(currentBlock, 7);
-						break;
-					case 7:
+					case 8:
 						highlightSpaces(currentBlock, 8);
 						break;
-					case 8:
-						highlightSpaces(currentBlock, 10);
-						highlightSpaces(currentBlock, -1);
-						break;
-					case 9:
-						highlightSpaces(currentBlock, 11);
-						// Add code to handle switching places with an opponent
-						break;
 					case 10:
-						highlightSpaces(currentBlock, 12);
+						highlightSpaces(currentBlock, 10);
 						break;
 					case 11:
-						// Add code to handle the "Sorry" card actions
+						highlightSpaces(currentBlock, 11);
+						break;
+					case 12:
+						highlightSpaces(currentBlock, 12);
+						// Add code to handle switching places with an opponent
+						break;
+					case 13:
+						highlightSpaces(currentBlock, 13);
 						break;
 				}
 

@@ -486,7 +486,9 @@ public class SorryState extends GameState {
 		return currentPlayerIndex;
 	}
 	public void drawCard(SorryDrawCard sdc) {
-		this.cardNumber = rand.nextInt(11) + 1;
+		int[] validCardNumbers = {1, 2, 3, 4, 5, 8, 10, 11, 12, 13};
+		int randomIndex = rand.nextInt(validCardNumbers.length);
+		this.cardNumber = validCardNumbers[randomIndex];
 	}
 
 	public SorryPawn[] getPlayerPawns(int playerId){
