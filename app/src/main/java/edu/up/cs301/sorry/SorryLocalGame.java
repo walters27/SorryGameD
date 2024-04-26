@@ -85,7 +85,11 @@ public class SorryLocalGame extends LocalGame {
 			//StateChangeCurrentPawn sta = (StateChangeCurrentPawn) action;
 			gameState.currentPawn = ((StateChangeCurrentPawn) action).getPawn();
 			return true;
-		} else {
+		} else if (action instanceof SkipTurnAction) {
+			gameState.moveNextTurn();
+			return true;}
+
+		else {
 			// denote that this was an illegal move
 			return false;
 		}

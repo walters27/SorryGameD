@@ -166,7 +166,10 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				// https://stackoverflow.com/questions/2201917/how-can-i-open-a-url-in-androids-web-browser-from-my-application
 				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=x2ot0pV9UfaR_4pX"));
 				myActivity.startActivity(browserIntent);
-			}
+			} else if (button.getId() == R.id.skipturnbutton) {
+				SkipTurnAction ska = new SkipTurnAction(this, null);
+				game.sendAction(ska);
+			};
 	}
 
 	private int getDistanceToHome(SorryPawn pawn) {
@@ -271,6 +274,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		buttonMoveClockwise = activity.findViewById(R.id.buttonMoveClockwise);
 		gameBoardView = activity.findViewById(R.id.gameBoardView);
 		Button tutorial = activity.findViewById(R.id.tutorial);
+		Button skipturn = activity.findViewById(R.id.skipturnbutton);
 
 		// register click listeners
 		buttonDrawCards.setOnClickListener(this);
@@ -278,6 +282,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		gameBoardView.setOnTouchListener(this);
 		imageViewCard.setOnTouchListener(this);
 		tutorial.setOnClickListener(this);
+		skipturn.setOnClickListener(this);
 
 
 

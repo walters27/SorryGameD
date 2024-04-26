@@ -536,5 +536,10 @@ public class SorryState extends GameState implements Serializable {
 		}
 		return playerPawns.toArray(new SorryPawn[playerPawns.size()]);
 	}
+
+	public void moveNextTurn() {
+		this.playerId = ((this.playerId+1)%4);
+	}
 }
+
 
