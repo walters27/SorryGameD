@@ -63,7 +63,6 @@ public class SorryComputerPlayer2 extends SorryComputerPlayer1 {
 						//set needToDraw to true to draw again
 						needToDraw = true;
 
-						break;
 					}
 				}
 
