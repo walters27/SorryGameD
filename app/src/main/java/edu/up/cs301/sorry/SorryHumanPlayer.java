@@ -12,6 +12,7 @@ import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +33,11 @@ import java.util.Random;
 public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener, View.OnTouchListener {
 	private SorryState state;
 
+	public MediaPlayer mediaPlayer;
+	// EXTERNAL CITATION
+	// Tramanh Best - Boolean Baddies
+	// Problem: Needed Music
+	// Solution: take inspiration from the boolean baddies
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
 	private Button buttonMoveClockwise;
@@ -93,31 +99,26 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				//state.setCardNumber(5);
 				break;
 			case 6:
-				drawFace = R.drawable.sorrycardseven;
-				handleSevenCard();
-				//state.setCardNumber(7);
-				break;
-			case 7:
 				drawFace = R.drawable.sorrycardeight;
 				handleEightCard();
 				//state.setCardNumber(8);
 				break;
-			case 8:
+			case 7:
 				drawFace = R.drawable.sorrycardten;
 				handleTenCard();
 				//state.setCardNumber(10);
 				break;
-			case 9:
+			case 8:
 				drawFace = R.drawable.sorrycardeleven;
 				handleElevenCard();
 				//state.setCardNumber(11);
 				break;
-			case 10:
+			case 9:
 				drawFace = R.drawable.sorrycardtwelve;
 				handleTwelveCard();
 				//state.setCardNumber(12);
 				break;
-			case 11:
+			case 10:
 				drawFace = R.drawable.sorrycardsorry;
 				handleSorryCard();
 				//state.setCardNumber(13);
@@ -256,6 +257,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
 		gameBoardView.setOnTouchListener(this);
+
+		//add music
+		mediaPlayer = MediaPlayer.create(myActivity, R.raw.sorry);
+		mediaPlayer.start();
+		mediaPlayer.setLooping(true);
 	}
 
 	@Override
