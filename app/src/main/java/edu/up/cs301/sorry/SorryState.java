@@ -3,6 +3,7 @@ package edu.up.cs301.sorry;
 import android.graphics.Color;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import edu.up.cs301.GameFramework.infoMessage.GameState;
  * @author Steven R. Vegdahl, Quince Pham, Kira Kunitake, Annalise Walters, Corwin Carr
  * @version July 2013
  */
-public class SorryState extends GameState {
+public class SorryState extends GameState implements Serializable {
 	// to satisfy Serializable interface
 	private static final long serialVersionUID = 7737393762469851826L;
 
