@@ -157,10 +157,10 @@ public class SorryState extends GameState {
 		mainPathMap.put(39, 23);
 
 		// Yellow Safe Zone Path
-
+		mainPathMap.put(187, 188);
 
 		// Green Safe Zone Path
-
+		mainPathMap.put(133, 118);
 
 	}
 

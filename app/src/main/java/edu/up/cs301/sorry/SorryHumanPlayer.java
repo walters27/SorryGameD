@@ -28,6 +28,7 @@ import java.util.Random;
 
 public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener, View.OnTouchListener {
 	private SorryState state;
+
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
 	private Button buttonMoveClockwise;
