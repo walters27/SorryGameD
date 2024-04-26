@@ -49,7 +49,7 @@ public class SorryState extends GameState {
 
 		int[][] locations = {
 				{58, 73, 88, 74},     // Blue
-				{2, 34, 35, 36},     // Red
+				{20, 34, 35, 36},     // Red
 				{191, 192, 206, 190}, // Yellow
 				{138, 153, 168, 152}  // Green
 		};
@@ -139,13 +139,29 @@ public class SorryState extends GameState {
 		mainPathMap.put(31, 16);
 		mainPathMap.put(16, 1);
 		mainPathMap.put(1, 2);
-		//red
-		mainPathMap.put(18,33);
-		mainPathMap.put(33,48);
+
+		// Red Safe Zone Path
+		mainPathMap.put(18, 33);
+		mainPathMap.put(33, 48);
 		mainPathMap.put(48, 63);
 		mainPathMap.put(63, 78);
 		mainPathMap.put(78, 93);
 		mainPathMap.put(93, 108);
+
+		// Blue Safe Zone Path
+		mainPathMap.put(44, 43);
+		mainPathMap.put(43, 42);
+		mainPathMap.put(42, 41);
+		mainPathMap.put(41, 40);
+		mainPathMap.put(40, 39);
+		mainPathMap.put(39, 23);
+
+		// Yellow Safe Zone Path
+
+
+		// Green Safe Zone Path
+
+
 	}
 
 	public int getPlayerId() {
