@@ -12,6 +12,7 @@ import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -29,6 +30,11 @@ import java.util.Random;
 public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener, View.OnTouchListener {
 	private SorryState state;
 
+	public MediaPlayer mediaPlayer;
+	// EXTERNAL CITATION
+	// Tramanh Best - Boolean Baddies
+	// Problem: Needed Music
+	// Solution: take inspiration from the boolean baddies
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
 	private Button buttonMoveClockwise;
@@ -251,6 +257,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
 		gameBoardView.setOnTouchListener(this);
+
+		//add music
+		mediaPlayer = MediaPlayer.create(myActivity, R.raw.sorry);
+		mediaPlayer.start();
+		mediaPlayer.setLooping(true);
 	}
 
 	@Override
