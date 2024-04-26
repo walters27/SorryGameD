@@ -452,8 +452,8 @@ public class SorryState extends GameState {
 				ArrayList<Integer> location = new ArrayList<>();
 				location.add(118);
 				location.add(119);
+				location.add(117);
 				location.add(103);
-				location.add(104);
 				//remove location from ArrayList if it is occupied
 				for (SorryPawn s : pawns) {
 					if (location.contains(s.location))

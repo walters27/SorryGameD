@@ -23,11 +23,6 @@ import java.util.Random;
  */
 public class SorryLocalGame extends LocalGame {
 
-	// When a counter game is played, any number of players. The first player
-	// is trying to get the counter value to TARGET_MAGNITUDE; the second player,
-	// if present, is trying to get the counter to -TARGET_MAGNITUDE. The
-	// remaining players are neither winners nor losers, but can interfere by
-	// modifying the counter.
 	public static final int TARGET_MAGNITUDE = 10;
 
 	// the game's state
