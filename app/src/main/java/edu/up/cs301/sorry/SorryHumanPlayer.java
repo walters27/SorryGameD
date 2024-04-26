@@ -12,10 +12,12 @@ import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -23,11 +25,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener, View.OnTouchListener {
+public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener, View.OnTouchListener, GestureDetector.OnGestureListener {
 	private SorryState state;
 
 	public MediaPlayer mediaPlayer;
@@ -41,6 +47,8 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	private GameBoardView gameBoardView;
 	private Handler handler = new Handler();
 	private SorryPawn selectedPawn;
+
+	private GestureDetector gesture;
 
 	public SorryHumanPlayer(String name) {
 		super(name);
@@ -252,11 +260,16 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		buttonDrawCards.setOnClickListener(this);
 		buttonMoveClockwise.setOnClickListener(this);
 		gameBoardView.setOnTouchListener(this);
+		imageViewCard.setOnTouchListener(this);
+
 
 		//add music
 		mediaPlayer = MediaPlayer.create(myActivity, R.raw.sorry);
 		mediaPlayer.start();
 		mediaPlayer.setLooping(true);
+
+
+		gesture = new GestureDetector(myActivity, this);
 	}
 
 	@Override
@@ -293,11 +306,43 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			}
 			return true;
 		}
+		if (v instanceof ImageView)
+		{
+			return gesture.onTouchEvent(event);
+		}
+		else {Log.d("", "" + v.getClass());}
 		return false;
 	}
 
-	public void setBoardView(GameBoardView gb)
-	{
-		this.gameBoardView = gb;
+	@Override
+	public boolean onDown(@NonNull MotionEvent e) {
+		return true;
+	}
+
+	@Override
+	public void onShowPress(@NonNull MotionEvent e) {
+
+	}
+
+	@Override
+	public boolean onSingleTapUp(@NonNull MotionEvent e) {
+		return true;
+	}
+
+	@Override
+	public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+		return false;
+	}
+
+	@Override
+	public void onLongPress(@NonNull MotionEvent e) {
+
+	}
+
+	@Override
+	public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+		Log.d("", "flung");
+			drawCard();
+			return true;
 	}
 }
