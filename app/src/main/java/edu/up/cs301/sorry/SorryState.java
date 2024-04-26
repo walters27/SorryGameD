@@ -372,6 +372,43 @@ public class SorryState extends GameState {
 			currLocation =location.get(0);
 			}
 
+			if (currLocation == 38) {currentPawn.isHome = true;
+			ArrayList<Integer> location = new ArrayList<>();
+			location.add(23);
+			location.add(53);
+			location.add(37);
+			location.add(38);
+				for (SorryPawn s : pawns) {
+					if (location.contains(s.location))
+					{
+						location.remove(location.indexOf(s.location));
+					}
+			}}
+			if (currLocation == 188) {
+			ArrayList<Integer> location = new ArrayList<>();
+			location.add(188);
+			location.add(189);
+			location.add(173);
+			location.add(174);
+				for (SorryPawn s : pawns) {
+					if (location.contains(s.location))
+					{
+						location.remove(location.indexOf(s.location));
+					}}
+			}
+			if (currLocation == 118) {
+				ArrayList<Integer> location = new ArrayList<>();
+				location.add(118);
+				location.add(119);
+				location.add(103);
+				location.add(104);
+				for (SorryPawn s : pawns) {
+					if (location.contains(s.location))
+					{
+						location.remove(location.indexOf(s.location));
+					}}
+			}
+
 			//TODO: make this apply to the state pawn index
 			movePawnTo(currLocation);
 			if (statepawn != null) {
