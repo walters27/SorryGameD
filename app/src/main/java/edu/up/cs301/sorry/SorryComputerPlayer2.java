@@ -2,143 +2,73 @@ package edu.up.cs301.sorry;
 
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
+import edu.up.cs301.GameFramework.infoMessage.IllegalMoveInfo;
+
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Random;
 
 
 /**
-* A computer-version of a counter-player.  Since this is such a simple game,
-* it just sends "+" and "-" commands with equal probability, at an average
-* rate of one per second. This computer player does, however, have an option to
-* display the game as it is progressing, so if there is no human player on the
-* device, this player will display a GUI that shows the value of the counter
-* as the game is being played.
-* 
+*Smart computer player
+ *
 * @author Steven R. Vegdahl
 * @author Andrew M. Nuxoll, Corwin Carr, Quince Pham, Kira Kunitake, Annalise Walters
 * @version September 2013
 */
 public class SorryComputerPlayer2 extends SorryComputerPlayer1 {
-	
-	/*
-	 * instance variables
-	 */
-	
-	// the most recent game state, as given to us by the CounterLocalGame
-	private SorryState currentGameState = null;
-	
-	// If this player is running the GUI, the activity (null if the player is
-	// not running a GUI).
-	private Activity activityForGui = null;
-	
-	// If this player is running the GUI, the widget containing the counter's
-	// value (otherwise, null);
-	private TextView counterValueTextView = null;
-	
-	// If this player is running the GUI, the handler for the GUI thread (otherwise
-	// null)
-	private Handler guiHandler = null;
-	
-	/**
-	 * constructor
-	 * 
-	 * @param name
-	 * 		the player's name
-	 */
 	public SorryComputerPlayer2(String name) {
 		super(name);
 	}
-	
-    /**
-     * callback method--game's state has changed
-     * 
-     * @param info
-     * 		the information (presumably containing the game's state)
-     */
+	private boolean needToDraw = true;
+
 	@Override
 	protected void receiveInfo(GameInfo info) {
-		// perform superclass behavior
-		super.receiveInfo(info);
-		
-		Log.i("computer player", "receiving");
-		
-		// if there is no game, ignore
-		if (game == null) {
-			return;
-		}
-		else if (info instanceof SorryState) {
-			// if we indeed have a counter-state, update the GUI
-			currentGameState = (SorryState)info;
-			updateDisplay();
-		}
-	}
-	
-	
-	/** 
-	 * sets the counter value in the text view
-	 *  */
-	private void updateDisplay() {
-		// if the guiHandler is available, set the new counter value
-		// in the counter-display widget, doing it in the Activity's
-		// thread.
-		if (guiHandler != null) {
-			guiHandler.post(
-					new Runnable() {
-						public void run() {
-//						if (counterValueTextView != null && currentGameState != null) {
-//							counterValueTextView.setText("" + currentGameState.getCounter());
-//						}
-					}});
-		}
-	}
-	
-	/**
-	 * Tells whether we support a GUI
-	 * 
-	 * @return
-	 * 		true because we support a GUI
-	 */
-	public boolean supportsGui() {
-		return true;
-	}
-	
-	/**
-	 * callback method--our player has been chosen/rechosen to be the GUI,
-	 * called from the GUI thread.
-	 * 
-	 * @param a
-	 * 		the activity under which we are running
-	 */
-	@Override
-	public void setAsGui(GameMainActivity a) {
-		
-		// remember who our activity is
-		this.activityForGui = a;
-		
-		// remember the handler for the GUI thread
-		this.guiHandler = new Handler();
-		
-		// Load the layout resource for the our GUI's configuration
-		activityForGui.setContentView(R.layout.counter_human_player);
+		//cast info to SorryState
+		if (info instanceof IllegalMoveInfo) {
+			//do nothing if it's an illegal move
+			return;}
 
-		// remember who our text view is, for updating the counter value
-		this.counterValueTextView =
-				(TextView) activityForGui.findViewById(R.id.counterValueTextView);
-		
-		// disable the buttons, since they will have no effect anyway
-		//Button plusButton = (Button)activityForGui.findViewById(R.id.plusButton);
-		//plusButton.setEnabled(false);
-		//Button minusButton = (Button)activityForGui.findViewById(R.id.minusButton);
-		//minusButton.setEnabled(false);
-		
-		// if the state is non=null, update the display
-		if (currentGameState != null) {
-			updateDisplay();
+		SorryState gameState = (SorryState)info;
+
+		//check if it's the current players turn
+		if(info instanceof SorryState && gameState.getPlayerId() == this.playerNum){
+			if (needToDraw) {
+				//If you need to draw a card, create draw card action
+				SorryDrawCard sdc = new SorryDrawCard(this);
+				//set draw card to false after drawing a card
+				needToDraw = false;
+				//send card action to the game
+				game.sendAction(sdc);
+			}
+			else {  //move
+				//get available pawns for the player
+				SorryPawn[] allPawns = gameState.getPlayerPawns(playerNum);
+
+				for(int i = 0; i < allPawns.length; i++){
+					//move pawn if it is not home
+					if (!allPawns[i].isHome) {
+						//create change pawn action
+						StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, allPawns[i]);
+						//send action to the game
+						game.sendAction(sta);
+						//create a MoveForward action
+						MoveForwardAction forward = new MoveForwardAction(this, allPawns[i]);
+						//send move forward to the game
+						game.sendAction(forward);
+						//set needToDraw to true to draw again
+						needToDraw = true;
+
+						break;
+					}
+				}
+
+
+			}
 		}
 	}
-
 }

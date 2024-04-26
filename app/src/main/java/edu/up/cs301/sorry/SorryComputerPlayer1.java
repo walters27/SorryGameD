@@ -18,19 +18,11 @@ import edu.up.cs301.GameFramework.utilities.Tickable;
  * @version September 2013
  */
 public class SorryComputerPlayer1 extends GameComputerPlayer {
-
-	/**
-	 * Constructor for objects of class CounterComputerPlayer1
-	 *
-	 * @param name the player's name
-	 */
 	public SorryComputerPlayer1(String name) {
 		// invoke superclass constructor
 		super(name);
 	}
 
-	//TODO: Nux says it's better to put variables like this in the game state
-	//Example:  gameState.phase =  DRAW_PHASE | SELECT_PAWN_PHASE | MOVE_OR_SELECT_PHASE
 	private boolean needToDraw = true;
 
 	/**
@@ -41,28 +33,41 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 	@Override
 	protected void receiveInfo(GameInfo info) {
 		//cast info to SorryState
-		if (info instanceof IllegalMoveInfo) {return;}
+		if (info instanceof IllegalMoveInfo) {
+			//do nothing if it's an illegal move
+			return;}
+
 		SorryState gameState = (SorryState)info;
+
 		//check if it's the current players turn
 		if(info instanceof SorryState && gameState.getPlayerId() == this.playerNum){
-			//Do I need to draw a card
 			if (needToDraw) {
+				//If you need to draw a card, create draw card action
 				SorryDrawCard sdc = new SorryDrawCard(this);
+				//set draw card to false after drawing a card
 				needToDraw = false;
+				//send card action to the game
 				game.sendAction(sdc);
 			}
 			else {  //move
-				//TODO: choose which pawn to move
-
+				//get available pawns for the player
 				SorryPawn[] movePawn = gameState.getPlayerPawns(playerNum);
+
 				Random rand = new Random();
+				//randomly choose a pawn to move
 				SorryPawn pawn = movePawn[rand.nextInt(movePawn.length)];
+
+				//create change pawn action
 				StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, pawn);
+				//send action to the game
 				game.sendAction(sta);
+
 				//create a MoveForward action
 				MoveForwardAction forward = new MoveForwardAction(this, pawn);
 				//send move forward to the game
 				game.sendAction(forward);
+
+				//set needToDraw to true to draw again
 				needToDraw = true;
 			}
 		}
