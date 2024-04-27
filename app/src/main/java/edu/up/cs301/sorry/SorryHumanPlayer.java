@@ -376,7 +376,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		{
 			return gesture.onTouchEvent(event);
 		}
-		else {Log.d("", "" + v.getClass());}
 		return false;
 	}
 
@@ -432,7 +431,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 
 	@Override
 	public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
-		Log.d("", "flung");
 			drawCard();
 			return true;
 	}

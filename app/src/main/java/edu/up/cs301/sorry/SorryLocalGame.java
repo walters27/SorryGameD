@@ -70,8 +70,6 @@ public class SorryLocalGame extends LocalGame {
 		if (!this.players[this.gameState.getPlayerId()].equals(action.getPlayer())) {
 			return false;
 		}
-		Log.d("turn", "action sender:" + action.getPlayer() + " current player:" + this.players[this.gameState.getPlayerId()]);
-		Log.d("", "gamestate player id: "+gameState.getPlayerId());
 		if (action instanceof SorryDrawCard) {
 			SorryDrawCard sdc = (SorryDrawCard) action;
 			this.gameState.drawCard(sdc);

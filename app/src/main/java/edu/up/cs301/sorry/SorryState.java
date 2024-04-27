@@ -159,7 +159,7 @@ public class SorryState extends GameState implements Serializable {
 		mainPathMap.put(42, 41);
 		mainPathMap.put(41, 40);
 		mainPathMap.put(40, 39);
-		mainPathMap.put(39, 23);
+		mainPathMap.put(39, 38);
 
 		// Yellow Safe Zone Path
 		mainPathMap.put(182, 183);
@@ -257,38 +257,6 @@ public class SorryState extends GameState implements Serializable {
 		}
 	}
 
-	// matches pawn color to a corresponding pawn image
-	private int getImageResourceId(int color) {
-		switch (color) {
-			case 0:
-				return R.drawable.blue_pawn;
-			case 1:
-				return R.drawable.red_pawn;
-			case 2:
-				return R.drawable.green_pawn;
-			case 3:
-				return R.drawable.yellow_pawn;
-			default:
-				return 0;
-		}
-	}
-
-	// gets the color of the pawn based on color index
-	private String getColorName(int color) {
-		switch (color) {
-			case 0:
-				return "Blue";
-			case 1:
-				return "Red";
-			case 2:
-				return "Green";
-			case 3:
-				return "Yellow";
-			default:
-				return "";
-		}
-	}
-
 	/** Handler for the SorryDrawCard action.
 	 *
 	 * Caveat: This code assumes it is the associated player's turn
@@ -321,8 +289,6 @@ public class SorryState extends GameState implements Serializable {
 				if (currentPawn.isInStart) {
 					// Move from start box to start position
 					currLocation = currentTeamConfig.getStartPos();
-					currentPawn.isInStart = false;
-					statepawn.isInStart = false;
 					//if pawn has not entered safe zone
 				} else if (mainPathMap.containsKey(currLocation) && !enteredSafeZone) {
 					// Move along the main path
@@ -364,33 +330,6 @@ public class SorryState extends GameState implements Serializable {
 						if (safeZoneIndex < safeZone.length - 1) {
 							//move to next spot in the safe zone
 							currLocation = safeZone[safeZoneIndex + 1];
-						} else {
-							// Move to a random unoccupied spot in the home position
-							int[] home = currentTeamConfig.getHome();
-							List<Integer> unoccupiedHomeSpots = new ArrayList<>();
-							//find unoccupied spot in home position
-							for (int homeSpot : home) {
-								boolean isOccupied = false;
-								for (SorryPawn pawn : pawns) {
-									if (pawn.location == homeSpot) {
-										isOccupied = true;
-										break;
-									}
-								}
-								//if spot is not occupied
-								if (!isOccupied) {
-									//add to unoccupied spots
-									unoccupiedHomeSpots.add(homeSpot);
-								}
-							}
-							if (!unoccupiedHomeSpots.isEmpty()) {
-								//choose a random unoccupied spot
-								int randomIndex = new Random().nextInt(unoccupiedHomeSpots.size());
-								currLocation = unoccupiedHomeSpots.get(randomIndex);
-								currentPawn.isHome = true;
-							}
-							// Stop moving further, as the pawn has reached the end of the safe zone
-							break;
 						}
 					}
 				}
@@ -413,7 +352,7 @@ public class SorryState extends GameState implements Serializable {
 				}
 			}
 			//move pawn to first available location
-			currLocation =location.get(0);
+			 if (location.size() > 0) {currLocation =location.get(0);}
 			}
 			//blue home location
 			if (currLocation == 38) {
@@ -431,7 +370,9 @@ public class SorryState extends GameState implements Serializable {
 					{
 						location.remove(location.indexOf(s.location));
 					}
-			}}
+
+			}
+			if (location.size() > 0)	{currLocation =location.get(0);}}
 			//green home location
 			if (currLocation == 188) {
 				//list of green home positions
@@ -445,7 +386,7 @@ public class SorryState extends GameState implements Serializable {
 					if (location.contains(s.location))
 					{
 						location.remove(location.indexOf(s.location));
-					}}
+					}} if (location.size() > 0) {currLocation =location.get(0);}
 			}
 			//yellow home location
 			if (currLocation == 118) {
@@ -460,14 +401,22 @@ public class SorryState extends GameState implements Serializable {
 					if (location.contains(s.location))
 					{
 						location.remove(location.indexOf(s.location));
-					}}
+					}} if (location.size() > 0) currLocation =location.get(0);
 			}
 			//move pawn to new location
-			movePawnTo(currLocation);
+
+			//movePawnTo(currLocation);
+
 			//update state pawn's location if it exists
+			boolean cluttered = false;
+			for (SorryPawn s : pawns) {if (s.location == currLocation) {cluttered = true; break;}}
 			if (statepawn != null) {
+				if ((!cluttered) || currentPawn.isHome){
 				statepawn.location = currLocation;
+			}	else {Log.d("", "someone was cluttered"); return;}
 			}
+			currentPawn.isInStart = false;
+			statepawn.isInStart = false;
 			//switch to next player's turn
 			this.playerId = ((this.playerId+1)%4);
 		}
