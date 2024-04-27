@@ -11,7 +11,7 @@ import edu.up.cs301.GameFramework.utilities.Tickable;
 
 
 /**
- * Dumb computer player
+ * dumb computer player
  *
  * @author Steven R. Vegdahl
  * @author Andrew M. Nuxoll, Annalise Walters, Kira Kunitake, Quince Pham, Corwin Carr

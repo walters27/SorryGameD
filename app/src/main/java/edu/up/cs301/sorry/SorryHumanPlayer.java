@@ -46,6 +46,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	// Tramanh Best - Boolean Baddies
 	// Problem: Needed Music
 	// Solution: take inspiration from the boolean baddies
+
 	private GameMainActivity myActivity;
 	private ImageView imageViewCard;
 	private Button buttonMoveClockwise;
