@@ -157,7 +157,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				// Problem: dunno how to link to site
 				// Solution: use this
 				// https://stackoverflow.com/questions/2201917/how-can-i-open-a-url-in-androids-web-browser-from-my-application
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=x2ot0pV9UfaR_4pX"));
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtube.be/dxQVLhjp_KQ"));
 				myActivity.startActivity(browserIntent);
 			} else if (button.getId() == R.id.skipturnbutton) {
 				SkipTurnAction ska = new SkipTurnAction(this, null);
