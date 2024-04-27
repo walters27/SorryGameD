@@ -54,6 +54,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	private SorryPawn selectedPawn;
 
 	private GestureDetector gesture;
+	private List<Integer> highlightedSpaces = new ArrayList<>();
 
 	public SorryHumanPlayer(String name) {
 		super(name);
@@ -63,21 +64,19 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		return myActivity.findViewById(R.id.sorry_gui_layout);
 	}
 
-	private List<Integer> highlightedSpaces = new ArrayList<>();
 
 	protected void updateDisplay() {
-
+		//update cards displayed
 		updateCurrentCard();
-
+		//update pawns on game board
 		gameBoardView.pawns = state.getPawns();
 		gameBoardView.invalidate();
 
-		//TODO: update message box (winner?)
 	}
 
-	/** Displays the currently face up card for the user */
+	/** Update the current card drawn */
 	private void updateCurrentCard() {
-		// generates/draws a random card number
+		//gets the current card number
 		int cardNum = state.getCardNumber();
 		int drawFace = 0;
 
@@ -85,56 +84,46 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		switch (cardNum) {
 			case 1:
 				drawFace = R.drawable.sorrycardone;
-				//state.setCardNumber(1);
 				handleOneCard();
 				break;
 			case 2:
 				drawFace = R.drawable.sorrycardtwo;
-				//state.setCardNumber(2);
 				handleTwoCard();
 				break;
 			case 3:
 				drawFace = R.drawable.sorrycardthree;
 				handleThreeCard();
-				//state.setCardNumber(3);
 				break;
 			case 4:
 				drawFace = R.drawable.sorrycardfour;
 				handleFourCard();
-				//state.setCardNumber(4);
 				break;
 			case 5:
 				drawFace = R.drawable.sorrycardfive;
 				handleFiveCard();
-				//state.setCardNumber(5);
 				break;
 			case 8:
 				drawFace = R.drawable.sorrycardeight;
 				handleEightCard();
-				//state.setCardNumber(8);
 				break;
 			case 10:
 				drawFace = R.drawable.sorrycardten;
 				handleTenCard();
-				//state.setCardNumber(10);
 				break;
 			case 11:
 				drawFace = R.drawable.sorrycardeleven;
 				handleElevenCard();
-				//state.setCardNumber(11);
 				break;
 			case 12:
 				drawFace = R.drawable.sorrycardtwelve;
 				handleTwelveCard();
-				//state.setCardNumber(12);
 				break;
 			case 13:
 				drawFace = R.drawable.sorrycardsorry;
 				handleSorryCard();
-				//state.setCardNumber(13);
 				break;
 		}
-
+		//set card image
 		imageViewCard.setImageResource(drawFace);
 		state.setCardDrawn(true);
 	}
@@ -150,6 +139,9 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		t.append(m); // Add the new message
 	}
 
+	/**
+	OnClick sends actions to the game if a button is clicked
+	 */
 	public void onClick(View button) {
 		if (game == null) return;
 			if (button.getId() == R.id.buttonDrawCards) {
@@ -170,38 +162,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				SkipTurnAction ska = new SkipTurnAction(this, null);
 				game.sendAction(ska);
 			};
-	}
-
-	private int getDistanceToHome(SorryPawn pawn) {
-		int distance = 0;
-		int currentLocation = pawn.location;
-
-		// Calculate distance based on pawn color and current location
-		if (pawn.color == RED) {
-			if (currentLocation >= 1 && currentLocation <= 107) {
-				distance = 107 - currentLocation;
-			}
-		} else if (pawn.color == BLUE) {
-			if (currentLocation >= 16 && currentLocation <= 23) {
-				distance = 23 - currentLocation;
-			} else if (currentLocation >= 1 && currentLocation <= 15) {
-				distance = (15 - currentLocation) + 8;
-			}
-		} else if (pawn.color == YELLOW) {
-			if (currentLocation >= 211 && currentLocation <= 118) {
-				distance = 118 - currentLocation;
-			} else if (currentLocation >= 196 && currentLocation <= 210) {
-				distance = (210 - currentLocation) + 104;
-			}
-		} else if (pawn.color == GREEN) {
-			if (currentLocation >= 166 && currentLocation <= 173) {
-				distance = 173 - currentLocation;
-			} else if (currentLocation >= 151 && currentLocation <= 165) {
-				distance = (165 - currentLocation) + 8;
-			}
-		}
-
-		return distance;
 	}
 
 	public void drawCard() {
@@ -302,10 +262,12 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 			List<SorryPawn> sp = state.getPawns();
 			// code citation DJhon Stackoverflow
 			// get x and y location of click
+			//iterate through pawns to see if any was selected
 			int transx = (int) event.getX();
 			int transy = (int) event.getY();
 			int ydiff = 0;
 			int xdiff = 0;
+			//loop through pawns to see if any was selected
 			for (int i = 0; i < 16; i++) {
 				int pawnrow = (sp.get(i).location - 1) / 15;
 				int pawncol = (sp.get(i).location - 1) % 15;
@@ -319,10 +281,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				}
 			}
 			if (selected != null) {
+				//if pawn is selected update state and display
 				StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, selected);
 				game.sendAction(sta);
-				//state.targetPawn = selected;
 				selectedPawn = selected;
+				//display selected pawn info
 				sendTextMessage(getTextBox(), "selected a " + selected.color + " color pawn" + " x:" + transx + " y:" + transy);
 
 				// Clear the previously highlighted spaces
@@ -374,15 +337,19 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		}
 		if (v instanceof ImageView)
 		{
+			//if touch event is on ImageView, handle gesture
 			return gesture.onTouchEvent(event);
 		}
 		return false;
 	}
 
+	/**
+	 *highlights spaces based on cards drawn
+	 */
 	private void highlightSpaces(int currentBlock, int steps) {
 		Map<Integer, Integer> mainPathMap = state.getMainPathMap();
 		int nextBlock = currentBlock;
-
+		//loop to calculate next block based on steps
 		for (int i = 0; i < Math.abs(steps); i++) {
 			if (steps > 0) {
 				nextBlock = mainPathMap.getOrDefault(nextBlock, nextBlock);
@@ -390,10 +357,13 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 				nextBlock = getKeyByValue(mainPathMap, nextBlock);
 			}
 		}
-
+		//add next block to highlighted spaces list
 		highlightedSpaces.add(nextBlock);
 	}
 
+	/**
+	 *gets key from map based on value
+	 */
 	private Integer getKeyByValue(Map<Integer, Integer> map, int value) {
 		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
 			if (entry.getValue().equals(value)) {
