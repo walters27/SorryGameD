@@ -18,7 +18,7 @@ import edu.up.cs301.GameFramework.gameConfiguration.*;
  * @version April 2024
  *
  * Features: Custom Soundtrack, Custom image icon, Complex Gestures (swipe), How to Play screen
- * orientation handling, network play, sliders
+ * orientation handling, network play, sliders, Sorry! Special card.
  */
 public class SorryMainActivity extends GameMainActivity {
 	
