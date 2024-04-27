@@ -55,4 +55,26 @@ public class SorryPawn {
       return imageResourceId;
    }
 
+   public void moveToStartPos() {
+      if (isInStart) {
+         int startPos = getStartPos(color);
+         location = startPos;
+         isInStart = false;
+      }
+   }
+
+   private int getStartPos(int color) {
+      switch (color) {
+         case Color.RED:
+            return 5;
+         case Color.BLUE:
+            return 75;
+         case Color.YELLOW:
+            return 221;
+         case Color.GREEN:
+            return 151;
+         default:
+            return 1;
+      }
+   }
 }

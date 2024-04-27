@@ -48,6 +48,7 @@ public class SorryState extends GameState implements Serializable {
 		playerTurn = 1;
 		pawnStartCount = new int[]{4, 4, 4, 4};
 		pawnHomeCount = new int[]{0, 0, 0, 0};
+		pawns = new ArrayList<SorryPawn>();
 
 		//start location for each pawn
 		int[][] locations = {
@@ -190,10 +191,6 @@ public class SorryState extends GameState implements Serializable {
 		return pawns;
 	}
 
-	public boolean getCardDrawn() {
-		return cardDrawn;
-	}
-
 	public void setCardDrawn(boolean state) {
 		cardDrawn = state;
 	}
@@ -206,7 +203,7 @@ public class SorryState extends GameState implements Serializable {
 		return cardNumber;
 	}
 
-	//copy constructor
+
 	public SorryState(SorryState orig) {
 		super();
 		if (orig != null) {
@@ -487,10 +484,6 @@ public class SorryState extends GameState implements Serializable {
 		}
 		return -1;
 	}
-
-	/**
-	 * draw card
-	 */
 	public void drawCard(SorryDrawCard sdc) {
 		if (cardDrawn) {return;}
 		//array of card numbers

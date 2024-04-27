@@ -190,10 +190,6 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 5 card. Move a pawn five spaces forward.");
 	}
 
-	private void handleSevenCard() {
-		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 7 card. Move one pawn seven spaces forward or split the seven spaces between two pawns.");
-	}
-
 	private void handleEightCard() {
 		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew an 8 card. Move a pawn eight spaces forward.");
 	}
