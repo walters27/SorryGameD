@@ -3,6 +3,8 @@ package edu.up.cs301.sorry;
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 import edu.up.cs301.GameFramework.infoMessage.IllegalMoveInfo;
+import edu.up.cs301.GameFramework.players.GameComputerPlayer;
+
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;

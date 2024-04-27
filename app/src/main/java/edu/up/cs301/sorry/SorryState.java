@@ -292,6 +292,7 @@ public class SorryState extends GameState implements Serializable {
 					this.playerId = ((this.playerId+1)%4);
 					return;
 				}
+				else {return;}
 			//Sorry card exception over
 			}
 			for (int i = 0; i < 16; i++)
@@ -443,6 +444,34 @@ public class SorryState extends GameState implements Serializable {
 			}
 			//switch to next player's turn
 			cardDrawn = false;
+
+
+
+			//SLIDER TIME
+			ArrayList<Integer> sliders = new ArrayList<>();
+			sliders.add(2); sliders.add(10); sliders.add(30); sliders.add(150);
+			sliders.add(216); sliders.add(224); sliders.add(76); sliders.add(196);
+			ArrayList<Integer> byebye = new ArrayList<>();
+			switch(statepawn.location) {
+				case 2: byebye.add(3); byebye.add(4); byebye.add(5);
+				case 10: byebye.add(11); byebye.add(12); byebye.add(13);
+				case 30: byebye.add(45); byebye.add(60); byebye.add(75);
+				case 150: byebye.add(165); byebye.add(180); byebye.add(195);
+				case 216: byebye.add(215); byebye.add(214); byebye.add(213);
+				case 224: byebye.add(223); byebye.add(222); byebye.add(221);
+				case 76: byebye.add(31); byebye.add(46); byebye.add(61);
+				case 196: byebye.add(151); byebye.add(166); byebye.add(181);
+				default: break;
+			}
+			if (sliders.contains(statepawn.location)) {
+				for (SorryPawn s : pawns) {
+					if (byebye.contains(s.location)) {s.location = sendToStart(s);}
+				}
+				for (int i = 0; i < 3; i++) {
+					int nextLocation = mainPathMap.get(statepawn.location);
+					statepawn.location = nextLocation;
+				}
+			}
 			this.playerId = ((this.playerId+1)%4);
 		}
 	}
@@ -549,7 +578,8 @@ public class SorryState extends GameState implements Serializable {
 				if (startSpaces.contains(pa.location))
 				{startSpaces.remove(startSpaces.indexOf(pa.location));}
 			}
-			return startSpaces.get(0);
+			if (startSpaces.size() > 0) {
+			return startSpaces.get(0);}
 		}
 		return -1;
 	}
