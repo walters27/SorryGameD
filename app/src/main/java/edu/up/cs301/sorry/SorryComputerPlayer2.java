@@ -3,70 +3,75 @@ package edu.up.cs301.sorry;
 import edu.up.cs301.GameFramework.GameMainActivity;
 import edu.up.cs301.GameFramework.infoMessage.GameInfo;
 import edu.up.cs301.GameFramework.infoMessage.IllegalMoveInfo;
-
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-
+import java.util.Map;
 import java.util.Random;
 
-
-/**
-*Smart computer player
- *
-* @author Steven R. Vegdahl
-* @author Andrew M. Nuxoll, Corwin Carr, Quince Pham, Kira Kunitake, Annalise Walters
-* @version September 2013
-*/
 public class SorryComputerPlayer2 extends SorryComputerPlayer1 {
 	public SorryComputerPlayer2(String name) {
 		super(name);
 	}
+
 	private boolean needToDraw = true;
+	private SorryPawn currentPawn = null;
 
 	@Override
 	protected void receiveInfo(GameInfo info) {
-		//cast info to SorryState
 		if (info instanceof IllegalMoveInfo) {
-			//do nothing if it's an illegal move
-			return;}
+			return;
+		}
 
-		SorryState gameState = (SorryState)info;
+		SorryState gameState = (SorryState) info;
 
-		//check if it's the current players turn
-		if(info instanceof SorryState && gameState.getPlayerId() == this.playerNum){
-			if (needToDraw) {
-				//If you need to draw a card, create draw card action
-				SorryDrawCard sdc = new SorryDrawCard(this);
-				//set draw card to false after drawing a card
-				needToDraw = false;
-				//send card action to the game
-				game.sendAction(sdc);
+		if (info instanceof SorryState && gameState.getPlayerId() == this.playerNum) {
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
 			}
-			else {  //move
-				//get available pawns for the player
-				SorryPawn[] allPawns = gameState.getPlayerPawns(playerNum);
 
-				for(int i = 0; i < allPawns.length; i++){
-					//move pawn if it is not home
-					if (!allPawns[i].isHome) {
-						//create change pawn action
-						StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, allPawns[i]);
-						//send action to the game
-						game.sendAction(sta);
-						//create a MoveForward action
-						MoveForwardAction forward = new MoveForwardAction(this, allPawns[i]);
-						//send move forward to the game
-						game.sendAction(forward);
-						//set needToDraw to true to draw again
-						needToDraw = true;
+			if (needToDraw) {
+				SorryDrawCard sdc = new SorryDrawCard(this);
+				needToDraw = false;
+				game.sendAction(sdc);
+			} else {
+				SorryPawn[] movePawns = gameState.getPlayerPawns(playerNum);
 
+				if (currentPawn == null || currentPawn.isHome) {
+					currentPawn = null;
+					int maxDistanceFromStart = -1;
+
+					// Find the pawn with the maximum distance from the start position
+					for (SorryPawn pawn : movePawns) {
+						if (!pawn.isHome) {
+							int distanceFromStart = pawn.location;
+							if (distanceFromStart > maxDistanceFromStart) {
+								currentPawn = pawn;
+								maxDistanceFromStart = distanceFromStart;
+							}
+						}
+					}
+
+					// If no pawn is found outside the home square, select a random pawn
+					if (currentPawn == null) {
+						Random rand = new Random();
+						currentPawn = movePawns[rand.nextInt(movePawns.length)];
 					}
 				}
 
+				StateChangeCurrentPawn sta = new StateChangeCurrentPawn(this, currentPawn);
+				game.sendAction(sta);
 
+				MoveForwardAction forward = new MoveForwardAction(this, currentPawn);
+				game.sendAction(forward);
+
+				SkipTurnAction ska = new SkipTurnAction(this, null);
+				game.sendAction(ska);
+
+				needToDraw = true;
 			}
 		}
 	}

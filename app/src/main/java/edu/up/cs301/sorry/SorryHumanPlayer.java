@@ -223,7 +223,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	}
 
 	private void handleFourCard() {
-		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 4 card. Move a pawn four spaces backward.");
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 4 card. Move a pawn four spaces forward.");
 	}
 
 	private void handleFiveCard() {
@@ -239,11 +239,11 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	}
 
 	private void handleTenCard() {
-		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 10 card. Move a pawn ten spaces forward or move a pawn one space backward.");
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a 10 card. Move a pawn ten spaces forward.");
 	}
 
 	private void handleElevenCard() {
-		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew an 11 card. Move eleven spaces forward or switch places with an opponent.");
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew an 11 card. Move eleven spaces forward.");
 	}
 
 	private void handleTwelveCard() {
