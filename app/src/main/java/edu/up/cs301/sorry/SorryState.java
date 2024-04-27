@@ -282,6 +282,7 @@ public class SorryState extends GameState implements Serializable {
 			String currentTeamColor = getTeamColorFromPawn(currentPawn);
 			TeamConfiguration currentTeamConfig = teams.get(currentTeamColor);
 			boolean enteredSafeZone = false;
+			boolean instart = false;
 
 			//Move the pawn
 			for (int i = 0; i < numSpaces; i++) {
@@ -289,6 +290,9 @@ public class SorryState extends GameState implements Serializable {
 				if (currentPawn.isInStart) {
 					// Move from start box to start position
 					currLocation = currentTeamConfig.getStartPos();
+					currentPawn.isInStart = false;
+					statepawn.isInStart = false;
+					instart = true;
 					//if pawn has not entered safe zone
 				} else if (mainPathMap.containsKey(currLocation) && !enteredSafeZone) {
 					// Move along the main path
@@ -413,10 +417,8 @@ public class SorryState extends GameState implements Serializable {
 			if (statepawn != null) {
 				if ((!cluttered) || currentPawn.isHome){
 				statepawn.location = currLocation;
-			}	else {Log.d("", "someone was cluttered"); return;}
+			}	else {Log.d("", "someone was cluttered"); statepawn.isInStart = instart; return;}
 			}
-			currentPawn.isInStart = false;
-			statepawn.isInStart = false;
 			//switch to next player's turn
 			this.playerId = ((this.playerId+1)%4);
 		}
@@ -489,6 +491,7 @@ public class SorryState extends GameState implements Serializable {
 	public void moveNextTurn() {
 		this.playerId = ((this.playerId+1)%4);
 	}
+
 }
 
 
