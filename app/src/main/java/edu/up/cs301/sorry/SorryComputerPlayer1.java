@@ -41,6 +41,7 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 
 		//check if it's the current players turn
 		if(info instanceof SorryState && gameState.getPlayerId() == this.playerNum){
+			try {Thread.sleep(1000);} catch (Exception e) {}
 			if (needToDraw) {
 				//If you need to draw a card, create draw card action
 				SorryDrawCard sdc = new SorryDrawCard(this);
@@ -66,6 +67,9 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 				MoveForwardAction forward = new MoveForwardAction(this, pawn);
 				//send move forward to the game
 				game.sendAction(forward);
+
+				SkipTurnAction ska = new SkipTurnAction(this, null);
+				game.sendAction(ska);
 
 				//set needToDraw to true to draw again
 				needToDraw = true;

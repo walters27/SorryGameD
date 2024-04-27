@@ -263,6 +263,7 @@ public class SorryState extends GameState implements Serializable {
 	 */
 
 	public void moveClockwise(int numSpaces) {
+		if (!cardDrawn) {return;}
 		SorryPawn statepawn = null;
 		//check if current player is allowed to move this pawn
 		if(this.getPlayerId() != getTeamIdFromPawn(currentPawn)){
@@ -288,6 +289,7 @@ public class SorryState extends GameState implements Serializable {
 			for (int i = 0; i < numSpaces; i++) {
 				//if pawn is in start
 				if (currentPawn.isInStart) {
+					if (cardNumber != 1 && cardNumber != 2) {return;}
 					// Move from start box to start position
 					currLocation = currentTeamConfig.getStartPos();
 					currentPawn.isInStart = false;
@@ -420,6 +422,7 @@ public class SorryState extends GameState implements Serializable {
 			}	else {Log.d("", "someone was cluttered"); statepawn.isInStart = instart; return;}
 			}
 			//switch to next player's turn
+			cardDrawn = false;
 			this.playerId = ((this.playerId+1)%4);
 		}
 	}
@@ -472,9 +475,11 @@ public class SorryState extends GameState implements Serializable {
 		return currentPlayerIndex;
 	}
 	public void drawCard(SorryDrawCard sdc) {
+		if (cardDrawn) {return;}
 		int[] validCardNumbers = {1, 2, 3, 4, 5, 8, 10, 11, 12, 13};
 		int randomIndex = rand.nextInt(validCardNumbers.length);
 		this.cardNumber = validCardNumbers[randomIndex];
+		cardDrawn = true;
 	}
 
 	public SorryPawn[] getPlayerPawns(int playerId){
@@ -490,6 +495,7 @@ public class SorryState extends GameState implements Serializable {
 
 	public void moveNextTurn() {
 		this.playerId = ((this.playerId+1)%4);
+		cardDrawn = false;
 	}
 
 }
