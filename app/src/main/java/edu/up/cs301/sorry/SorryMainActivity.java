@@ -18,7 +18,7 @@ import edu.up.cs301.GameFramework.gameConfiguration.*;
  * @version April 2024
  *
  * Features: Custom Soundtrack, Custom image icon, Complex Gestures (swipe), How to Play screen
- * orientation handling, network play, sliders
+ * orientation handling, network play, sliders, Sorry! Special card.
  */
 public class SorryMainActivity extends GameMainActivity {
 	
@@ -58,10 +58,10 @@ public class SorryMainActivity extends GameMainActivity {
 				return new SorryComputerPlayer2(name);
 			}});
 
-		// Create a game configuration class for Counter:
+		// Create a game configuration class for Sorry!:
 		// - player types as given above
-		// - from 1 to 2 players
-		// - name of game is "Counter Game"
+		// - 4 players
+		// - name of game is "Sorry!"
 		// - port number as defined above
 		GameConfig defaultConfig = new GameConfig(playerTypes, 4, 4, "Sorry!",
 				PORT_NUMBER);

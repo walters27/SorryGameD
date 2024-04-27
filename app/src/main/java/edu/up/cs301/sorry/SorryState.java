@@ -22,25 +22,21 @@ import edu.up.cs301.GameFramework.infoMessage.GameState;
 public class SorryState extends GameState implements Serializable {
 	// to satisfy Serializable interface
 	private static final long serialVersionUID = 7737393762469851826L;
-
 	private int playerTurn;
 	private int[] pawnHomeCount;
 	private int[] pawnStartCount;
 	private ArrayList <SorryPawn> pawns;
-	private int cardNumber;  //this currently face up card
+	private int cardNumber;
 	private int playerId;
 	private boolean cardDrawn;
 	private int movesToWin;
 	private int currentPawnIndex;
 	public SorryPawn currentPawn;
-
 	public SorryPawn targetPawn;
 	private Map<Integer, Integer> mainPathMap;
 	private Map<String, TeamConfiguration> teams;
 	private int currentPlayerIndex = 0;
-
 	private Random rand = new Random();
-
 	public Map<Integer, Integer> getMainPathMap() {
 		return mainPathMap;
 	}
@@ -51,8 +47,8 @@ public class SorryState extends GameState implements Serializable {
 		playerTurn = 1;
 		pawnStartCount = new int[]{4, 4, 4, 4};
 		pawnHomeCount = new int[]{0, 0, 0, 0};
-		pawns = new ArrayList<SorryPawn>();
 
+		//start location for each pawn
 		int[][] locations = {
 				{58, 73, 88, 74},     // Blue
 				{20, 34, 35, 36},     // Red
@@ -61,6 +57,8 @@ public class SorryState extends GameState implements Serializable {
 		};
 		int[] colors = {Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN};
 		int[] drawableIds = {R.drawable.blue_pawn, R.drawable.red_pawn, R.drawable.yellow_pawn, R.drawable.green_pawn};
+
+		//create a pawn for each team and add it to the lsit
 		for (int colorIndex = 0; colorIndex < colors.length; colorIndex++) {
 			for (int location : locations[colorIndex]) {
 				SorryPawn pawn = new SorryPawn(colors[colorIndex], drawableIds[colorIndex]);
@@ -74,6 +72,7 @@ public class SorryState extends GameState implements Serializable {
 		movesToWin = 61;
 		currentPawnIndex = 0;
 
+		//team configurations with start and home locations
 		teams  = new HashMap<>();
 		teams.put("red", new TeamConfiguration(
 				new int[]{20, 34, 35, 36}, 5, 3,
@@ -88,6 +87,7 @@ public class SorryState extends GameState implements Serializable {
 				new int[]{138, 153, 168, 152}, 151, 181,
 				new int[]{182, 184, 185, 186, 187}, new int[]{173, 188, 203, 189}));
 
+		//main path map of the board
 		mainPathMap = new HashMap<>();
 		mainPathMap.put(2, 3);
 		mainPathMap.put(3, 4);
@@ -185,10 +185,6 @@ public class SorryState extends GameState implements Serializable {
 		return playerId;
 	}
 
-	public void setPlayerId(int s) {
-		playerId = s;
-	}
-
 	public ArrayList<SorryPawn> getPawns() {
 		return pawns;
 	}
@@ -205,38 +201,11 @@ public class SorryState extends GameState implements Serializable {
 		return pawnHomeCount[color];
 	}
 
-	public void setPawnHomeCount(int color, int num) {
-		pawnHomeCount[color] = num;
-	}
-
-	public int getPawnStartCount(int color) {
-		return pawnStartCount[color];
-	}
-
-	public void setPawnStartCount(int color, int num) {
-		pawnStartCount[color] = num;
-	}
-
 	public int getCardNumber() {
 		return cardNumber;
 	}
 
-	public void setCardNumber(int cardNumber) {
-		this.cardNumber = cardNumber;
-	}
-
-	public int getCurrentPawnIndex() {
-		return currentPawnIndex;
-	}
-
-	public void setCurrentPawnIndex(int index) {
-		currentPawnIndex = index;
-	}
-
-	public void setPawns (ArrayList <SorryPawn> newPawn){
-		this.pawns = newPawn;
-	}
-
+	//copy constructor
 	public SorryState(SorryState orig) {
 		super();
 		if (orig != null) {
@@ -448,9 +417,11 @@ public class SorryState extends GameState implements Serializable {
 
 			//SLIDER TIME
 			ArrayList<Integer> sliders = new ArrayList<>();
+			//slider locations
 			sliders.add(2); sliders.add(10); sliders.add(30); sliders.add(150);
 			sliders.add(216); sliders.add(224); sliders.add(76); sliders.add(196);
 			ArrayList<Integer> byebye = new ArrayList<>();
+			//determine slide based on current location of pawn
 			switch(statepawn.location) {
 				case 2: byebye.add(3); byebye.add(4); byebye.add(5);
 				case 10: byebye.add(11); byebye.add(12); byebye.add(13);
@@ -464,8 +435,10 @@ public class SorryState extends GameState implements Serializable {
 			}
 			if (sliders.contains(statepawn.location)) {
 				for (SorryPawn s : pawns) {
+					//if location of pawn is in byebye, send it back to start
 					if (byebye.contains(s.location)) {s.location = sendToStart(s);}
 				}
+				//move pawn forward (slide)
 				for (int i = 0; i < 3; i++) {
 					int nextLocation = mainPathMap.get(statepawn.location);
 					statepawn.location = nextLocation;
@@ -474,8 +447,13 @@ public class SorryState extends GameState implements Serializable {
 			this.playerId = ((this.playerId+1)%4);
 		}
 	}
+
+	/**
+	 *returns team corresponding to the color of the pawn
+	 */
 	private String getTeamColorFromPawn(SorryPawn pawn) {
 		int pawnColor = pawn.color;
+		//determine team based on pawn's color
 		if (pawnColor == Color.RED) {
 			return "red";
 		} else if (pawnColor == Color.BLUE) {
@@ -488,9 +466,14 @@ public class SorryState extends GameState implements Serializable {
 		return "";
 	}
 
+	/**
+	 * get team id of corresponding pawn
+	 */
 	public int getTeamIdFromPawn(SorryPawn pawn) {
 		if(pawn != null){
+			//get color of pawn
 			int pawnColor = pawn.color;
+			//determine id based on pawn's color
 			if (pawnColor == Color.RED) {
 				return  0;
 			} else if (pawnColor == Color.BLUE) {
@@ -503,53 +486,53 @@ public class SorryState extends GameState implements Serializable {
 		}
 		return -1;
 	}
-	public void movePawnTo(int position) {
-		if (position >= 1 && position <= 225) {
-			currentPawn.location = position;
-			//GameBoardView.invalidate();
-		}
-	}
 
-	public void selectPawn(int pawnIndex) {
-		currentPawn = pawns.get(currentPlayerIndex * 4 + pawnIndex);
-	}
-
-	public void setCurrentPlayer(int playerIndex) {
-		currentPlayerIndex = playerIndex;
-		//currentPawn = pawns.get(playerIndex * 4); // Assumes 4 pawns per player
-	}
-
-	public int getCurrentPlayer(){
-		return currentPlayerIndex;
-	}
+	/**
+	 * draw card
+	 */
 	public void drawCard(SorryDrawCard sdc) {
 		if (cardDrawn) {return;}
+		//array of card numbers
 		int[] validCardNumbers = {1, 2, 3, 4, 5, 8, 10, 11, 12, 13};
+		//generate random index to set as card
 		int randomIndex = rand.nextInt(validCardNumbers.length);
 		this.cardNumber = validCardNumbers[randomIndex];
 		cardDrawn = true;
 	}
 
+	/**
+	 * retrieve pawn belonging to specific player
+	 */
 	public SorryPawn[] getPlayerPawns(int playerId){
 		ArrayList <SorryPawn> playerPawns = new ArrayList<>();
+		//go through all pawns in game state
 		for (SorryPawn pawn:pawns){
 			int pawnTeamId = getTeamIdFromPawn(pawn);
+			//if pawn belongs to player add to list
 			if(pawnTeamId==playerId){
 				playerPawns.add(pawn);
 			}
 		}
+		//convert array list to array
 		return playerPawns.toArray(new SorryPawn[playerPawns.size()]);
 	}
 
 	public void moveNextTurn() {
+		//changes players turn
 		this.playerId = ((this.playerId+1)%4);
+		//reset card
 		cardDrawn = false;
 	}
 
+	/**
+	 * sorry card. sends pawn back to home if selected by enemy.
+	 */
 	public int sendToStart(SorryPawn p) {
 		if (p == null) {return -1;}
+		//get team id of pawn
 		int team = getTeamIdFromPawn(p);
 		ArrayList<Integer> startSpaces = new ArrayList<>();
+		//populate start spaces based on pawn's team
 		switch(team)
 		{
 			case 1: startSpaces.add(58); startSpaces.add(73); startSpaces.add(88); startSpaces.add(74);
@@ -563,6 +546,7 @@ public class SorryState extends GameState implements Serializable {
 			default:
 				break;
 		}
+		//if pawn is not in start or home
 		if (!p.isInStart && !p.isHome)
 		{
 			// still need to check safe spaces
@@ -572,6 +556,7 @@ public class SorryState extends GameState implements Serializable {
 			{
 				if (p.location == exceptions[i]) {return -1;}
 			}
+			//remove pawns occupying start spaces
 			for (SorryPawn pa : pawns)
 			{
 				if (startSpaces.contains(pa.location))
