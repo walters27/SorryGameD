@@ -25,12 +25,8 @@ import java.util.Random;
  * @version July 2013
  */
 public class SorryLocalGame extends LocalGame {
-
-	public static final int TARGET_MAGNITUDE = 10;
-
 	// the game's state
 	private SorryState gameState;
-	private int playerId;
 	private Activity myActivity;
 
 
@@ -45,6 +41,10 @@ public class SorryLocalGame extends LocalGame {
 		return true;
 	}
 
+	/**
+	 *checks if game is over by seeing if any player has all 4 pawns in home
+	 * and sends a message to the message box if they do
+	 */
 	@Override
 	protected String checkIfGameOver() {
 		if (gameState.getPawnHomeCount(0) == 4) {
@@ -68,6 +68,7 @@ public class SorryLocalGame extends LocalGame {
 		}
 	}
 	private void handleGameOver(String message){
+		//get reference to text box and set game over message
 		TextView textViewMessages = myActivity.findViewById((R.id.textViewMessages));
 		textViewMessages.setText(message);
 	}
@@ -90,22 +91,23 @@ public class SorryLocalGame extends LocalGame {
 	 */
 	@Override
 	protected boolean makeMove(GameAction action) {
-
 		//Reject  moves if it's  not your turn
 		if (!this.players[this.gameState.getPlayerId()].equals(action.getPlayer())) {
 			return false;
 		}
+
 		if (action instanceof SorryDrawCard) {
+			//draw card action
 			SorryDrawCard sdc = (SorryDrawCard) action;
 			this.gameState.drawCard(sdc);
 			return true;
 		} else if (action instanceof MoveForwardAction) {
-			//SorryMoveAction sma = (SorryMoveAction) action;
+			//move forward action
 			gameState.moveClockwise(gameState.getCardNumber());
 
 			return true;
 		} else if (action instanceof StateChangeCurrentPawn) {
-
+			//change current pawn action
 			if ( gameState.getTeamIdFromPawn(((StateChangeCurrentPawn)action).getPawn()) != gameState.getPlayerId())
 			{
 				gameState.targetPawn = ((StateChangeCurrentPawn) action).getPawn();
@@ -114,6 +116,7 @@ public class SorryLocalGame extends LocalGame {
 			gameState.currentPawn = ((StateChangeCurrentPawn) action).getPawn(); }
 			return true;
 		} else if (action instanceof SkipTurnAction) {
+			//skip turn action
 			gameState.moveNextTurn();
 			return true;}
 
