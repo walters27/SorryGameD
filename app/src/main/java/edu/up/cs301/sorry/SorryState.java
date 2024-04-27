@@ -45,7 +45,6 @@ public class SorryState extends GameState implements Serializable {
 		return mainPathMap;
 	}
 
-
 	// constructor to initialize game state
 	public SorryState() {
 		super();

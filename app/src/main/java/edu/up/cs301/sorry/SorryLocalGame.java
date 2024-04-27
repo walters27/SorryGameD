@@ -88,6 +88,7 @@ public class SorryLocalGame extends LocalGame {
 	/**
 	 * The only type of GameAction that should be sent is CounterMoveAction
 	 */
+
 	@Override
 	protected boolean makeMove(GameAction action) {
 

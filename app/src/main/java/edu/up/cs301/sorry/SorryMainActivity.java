@@ -46,13 +46,13 @@ public class SorryMainActivity extends GameMainActivity {
 				return new SorryHumanPlayer(name);
 			}});
 		
-		// a computer player type (player type 1)
+		// computer player type (player type 1)
 		playerTypes.add(new GamePlayerType("Computer Player") {
 			public GamePlayer createPlayer(String name) {
 				return new SorryComputerPlayer1(name);
 			}});
 		
-		// a computer player type (player type 2)
+		// computer player type (player type 2)
 		playerTypes.add(new GamePlayerType("Smart Computer Player") {
 			public GamePlayer createPlayer(String name) {
 				return new SorryComputerPlayer2(name);
