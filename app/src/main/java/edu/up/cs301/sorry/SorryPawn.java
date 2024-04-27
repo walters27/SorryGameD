@@ -55,48 +55,4 @@ public class SorryPawn {
       return imageResourceId;
    }
 
-   public void moveToStartPos() {
-      if (isInStart) {
-         int startPos = getStartPos(color);
-         location = startPos;
-         isInStart = false;
-      }
-   }
-
-   private int getStartPos(int color) {
-      switch (color) {
-         case Color.RED:
-            return 5;
-         case Color.BLUE:
-            return 75;
-         case Color.YELLOW:
-            return 221;
-         case Color.GREEN:
-            return 151;
-         default:
-            return 1;
-      }
-   }
-
-   public void moveToHome() {
-      int[] homeLocations = getHomeLocations(color);
-      int randomIndex = new Random().nextInt(homeLocations.length);
-      location = homeLocations[randomIndex];
-      isHome = true;
-   }
-
-   private int[] getHomeLocations(int color) {
-      switch (color) {
-         case Color.RED:
-            return new int[]{107, 108, 109, 123};
-         case Color.BLUE:
-            return new int[]{23, 38, 53, 37};
-         case Color.YELLOW:
-            return new int[]{118, 119, 103, 104};
-         case Color.GREEN:
-            return new int[]{173, 188, 203, 189};
-         default:
-            return new int[]{1};
-      }
-   }
 }

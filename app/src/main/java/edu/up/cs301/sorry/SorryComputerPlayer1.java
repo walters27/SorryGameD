@@ -68,7 +68,9 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 				//send move forward to the game
 				game.sendAction(forward);
 
+				//create SkipTurnAction
 				SkipTurnAction ska = new SkipTurnAction(this, null);
+				//send action to the game
 				game.sendAction(ska);
 
 				//set needToDraw to true to draw again
