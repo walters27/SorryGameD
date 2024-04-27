@@ -5,8 +5,11 @@ import edu.up.cs301.GameFramework.players.GamePlayer;
 import edu.up.cs301.GameFramework.LocalGame;
 import edu.up.cs301.GameFramework.actionMessage.GameAction;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -28,6 +31,7 @@ public class SorryLocalGame extends LocalGame {
 	// the game's state
 	private SorryState gameState;
 	private int playerId;
+	private Activity myActivity;
 
 
 	/**
@@ -38,13 +42,34 @@ public class SorryLocalGame extends LocalGame {
 	 */
 	@Override
 	protected boolean canMove(int playerIdx) {
-
 		return true;
 	}
 
 	@Override
 	protected String checkIfGameOver() {
-		return null;
+		if (gameState.getPawnHomeCount(0) == 4) {
+			handleGameOver("Player 0 has won!");
+			return "Player 0 has won!";
+		}
+		else if (gameState.getPawnHomeCount(1) == 4) {
+			handleGameOver("Player 1 has won!");
+			return "Player 1 has won!";
+		}
+		else if (gameState.getPawnHomeCount(2) == 4) {
+			handleGameOver("Player 2 has won!");
+			return "Player 2 has won!";
+		}
+		else if (gameState.getPawnHomeCount(3) == 4) {
+			handleGameOver("Player 3 has won!");
+			return "Player 3 has won!";
+		}
+		else{
+			return null;
+		}
+	}
+	private void handleGameOver(String message){
+		TextView textViewMessages = myActivity.findViewById((R.id.textViewMessages));
+		textViewMessages.setText(message);
 	}
 
 	/**
@@ -108,4 +133,5 @@ public class SorryLocalGame extends LocalGame {
 		p.sendInfo(new SorryState(this.gameState));
 
 	}//sendUpdatedSate
+
 }
