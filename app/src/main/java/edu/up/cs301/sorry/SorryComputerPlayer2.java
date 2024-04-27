@@ -31,7 +31,7 @@ public class SorryComputerPlayer2 extends SorryComputerPlayer1 {
 
 		SorryState gameState = (SorryState)info;
 
-		//check if it's the current players turn
+		//check if it is the current players turn
 		if(info instanceof SorryState && gameState.getPlayerId() == this.playerNum){
 			try {Thread.sleep(500);} catch (Exception e) {}
 			if (needToDraw) {
