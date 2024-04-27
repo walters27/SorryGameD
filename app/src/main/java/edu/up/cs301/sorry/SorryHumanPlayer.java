@@ -211,7 +211,7 @@ public class SorryHumanPlayer extends GameHumanPlayer implements OnClickListener
 	}
 
 	private void handleSorryCard() {
-		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a Sorry card. Take one pawn from Start and move it directly to a square occupied by any opponent's pawn, sending that pawn back to its own Start.");
+		sendTextMessage(getTextBox(), "Player " + state.getPlayerId() + " drew a Sorry card. Select one of your pawns and one of your opponents and the move to replace their pawn with yours and send theirs back to base.");
 	}
 
 	// receives game info and updates SorryState
