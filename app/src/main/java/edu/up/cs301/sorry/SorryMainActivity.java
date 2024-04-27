@@ -15,7 +15,10 @@ import edu.up.cs301.GameFramework.gameConfiguration.*;
  * 
  * @author Andrew M. Nuxoll, Kira Kunitake, Annalise Walters, Crorwin Carr, Quince Pham
  * @author Steven R. Vegdahl
- * @version July 2013
+ * @version April 2024
+ *
+ * Features: Custom Soundtrack, Custom image icon, Complex Gestures (swipe), How to Play screen
+ * orientation handling, network play
  */
 public class SorryMainActivity extends GameMainActivity {
 	

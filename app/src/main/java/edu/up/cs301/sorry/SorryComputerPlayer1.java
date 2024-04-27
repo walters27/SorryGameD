@@ -41,7 +41,7 @@ public class SorryComputerPlayer1 extends GameComputerPlayer {
 
 		//check if it's the current players turn
 		if(info instanceof SorryState && gameState.getPlayerId() == this.playerNum){
-			try {Thread.sleep(1000);} catch (Exception e) {}
+			try {Thread.sleep(500);} catch (Exception e) {}
 			if (needToDraw) {
 				//If you need to draw a card, create draw card action
 				SorryDrawCard sdc = new SorryDrawCard(this);

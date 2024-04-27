@@ -33,6 +33,8 @@ public class SorryState extends GameState implements Serializable {
 	private int movesToWin;
 	private int currentPawnIndex;
 	public SorryPawn currentPawn;
+
+	public SorryPawn targetPawn;
 	private Map<Integer, Integer> mainPathMap;
 	private Map<String, TeamConfiguration> teams;
 	private int currentPlayerIndex = 0;
@@ -274,6 +276,24 @@ public class SorryState extends GameState implements Serializable {
 		}
 		if (currentPawn != null){
 			//Loop through pawn to find current pawn's index
+			//Sorry card exception
+			if (cardNumber == 13) {
+				if (sendToStart(targetPawn) != -1)
+				{
+					int temploc = targetPawn.location;
+					for (SorryPawn s : pawns) {
+						if (s.location == temploc) {targetPawn = s;}
+						if (s.location == currentPawn.location) {statepawn = s;}
+					}
+					targetPawn.location = sendToStart(targetPawn);
+					statepawn.location = temploc;
+
+					cardDrawn = false;
+					this.playerId = ((this.playerId+1)%4);
+					return;
+				}
+			//Sorry card exception over
+			}
 			for (int i = 0; i < 16; i++)
 			{
 				if (pawns.get(i).location == currentPawn.location) {statepawn = pawns.get(i);}
@@ -440,7 +460,7 @@ public class SorryState extends GameState implements Serializable {
 		return "";
 	}
 
-	private int getTeamIdFromPawn(SorryPawn pawn) {
+	public int getTeamIdFromPawn(SorryPawn pawn) {
 		if(pawn != null){
 			int pawnColor = pawn.color;
 			if (pawnColor == Color.RED) {
@@ -498,6 +518,41 @@ public class SorryState extends GameState implements Serializable {
 		cardDrawn = false;
 	}
 
+	public int sendToStart(SorryPawn p) {
+		if (p == null) {return -1;}
+		int team = getTeamIdFromPawn(p);
+		ArrayList<Integer> startSpaces = new ArrayList<>();
+		switch(team)
+		{
+			case 1: startSpaces.add(58); startSpaces.add(73); startSpaces.add(88); startSpaces.add(74);
+				break;
+			case 2: startSpaces.add(206); startSpaces.add(190); startSpaces.add(191); startSpaces.add(192);
+				break;
+			case 3: startSpaces.add(138); startSpaces.add(168); startSpaces.add(152); startSpaces.add(153);
+				break;
+			case 0: startSpaces.add(20); startSpaces.add(35); startSpaces.add(34); startSpaces.add(36);
+				break;
+			default:
+				break;
+		}
+		if (!p.isInStart && !p.isHome)
+		{
+			// still need to check safe spaces
+			TeamConfiguration pawnteam = teams.get(getTeamColorFromPawn(p));
+			int[] exceptions = pawnteam.getSafeZone();
+			for (int i = 0; i < exceptions.length; i++)
+			{
+				if (p.location == exceptions[i]) {return -1;}
+			}
+			for (SorryPawn pa : pawns)
+			{
+				if (startSpaces.contains(pa.location))
+				{startSpaces.remove(startSpaces.indexOf(pa.location));}
+			}
+			return startSpaces.get(0);
+		}
+		return -1;
+	}
 }
 
 

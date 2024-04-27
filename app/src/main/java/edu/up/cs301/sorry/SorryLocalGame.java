@@ -80,8 +80,13 @@ public class SorryLocalGame extends LocalGame {
 
 			return true;
 		} else if (action instanceof StateChangeCurrentPawn) {
-			//StateChangeCurrentPawn sta = (StateChangeCurrentPawn) action;
-			gameState.currentPawn = ((StateChangeCurrentPawn) action).getPawn();
+
+			if ( gameState.getTeamIdFromPawn(((StateChangeCurrentPawn)action).getPawn()) != gameState.getPlayerId())
+			{
+				gameState.targetPawn = ((StateChangeCurrentPawn) action).getPawn();
+			}
+			else {
+			gameState.currentPawn = ((StateChangeCurrentPawn) action).getPawn(); }
 			return true;
 		} else if (action instanceof SkipTurnAction) {
 			gameState.moveNextTurn();
