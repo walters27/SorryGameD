@@ -17,8 +17,16 @@ import edu.up.cs301.GameFramework.gameConfiguration.*;
  * @author Steven R. Vegdahl
  * @version April 2024
  *
- * Features: Custom Soundtrack, Custom image icon, Complex Gestures (swipe), How to Play screen
- * orientation handling, network play, sliders, Sorry! Special card.
+ * Features: Custom Soundtrack, Custom image icon, Complex Gestures (swipe up to draw card),
+ * How to Play screen, orientation handling, network play, sliders, Sorry! Special card.
+ *
+ * Bug: Sometimes the game crashes before the game is over.
+ *
+ *Button Actions: Start game by drawing a card. If you do not draw a 1 or 2 card
+ * to start, skip turn. If a pawn is in the space you are about to move
+ * to, skip turn. To play the sorry card click the pawn you want to switch
+ * positions with and click move.
+ *
  */
 public class SorryMainActivity extends GameMainActivity {
 	
